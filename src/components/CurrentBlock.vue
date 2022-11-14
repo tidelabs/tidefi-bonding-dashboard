@@ -1,0 +1,64 @@
+<template>
+  <q-card class="panel col q-ma-sm q-pa-sm">
+    <div class="column justify-start items-center">
+      <div class="col column items-center justify-end">Current Block</div>
+      <div class="full-width row justify-start items-center">
+        <q-circular-progress
+          :value="progressValue"
+          show-value
+          color="teal"
+          track-color="grey-3"
+          center-color="transparent"
+          size="50px"
+          class="col justify-end q-ma-sm"
+        >
+          {{ (maxBlockTime * progressValue / 100 / 1000).toFixed(1) }}s
+        </q-circular-progress>
+        <div class="col column">
+          <div class="col row items-center justify-start no-wrap">{{ clientStore.currentHeader.number }}</div>
+        </div>
+      </div>
+    </div>
+  </q-card>
+</template>
+
+<script>
+import { computed, watch, ref } from 'vue'
+import { useClientStore } from 'src/stores/client'
+
+export default {
+  name: 'CurrentBlock',
+  setup () {
+    const clientStore = useClientStore()
+    const maxBlockTime = 6000
+    const incrementTime = 250
+    const intervalTime = ref(0)
+    let intervalId = null
+
+    function clearTimer () {
+      clearInterval(intervalId)
+      intervalTime.value = 0
+    }
+    function setCountdown () {
+      clearTimer()
+      intervalId = setInterval(() => {
+        intervalTime.value += incrementTime
+      }, incrementTime)
+    }
+
+    const progressValue = computed(() => {
+      return Number((100 * intervalTime.value / maxBlockTime).toFixed(2))
+    })
+
+    watch(() => clientStore.currentHeader.number, () => {
+      setCountdown()
+    })
+
+    return {
+      clientStore,
+      progressValue,
+      maxBlockTime
+    }
+  }
+}
+</script>

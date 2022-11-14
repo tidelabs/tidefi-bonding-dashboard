@@ -1,0 +1,38 @@
+// app global css in SCSS form
+@supports (backdrop-filter: none) {
+  .glass {
+    background-color: rgba(25,118,210,.65);
+    backdrop-filter: blur(7px);
+  }
+}
+
+@supports not (backdrop-filter: none) {
+  .glass {
+    background-color: $primary;
+  }
+}
+
+.q-dark div,
+.body--dark div {
+  @supports (backdrop-filter: none) {
+    .glass {
+      background-color: rgba(10, 15, 20, 0.65);
+      backdrop-filter: blur(7px);
+    }
+  }
+
+  @supports not (backdrop-filter: none) {
+    .glass {
+      background-color: $dark;
+    }
+  }
+
+}
+
+
+.panel {
+  min-width: 120px !important;
+}
+.panel-title {
+  font-size: 1.2rem;
+}
