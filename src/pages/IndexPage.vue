@@ -41,8 +41,8 @@
         </q-td>
 
         <q-td key="identity" :props="props">
-          <div class="row">
-            <q-badge :label="props.row.blockCount" class="justify-center" style="width: 26px;" />
+          <div class="row justify-end items-center">
+            <q-badge v-if="props.row.blockCount" :label="props.row.blockCount" class="justify-center" style="width: 26px;" />
             <q-icon :name="isInvulnerable(props.row) ? solidLockClosed : solidLockOpen" size="18px" color="blue-grey-3">
               <q-tooltip>
                 {{ isInvulnerable(props.row) ? 'protected' : 'not protected'}}
@@ -217,7 +217,7 @@ export default defineComponent({
       {
         name: 'identity',
         required: true,
-        align: 'left',
+        align: 'right',
         sortable: false
       },
       {
