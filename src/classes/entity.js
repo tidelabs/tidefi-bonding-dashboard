@@ -64,8 +64,9 @@ export class Entity {
     this.ownStaked = 0
     this.totalStaked = 0
     this.rewardPoints = 0
-    this.reputation = 0
+    // this.reputation = 0 // computed - future
     this.lastBlock = ''
+    this.blockCount = 0
   }
 
   async connect () {
@@ -82,7 +83,6 @@ export class Entity {
     await this.updateSuperdentity()
     if (this.validator) {
       await this.updateStakerInfo()
-      // await this.fetchRewardsHistory()
     }
     await this.fetchBalances()
     await this.fetchLedger()
@@ -90,9 +90,9 @@ export class Entity {
     // loading data done
     entitiesStore.decLoading()
 
-    this.reputation = computed(() => {
-      return 5
-    })
+    // this.reputation = computed(() => {
+    //   return 5
+    // })
 
     this.name = computed(() => {
       if (this.identity && this.identity.info) {

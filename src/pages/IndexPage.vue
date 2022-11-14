@@ -42,6 +42,7 @@
 
         <q-td key="identity" :props="props">
           <div class="row">
+            <q-badge :label="props.row.blockCount" class="justify-center" style="width: 26px;" />
             <q-icon :name="isInvulnerable(props.row) ? solidLockClosed : solidLockOpen" size="18px" color="blue-grey-3">
               <q-tooltip>
                 {{ isInvulnerable(props.row) ? 'protected' : 'not protected'}}

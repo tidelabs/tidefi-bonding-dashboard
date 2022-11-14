@@ -1,6 +1,7 @@
 // import { ref } from 'vue'
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { useClientStore } from 'src/stores/client'
+import { useEntitiesStore } from 'src/stores/entities'
 import { normalizeValue } from '../helpers/utils'
 import { addOrUpdateEntity, updateLastBlock } from './entity'
 
@@ -52,8 +53,8 @@ export class Client {
       await this.fetchErasRewardPoints()
       await this.fetchInvulnerables()
       await this.fetchSubIdentities()
-      await this.fetchAuthoredBlocks()
       await this.fetchValidators()
+      await this.fetchAuthoredBlocks() // must come after validators
       await this.fetchErasValidatorReward()
 
       const [
@@ -104,6 +105,8 @@ export class Client {
         // block number
         currentHeader.number = normalizeValue(currentHeader.number)
         clientStore.currentHeader = currentHeader
+
+        this.fetchAuthoredBlocks()
       })
 
       this.unsubscribeSession = api.derive.session.progress((session) => {
@@ -411,6 +414,8 @@ export class Client {
     // this array needs sorting
     rewardsHistory.sort((a, b) => a.era - b.era)
 
+    // console.log('rewardsHistory:', rewardsHistory)
+
     clientStore.rewardsHistory = rewardsHistory
 
     return {
@@ -420,16 +425,24 @@ export class Client {
 
   async fetchAuthoredBlocks () {
     const clientStore = useClientStore()
+    const entitiesStore = useEntitiesStore()
     const authoredBlocks = []
 
     const authoredBlocksEntries = await clientStore.client.api.query.imOnline.authoredBlocks.entries() // (clientStore.activeEra.index - 1, this.address)
     authoredBlocksEntries.forEach(([ key, blocks ]) => {
-      const address = key.args[ 0 ].toJSON()
+      const address = key.args[ 1 ].toJSON()
       authoredBlocks.push({
         address,
         blocks: blocks.toJSON()
       })
     })
-    console.log('authoredBlocks:', authoredBlocks)
+
+    // console.log('authoredBlocks:', authoredBlocks)
+    entitiesStore.getActiveValidators.forEach((validator) => {
+      const authoredBlock = authoredBlocks.find((authoredBlock) => authoredBlock.address === validator.address)
+      if (authoredBlock) {
+        validator.blockCount = authoredBlock.blocks
+      }
+    })
   }
 }
