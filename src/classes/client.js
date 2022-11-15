@@ -107,6 +107,7 @@ export class Client {
         clientStore.currentHeader = currentHeader
 
         this.fetchAuthoredBlocks()
+        this.fetchErasValidatorReward()
       })
 
       this.unsubscribeSession = api.derive.session.progress((session) => {
@@ -116,10 +117,21 @@ export class Client {
         clientStore.session.sessionProgress = session.sessionProgress.toNumber()
         clientStore.session.sessionsPerEra = session.sessionsPerEra.toNumber()
 
-        // console.log('SESSION INFO:', JSON.stringify(clientStore.session, null, 2))
-        // if (clientStore.session.sessionLength === clientStore.session.sessionProgress) {
-        //   // refetch data when session ends
-        // }
+        if (clientStore.session.sessionLength - clientStore.session.sessionProgress <= 10) {
+          console.log('SESSION INFO:', JSON.stringify(clientStore.session, null, 2))
+        }
+
+        if (clientStore.session.sessionLength === clientStore.session.sessionProgress) {
+          // refetch data when session ends
+          console.log('---------- SESSION ENDED ----------')
+          this.refetchAll()
+        }
+
+        // this.refetchAll()
+
+        if (clientStore.session.eraLength === clientStore.session.eraProgress) {
+          console.log('---------- ERA ENDED ----------')
+        }
       })
 
       this.unsubscribeSomeOffline = api.events.imOnline.SomeOffline.is((offline) => {
@@ -139,6 +151,21 @@ export class Client {
 
       this.api.disconnect()
     }
+  }
+
+  // updates previous data asynchronously
+  refetchAll () {
+    this.fetchChainInfo()
+    this.fetchConsts()
+    this.fetchEras()
+    this.fetchCounts()
+    this.fetchErasTotalStake()
+    this.fetchErasRewardPoints()
+    this.fetchInvulnerables()
+    this.fetchSubIdentities()
+    this.fetchValidators()
+    this.fetchAuthoredBlocks() // must come after validators
+    this.fetchErasValidatorReward()
   }
 
   async fetchChainInfo () {
