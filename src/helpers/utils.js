@@ -65,7 +65,7 @@ export function convertSecondsToTime (sec, options = { d: false, h: true, m: tru
   let timeString = options.d && days > 0 ? days.toString() + 'd ' : ''
   timeString += options.h && hours ? hours.toString() + 'h ' : ''
   timeString += options.m ? minutes.toString() + 'm ' : ''
-  timeString += options.s ? seconds.toString() + 's' : ''
+  timeString += options.s && seconds && !hours ? seconds.toString() + 's' : ''
 
   return timeString
 }

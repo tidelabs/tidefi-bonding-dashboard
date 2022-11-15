@@ -16,6 +16,8 @@ export async function addOrUpdateEntity (address, validator = false) {
 
   const entity = entitiesStore.entities.find((en) => en.address === address)
   if (entity) {
+    // update validator in current set or not
+    entity.validator = validator
     entity.connect()
   }
   else {
@@ -244,7 +246,7 @@ export class Entity {
       this.preferences = stakerEntry.preferences
     }
     else {
-      console.log('Validator not in current set:', this.address)
+      // console.log('Validator not in current set:', this.address)
       const validatorEntry = clientStore.validatorEntries.find((ve) => ve.address === this.address)
       if (validatorEntry) {
         this.elected = false

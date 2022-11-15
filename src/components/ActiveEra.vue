@@ -42,7 +42,7 @@ export default {
     })
 
     const remainingTime = computed(() => {
-      return convertSecondsToTime((clientStore.session.eraLength - clientStore.session.eraProgress) * 6, { d: false, h: true, m: true, s: false })
+      return convertSecondsToTime((clientStore.session.eraLength - clientStore.session.eraProgress) * 6, { d: false, h: true, m: true, s: true })
     })
 
     return {
