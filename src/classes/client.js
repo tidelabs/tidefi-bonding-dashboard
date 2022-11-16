@@ -117,25 +117,21 @@ export class Client {
         clientStore.session.sessionProgress = session.sessionProgress.toNumber()
         clientStore.session.sessionsPerEra = session.sessionsPerEra.toNumber()
 
-        if (clientStore.session.sessionLength - clientStore.session.sessionProgress <= 10) {
-          console.log('SESSION INFO:', JSON.stringify(clientStore.session, null, 2))
-        }
-
-        if (clientStore.session.sessionLength === clientStore.session.sessionProgress) {
+        if (clientStore.session.sessionLength - clientStore.session.sessionProgress === 1) {
           // refetch data when session ends
           console.log('---------- SESSION ENDED ----------')
           this.refetchAll()
         }
 
-        // this.refetchAll()
-
-        if (clientStore.session.eraLength === clientStore.session.eraProgress) {
+        if (clientStore.session.eraLength - clientStore.session.eraProgress === 1) {
           console.log('---------- ERA ENDED ----------')
         }
       })
 
       this.unsubscribeSomeOffline = api.events.imOnline.SomeOffline.is((offline) => {
         console.log('SOME OFFLINE:', offline.toJSON())
+        // not sure this can be cleared when a Validator is back on line
+        // clientStore.offline = offline.toJSON()
       })
 
       clientStore.loading = false
@@ -330,6 +326,8 @@ export class Client {
     const erasTotalStaked = await this.api.query.staking.erasTotalStake(clientStore.currentEra)
     clientStore.erasTotalStaked = normalizeValue(erasTotalStaked.toHuman())
 
+    // console.log('erasTotalStaked:', clientStore.erasTotalStaked)
+
     return {
       erasTotalStaked
     }
@@ -395,7 +393,7 @@ export class Client {
         preferences
       }
     })
-    // console.log('se:', se)
+    console.log('se:', se)
     clientStore.stakerEntries = se
 
     ve.forEach(async (val) => {

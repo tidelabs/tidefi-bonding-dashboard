@@ -19,7 +19,7 @@ export const useClientStore = defineStore('client', {
       sessionProgress: 0,
       sessionsPerEra: 0
     },
-
+    //
     consts: { // with expected defaults
       bondingDuration: 28,
       existentialDeposit: 1000000000000,
@@ -57,6 +57,9 @@ export const useClientStore = defineStore('client', {
     },
     isLoading (state) {
       return state.loading
+    },
+    getPreviousHistoryErasCount (state) {
+      return state.activeEra.index - state.consts.historyDepth <= 0 ? state.activeEra.index : state.consts.historyDepth
     }
   },
 
