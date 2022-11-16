@@ -1,5 +1,6 @@
 <template>
   <q-page>
+    <FilterInfo :model-value="displayFilterInfoModal" />
     <q-table
       title="Validators"
       dense
