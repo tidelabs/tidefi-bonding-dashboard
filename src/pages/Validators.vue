@@ -18,11 +18,14 @@
         <div class="row justify-center items-center">
           <div class="q-ma-md">Filters:</div>
           <div class="row justify-evenly items-center q-gutter-sm">
-            <q-btn dense label="High Commission" :icon="scalesDuotone" no-caps rounded outline @click="filters.lowCommission = !filters.lowCommission" :class="{ 'filter-button-active': filters.lowCommission }" />
             <q-btn dense label="Inactive Validators" :icon="alarmClockOutline" no-caps rounded outline @click="filters.inactive = !filters.inactive" :class="{ 'filter-button-active': filters.inactive }" />
+            <q-btn dense label="High Commission" :icon="scalesDuotone" no-caps rounded outline @click="filters.highCommission = !filters.highCommission" :class="{ 'filter-button-active': filters.highCommission }" />
             <q-btn dense label="Oversubscribed" :icon="notificationImportantTwoTone" no-caps rounded outline @click="filters.oversubscribed = !filters.oversubscribed" :class="{ 'filter-button-active': filters.oversubscribed }" />
             <q-btn dense label="Blocked Nominations" :icon="personAddDisabledTwoTone" no-caps rounded outline @click="filters.blockedNominations = !filters.blockedNominations" :class="{ 'filter-button-active': filters.blockedNominations }" />
             <q-btn dense label="Missing Identity" :icon="identityTwoTone" no-caps rounded outline @click="filters.missingIdentity = !filters.missingIdentity" :class="{ 'filter-button-active': filters.missingIdentity }" />
+            <q-btn dense label="Not Staked" :icon="cash100" no-caps rounded outline @click="filters.notStaked = !filters.notStaked" :class="{ 'filter-button-active': filters.notStaked }" />
+            <q-btn dense label="Self Controller" :icon="selfImprovementTwoTone" no-caps rounded outline @click="filters.selfController = !filters.selfController" :class="{ 'filter-button-active': filters.selfController }" />
+            <q-btn dense flat unelevated round :icon="infoIcon" @click="displayFilterInfoModal = !displayFilterInfoModal" />
           </div>
         </div>
       </template>
@@ -189,10 +192,13 @@
 </template>
 
 <script>
-import { computed, watch, reactive } from 'vue'
+import { computed, watch, reactive, ref } from 'vue'
 import { useChainsStore } from 'stores/chain'
 import { useEntitiesStore } from 'src/stores/entities'
 import { useClientStore } from 'src/stores/client'
+import { infoIcon } from 'assets/icons'
+
+import FilterInfo from 'components/FilterInfo.vue'
 
 const solidMinusCircle = 'M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z@@fill:currentColor;fill-rule:evenodd;clip-rule:evenodd;|0 0 20 20'
 const solidPlusCircle = 'M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z@@fill:currentColor;fill-rule:evenodd;clip-rule:evenodd;|0 0 20 20'
@@ -205,9 +211,15 @@ const alarmClockOutline = 'M31.47,3.84a5.78,5.78,0,0,0-7.37-.63,16.08,16.08,0,0,
 const notificationImportantTwoTone = 'M12 6c-2.76 0-5 2.24-5 5v7h10v-7c0-2.76-2.24-5-5-5zm1 10h-2v-2h2v2zm0-4h-2V8h2v4z@@opacity:.3;&&M12 23c1.1 0 1.99-.89 1.99-1.99h-3.98c0 1.1.89 1.99 1.99 1.99zm7-6v-6c0-3.35-2.36-6.15-5.5-6.83V3c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v1.17C7.36 4.85 5 7.65 5 11v6l-2 2v1h18v-1l-2-2zm-2 1H7v-7c0-2.76 2.24-5 5-5s5 2.24 5 5v7zM11 8h2v4h-2zm0 6h2v2h-2z'
 const personAddDisabledTwoTone = 'M0 0h24v24H0V0z@@fill:none;&&M9 18h5.87L13 16.13l-1.1.3C9.89 16.99 9.08 17.76 9 18zm8-10c0-1.1-.9-2-2-2-.99 0-1.81.72-1.97 1.67l2.31 2.31C16.27 9.82 17 8.99 17 8z@@opacity:.3;&&M14.48 11.95c.17.02.34.05.52.05 2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4c0 .18.03.35.05.52l3.43 3.43zM15 6c1.1 0 2 .9 2 2 0 .99-.73 1.82-1.67 1.97l-2.31-2.31C13.19 6.72 14.01 6 15 6zm1.69 8.16L22.53 20H23v-2c0-2.14-3.56-3.5-6.31-3.84zM0 3.12l4 4V10H1v2h3v3h2v-3h2.88l2.51 2.51C9.19 15.11 7 16.3 7 18v2h9.88l4 4 1.41-1.41L1.41 1.71 0 3.12zm13.01 13.01L14.88 18H9c.08-.24.88-1.01 2.91-1.57l1.1-.3zM6 9.12l.88.88H6v-.88z'
 const identityTwoTone = 'M27.6488 48.6345C27.6093 48.6491 27.5698 48.6638 27.5304 48.6786L26.3003 49.1397C20.1048 51.4617 16 57.3838 16 64.0002C16 66.2093 17.7909 68.0002 20 68.0002H60C62.2091 68.0002 64 66.2093 64 64.0002C64 57.3838 59.8952 51.4617 53.6997 49.1397L52.4696 48.6786C52.4302 48.6638 52.3907 48.6491 52.3512 48.6345L45.908 54.09C42.4983 56.9769 37.5017 56.9769 34.092 54.09L27.6488 48.6345Z@@fill:currentColor;fill-opacity:0.25;&&M27.0335 18.8434C33.4205 10.0086 46.5795 10.0086 52.9665 18.8434L59.581 27.993C63.2551 33.0751 62.3964 40.1292 57.6104 44.1816L45.908 54.09C42.4983 56.9769 37.5017 56.9769 34.092 54.09L22.3896 44.1816C17.6036 40.1293 16.7449 33.0751 20.419 27.9929L27.0335 18.8434Z@@fill:currentColor;fill-opacity:0.25;&&M45.908 54.09L52.3512 48.6345C52.3907 48.6491 52.4302 48.6638 52.4696 48.6786L53.6997 49.1397C59.8952 51.4617 64 57.3838 64 64.0002C64 66.2093 62.2091 68.0002 60 68.0002H20C17.7909 68.0002 16 66.2093 16 64.0002C16 57.3838 20.1048 51.4617 26.3003 49.1397L27.5304 48.6786C27.5698 48.6638 27.6093 48.6491 27.6488 48.6345L34.092 54.09M45.908 54.09C42.4983 56.9769 37.5017 56.9769 34.092 54.09M45.908 54.09L57.6104 44.1816C62.3964 40.1292 63.2551 33.0751 59.581 27.993M34.092 54.09L22.3896 44.1816C17.6036 40.1293 16.7449 33.0751 20.419 27.9929M40 56.2551V68.0004M20.419 27.9929L27.0335 18.8434C33.4205 10.0086 46.5795 10.0086 52.9665 18.8434L59.581 27.993M20.419 27.9929C18.6407 30.4528 17.9243 33.3747 18.2012 36.1945C24.0233 31.0925 31.6505 28 40.0001 28C48.3496 28 55.9769 31.0925 61.799 36.1945C62.0758 33.3747 61.3593 30.4528 59.581 27.993M26.4546 30.8893C30.5891 29.032 35.174 27.9987 40.0002 27.9987C44.8264 27.9987 49.4112 29.0319 53.5456 30.8892C53.4967 31.5085 53.4069 32.1275 53.2753 32.7424L53.0516 33.7877C52.2136 37.7041 49.6612 41.0372 46.0986 42.8672C42.2707 44.8335 37.7295 44.8335 33.9015 42.8672C30.339 41.0372 27.7865 37.7041 26.9485 33.7877L26.7248 32.7424C26.5933 32.1276 26.5035 31.5086 26.4546 30.8893Z@@fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;|0 0 80 80'
+const selfImprovementTwoTone = 'M0 0 H24 V24 H0 V0z@@fill:none;&&M12 6 m-2 0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0&&M21,16v-2c-2.24,0-4.16-0.96-5.6-2.68l-1.34-1.6C13.68,9.26,13.12,9,12.53,9h-1.05c-0.59,0-1.15,0.26-1.53,0.72l-1.34,1.6 C7.16,13.04,5.24,14,3,14v2c2.77,0,5.19-1.17,7-3.25V15l-3.88,1.55C5.45,16.82,5,17.48,5,18.21C5,19.2,5.8,20,6.79,20H9v-0.5 c0-1.38,1.12-2.5,2.5-2.5h3c0.28,0,0.5,0.22,0.5,0.5S14.78,18,14.5,18h-3c-0.83,0-1.5,0.67-1.5,1.5V20h7.21 C18.2,20,19,19.2,19,18.21c0-0.73-0.45-1.39-1.12-1.66L14,15v-2.25C15.81,14.83,18.23,16,21,16z'
+const cash100 = 'M2,5H22V20H2V5M20,18V7H4V18H20M17,8A2,2 0 0,0 19,10V15A2,2 0 0,0 17,17H7A2,2 0 0,0 5,15V10A2,2 0 0,0 7,8H17M17,13V12C17,10.9 16.33,10 15.5,10C14.67,10 14,10.9 14,12V13C14,14.1 14.67,15 15.5,15C16.33,15 17,14.1 17,13M15.5,11A0.5,0.5 0 0,1 16,11.5V13.5A0.5,0.5 0 0,1 15.5,14A0.5,0.5 0 0,1 15,13.5V11.5A0.5,0.5 0 0,1 15.5,11M13,13V12C13,10.9 12.33,10 11.5,10C10.67,10 10,10.9 10,12V13C10,14.1 10.67,15 11.5,15C12.33,15 13,14.1 13,13M11.5,11A0.5,0.5 0 0,1 12,11.5V13.5A0.5,0.5 0 0,1 11.5,14A0.5,0.5 0 0,1 11,13.5V11.5A0.5,0.5 0 0,1 11.5,11M8,15H9V10H8L7,10.5V11.5L8,11V15Z'
 
 export default {
   name: 'Validators',
+
+  components: {
+    FilterInfo
+  },
 
   setup () {
     const chainStore = useChainsStore()
@@ -288,15 +300,18 @@ export default {
       }
     ]
     const filters = reactive({
-      lowCommission: false,
       inactive: false,
+      highCommission: false,
       oversubscribed: false,
       blockedNominations: false,
-      missingIdentity: false
+      missingIdentity: false,
+      notStaked: false,
+      selfController: false
     })
     const pagination = reactive({
       rowsPerPage: 15
     })
+    const displayFilterInfoModal = ref(false)
 
     const chainName = computed(() => chainStore.chainName)
 
@@ -313,11 +328,13 @@ export default {
     const filteredValidators = computed(() => {
       return validators.value.filter((val) => {
         let retVal = true
-        if (filters.lowCommission && parseFloat(val.preferences.commission) > 10.00) retVal = false
         if (retVal && filters.inactive && val.elected === false) retVal = false
+        if (retVal && filters.highCommission && parseFloat(val.preferences.commission) > 10.00) retVal = false
         if (retVal && filters.oversubscribed && isOversubscribed(val)) retVal = false
         if (retVal && filters.blockedNominations && val.preferences.blocked === true) retVal = false
         if (retVal && filters.missingIdentity && !hasIdentity(val)) retVal = false
+        if (retVal && filters.notStaked && val.payee !== 'Staked') retVal = false
+        if (retVal && filters.selfController && val.selfController === val.address) retVal = false
         return retVal
       })
     })
@@ -331,6 +348,10 @@ export default {
 
     watch(chainName, (val) => {
       console.log('indexPage: chainName changed', val)
+    })
+
+    watch(displayFilterInfoModal, (val) => {
+      console.log('displayFilterInfoModal:', displayFilterInfoModal.value)
     })
 
     function customSort (rows, sortBy, descending) {
@@ -450,6 +471,10 @@ export default {
       notificationImportantTwoTone,
       personAddDisabledTwoTone,
       identityTwoTone,
+      cash100,
+      selfImprovementTwoTone,
+      infoIcon,
+      displayFilterInfoModal,
       customSort,
       getIdentityType,
       getIdentityIcon,
