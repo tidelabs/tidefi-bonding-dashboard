@@ -61,7 +61,12 @@
           </q-td>
 
           <q-td key="commission" :props="props">
-            {{ props.row.preferences.commission }}
+            <div>{{ props.row.preferences.commission }}</div>
+          </q-td>
+
+          <q-td key="payee" :props="props">
+            <div v-if="props.row.payee.Account">Account<q-tooltip>{{ props.row.payee.Account }}</q-tooltip></div>
+            <div v-else>{{ props.row.payee }}</div>
           </q-td>
 
           <q-td key="other_staked" :props="props">
@@ -135,6 +140,14 @@
             <tr>
               <td class="text-weight-bold">Commission</td>
               <td>{{ props.row.preferences.commission }}</td>
+            </tr>
+
+            <tr>
+              <td class="text-weight-bold">Payee</td>
+              <td>
+                <div v-if="props.row.payee.Account">Account<q-tooltip>{{ props.row.payee.Account }}</q-tooltip></div>
+                <div v-else>{{ props.row.payee }}</div>
+              </td>
             </tr>
 
             <tr>
@@ -219,6 +232,13 @@ export default {
         name: 'commission',
         required: true,
         align: 'right',
+        sortable: true
+      },
+      {
+        label: 'Payee',
+        name: 'payee',
+        required: true,
+        align: 'left',
         sortable: true
       },
       {

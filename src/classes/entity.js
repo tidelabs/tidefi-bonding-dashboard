@@ -66,6 +66,7 @@ export class Entity {
     this.ownStaked = 0
     this.totalStaked = 0
     this.rewardPoints = 0
+    this.payee = ''
     // this.reputation = 0 // computed - future
     this.lastBlock = ''
     this.blockCount = 0
@@ -80,6 +81,9 @@ export class Entity {
     this.identicon = toSvg(this.address, 24)
 
     this.controller = await getControllerInfo(this.address, clientStore.client.api)
+    const payee = await await clientStore.client.api.query.staking.payee(this.address)
+    this.payee = payee.toHuman()
+    // console.log('payee:', this.address, this.payee)
     await this.fetchIdentity()
     await this.updateParentIdentity()
     await this.updateSuperdentity()
