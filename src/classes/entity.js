@@ -80,7 +80,10 @@ export class Entity {
 
     this.identicon = toSvg(this.address, 24)
 
-    this.controller = await getControllerInfo(this.address, clientStore.client.api)
+    const controller = await getControllerInfo(this.address, clientStore.client.api)
+    this.controller = controller.toHuman()
+    // console.log('controller:', this.controller)
+    // console.log('address   :', this.address)
     const payee = await await clientStore.client.api.query.staking.payee(this.address)
     this.payee = payee.toHuman()
     // console.log('payee:', this.address, this.payee)
