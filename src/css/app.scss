@@ -36,3 +36,14 @@
 .panel-title {
   font-size: 1.2rem;
 }
+
+.border-light {
+  border: solid 1px lightgray;
+  border-radius: 2px;
+}
+
+.identity-svg-wrapper {
+  max-width: 25px;
+  max-height: 25px;
+  margin: 2px;
+}
