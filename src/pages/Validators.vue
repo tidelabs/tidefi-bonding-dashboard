@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <FilterInfo :model-value="displayFilterInfoModal" />
+    <FilterInfo v-model="displayFilterInfoModal" />
     <q-table
       title="Validators"
       dense
@@ -504,16 +504,5 @@ export default {
   .validator-link {
     text-decoration: underline dotted;
     color: inherit;
-  }
-
-  .border-light {
-    border: solid 1px lightgray;
-    border-radius: 2px;
-  }
-
-  .identity-svg-wrapper {
-    max-width: 25px;
-    max-height: 25px;
-    margin: 2px;
   }
 </style>

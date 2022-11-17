@@ -1,18 +1,15 @@
 <template>
-  <q-dialog :model-value="displayed" @hide="displayed = false">
+  <q-dialog :model-value="displayed">
     <q-card class="q-pa-md">
-      <div class="column justify-center items-center">
-        <div class="info-title">Filtering Information</div>
-      </div>
       <div class="column justify-center items-start">
         <div>
-          The Filtering selections can be used for you to select the
+          The Filtering can be used to help you select the
           best validator to nominate via bonding. By selecting the
           filters that meet your needs, you can narrow down the amount
           of nominators to select from. Below is a description for each
           filter and it's use.
         </div>
-        <table class="border rounded-borders  ">
+        <table class="info-table q-mt-md">
           <tbody>
             <tr>
               <td class="info-subtitle">Inactive Validators</td>
@@ -31,7 +28,7 @@
               </td>
             </tr>
             <tr>
-              <td class="info-subtitle">Oversubscribe</td>
+              <td class="info-subtitle">Oversubscribed</td>
               <td class="vertical-top">
                 On substrate chains, there is a constant
                 <span class="info-highlight">maxNominatorRewardedPerValidator</span>
@@ -93,9 +90,7 @@ export default {
     modelValue: Boolean
   },
 
-  emits: [
-    'update:model-value'
-  ],
+  emits: ['update:modelValue'],
 
   setup (props, { emit }) {
     const displayed = ref(props.modelValue)
@@ -105,9 +100,9 @@ export default {
       displayed.value = val
     })
 
-    watch(() => displayed, (val) => {
+    watch(displayed, (val) => {
       console.log('displayed:', displayed.value)
-      emit('update:ModelValue', val)
+      emit('update:modelValue', val)
     })
 
     return {
@@ -118,8 +113,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.border {
-  border: 1px solid rgba(200,200,200, .4);
+table.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  // border: 1px solid rgba(200, 200, 200, 0.4);
+  border-radius: 4px;
+}
+table.info-table tbody {
+  margin: 4px;
+}
+//table.info-table tr {
+//  border-bottom: 1px solid rgba(200, 200, 200, 0.4);
+//}
+table.info-table tr:nth-child(odd) {
+  background-color: rgba(200, 200, 200, 0.2);
+}
+table.info-table td {
+  padding: 4px;
 }
 .info-title {
   font-size: 2rem;
