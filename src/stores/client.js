@@ -22,7 +22,7 @@ export const useClientStore = defineStore('client', {
     //
     consts: { // with expected defaults
       bondingDuration: 28,
-      existentialDeposit: 1000000000000,
+      existentialDeposit: 1000000000000, // 1 TDFY
       expectedBlockTime: 6000, // ms
       maxElectingVoters: 22500,
       maxNominations: 16,
@@ -30,6 +30,8 @@ export const useClientStore = defineStore('client', {
       sessionsPerEra: 6,
       historyDepth: 50 // 84 for Tidechain
     },
+    //
+    assets: [],
     //
     activeEra: { index: 0, start: 0 }, // index, start (time)
     currentEra: 0,

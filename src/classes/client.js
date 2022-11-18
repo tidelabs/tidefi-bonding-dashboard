@@ -47,6 +47,7 @@ export class Client {
 
       await this.fetchChainInfo()
       await this.fetchConsts()
+      await this.fetchAssets()
       await this.fetchEras()
       await this.fetchCounts()
       await this.fetchErasTotalStake()
@@ -153,6 +154,7 @@ export class Client {
   refetchAll () {
     this.fetchChainInfo()
     this.fetchConsts()
+    this.fetchAssets()
     this.fetchEras()
     this.fetchCounts()
     this.fetchErasTotalStake()
@@ -234,6 +236,27 @@ export class Client {
       expectedBlockTime,
       existentialDeposit
       // historyDepth
+
+  async fetchAssets () {
+    const clientStore = useClientStore()
+    const assets = []
+
+    const assetsMetadata = await this.api.query.assets.metadata.entries()
+
+    assetsMetadata.forEach(([ key, data ]) => {
+      const id = key.args[ 0 ].toJSON()
+      const asset = data.toHuman()
+      asset.decimals = parseInt(asset.decimals, 10)
+      assets.push({
+        id,
+        asset
+      })
+    })
+
+    clientStore.assets = assets
+
+    return {
+      assetsMetadata
     }
   }
 
