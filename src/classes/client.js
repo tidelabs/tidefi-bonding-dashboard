@@ -236,8 +236,10 @@ export class Client {
       maxNominatorRewardedPerValidator,
       maxElectingVoters,
       expectedBlockTime,
-      existentialDeposit
-      // historyDepth
+      existentialDeposit,
+      historyDepth
+    }
+  }
 
   async fetchAssets () {
     const clientStore = useClientStore()
