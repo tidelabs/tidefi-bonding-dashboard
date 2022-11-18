@@ -322,7 +322,6 @@ export default {
       return ''
     })
 
-    // const validators = computed(() => entitiesStore.getActiveValidators)
     const validators = computed(() => entitiesStore.getValidators)
 
     const filteredValidators = computed(() => {
@@ -369,16 +368,30 @@ export default {
               : x[ sortBy ].toLowerCase() < y[ sortBy ].toLowerCase()
                 ? -1 : 0
           }
+          else if (sortBy === 'payee') {
+            let x1 = x[ sortBy ], y1 = y[ sortBy ]
+            if (x1.Account) {
+              x1 = 'Account'
+            }
+            if (y1.Account) {
+              y1 = 'Account'
+            }
+            // string sort
+            return x1.toLowerCase() > y1.toLowerCase()
+              ? 1
+              : x1.toLowerCase() < y1.toLowerCase()
+                ? -1 : 0
+          }
           else {
             // numeric sort
             let x1 = 0, y1 = 0
             if (sortBy === 'commission') {
-              x1 = x.preferences.commission
-              y1 = y.preferences.commission
+              x1 = parseFloat(x.preferences.commission)
+              y1 = parseFloat(y.preferences.commission)
             }
             else if (sortBy === 'other_staked') {
-              x1 = x.otherStaked
-              y1 = y.otherStaked
+              x1 = x.otherStaked === 'unknown' ? 0 : x.otherStaked
+              y1 = y.otherStaked === 'unknown' ? 0 : y.otherStaked
             }
             else if (sortBy === 'nominator_count') {
               x1 = x.nominatorCount
@@ -389,12 +402,12 @@ export default {
               y1 = y.ownStaked
             }
             else if (sortBy === 'total_staked') {
-              x1 = x.totalStaked
-              y1 = y.totalStaked
+              x1 = x.totalStaked === 'unknown' ? 0 : x.totalStaked
+              y1 = y.totalStaked === 'unknown' ? 0 : y.totalStaked
             }
             else if (sortBy === 'reward_points') {
-              x1 = x.rewardPoints
-              y1 = y.rewardPoints
+              x1 = x.rewardPoints === 'unknown' ? 0 : x.rewardPoints
+              y1 = y.rewardPoints === 'unknown' ? 0 : y.rewardPoints
             }
 
             return parseFloat(x1) - parseFloat(y1)
