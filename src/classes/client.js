@@ -57,6 +57,7 @@ export class Client {
       await this.fetchValidators()
       await this.fetchAuthoredBlocks() // must come after validators
       await this.fetchErasValidatorReward()
+      await this.fetchUnappliedSlashes()
 
       const [
         bondedEras,
@@ -164,6 +165,7 @@ export class Client {
     this.fetchValidators()
     this.fetchAuthoredBlocks() // must come after validators
     this.fetchErasValidatorReward()
+    this.fetchUnappliedSlashes()
   }
 
   async fetchChainInfo () {
@@ -468,6 +470,20 @@ export class Client {
 
     return {
       erasValidatorReward
+    }
+  }
+
+  async fetchUnappliedSlashes () {
+    const clientStore = useClientStore()
+    // const slashes = []
+
+    const unappliedSlashes = await this.api.query.staking.unappliedSlashes(clientStore.previousEra)
+
+    // TODO: needs more work
+    clientStore.slashes = unappliedSlashes
+
+    return {
+      unappliedSlashes
     }
   }
 

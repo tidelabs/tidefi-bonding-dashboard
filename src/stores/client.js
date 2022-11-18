@@ -50,7 +50,8 @@ export const useClientStore = defineStore('client', {
     validatorEntries: [],
     stakerEntries: [],
     rewardsHistory: [],
-    rewardPoints: [{ era: 0, rewards: { total: 0, individual: {} } }]
+    rewardPoints: [{ era: 0, rewards: { total: 0, individual: {} } }],
+    slashes: []
   }),
 
   getters: {
