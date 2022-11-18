@@ -122,9 +122,6 @@ table.info-table {
 table.info-table tbody {
   margin: 4px;
 }
-//table.info-table tr {
-//  border-bottom: 1px solid rgba(200, 200, 200, 0.4);
-//}
 table.info-table tr:nth-child(odd) {
   background-color: rgba(200, 200, 200, 0.2);
 }

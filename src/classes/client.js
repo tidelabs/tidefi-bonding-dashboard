@@ -367,7 +367,8 @@ export class Client {
     subIdentityEntries.forEach(([ key, data ]) => {
       (data.toJSON()[ 1 ]).forEach((sub) => {
         subIdentities.push({
-          parent: key.toHuman()[ 0 ], sub
+          parent: key.toHuman()[ 0 ],
+          sub
         })
       })
     })
