@@ -109,7 +109,7 @@ export class Client {
         clientStore.currentHeader = currentHeader
 
         this.fetchAuthoredBlocks()
-        this.fetchErasValidatorReward()
+        // this.fetchErasValidatorReward()
       })
 
       this.unsubscribeSession = api.derive.session.progress((session) => {
