@@ -181,6 +181,24 @@ export class Entity {
       return clientStore.rewardPoints[ clientStore.rewardPoints.length - 1 ].rewards.individual[ this.address ] || 0
     })
 
+    this.erasRewardPoints = computed(() => {
+      const clientStore = useClientStore()
+      const points = []
+
+      clientStore.rewardPoints.forEach((era) => {
+        if (era.rewards.individual[ this.address ]) {
+          points.push({
+            era: era.era,
+            total: era.rewards.total,
+            amount: era.rewards.individual[ this.address ]
+          })
+        }
+      })
+
+      // console.log('validator points:', this.address, points)
+
+      return points
+    })
   }
 
   formatTokenValue (val) {
