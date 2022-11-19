@@ -98,7 +98,9 @@ export class Entity {
 
     entitiesStore.incLoading()
 
-    this.identicon = toSvg(this.address, 24)
+    if (!this.identicon) {
+      this.identicon = toSvg(this.address, 24)
+    }
 
     const controller = await getControllerInfo(this.address, clientStore.client.api)
     this.controller = controller.toHuman()
