@@ -41,14 +41,15 @@ export class Entity {
     this.address = address
     //
     this.identicon = null
-    this.free = 0
-    this.freeHuman = 0
-    this.reserved = 0
-    this.miscFrozen = 0 // bonded
-    this.feeFrozen = 0 // locked
-    this.locked = 0
-    this.transferrable = 0
-    this.nonce = ''
+    this.balances = {
+      free: 0,
+      freeHuman: '',
+      reserved: 0,
+      miscFrozen: 0, // bonded
+      locked: 0, // locked
+      transferrable: 0,
+      nonce: ''
+    }
     this.ledger = null
     // validator info
     this.validator = validator
@@ -144,7 +145,7 @@ export class Entity {
     })
 
     this.ownStaked = computed(() => {
-      return this.stakers && 'own' in this.stakers ? this.formatTokenValue(normalizeValue(this.stakers.own)) : this.formatTokenValue(this.locked)
+      return this.stakers && 'own' in this.stakers ? this.formatTokenValue(normalizeValue(this.stakers.own)) : this.formatTokenValue(this.balances.locked)
     })
 
     this.totalStaked = computed(() => {
@@ -167,17 +168,19 @@ export class Entity {
   async fetchBalances () {
     const clientStore = useClientStore()
 
-    const validatorBalance = await clientStore.client.api.query.system.account(this.address)
+    this.unsubscribeBalances
+      = await clientStore.client.api.query.system.account(
+        this.address, (balance) => {
+          this.balances.free = balance.data.free.toString()
+          this.balances.freeHuman = balance.data.free / Math.pow(10, clientStore.decimals[ 0 ])
 
-    this.free = validatorBalance.data.free.toString()
-    this.freeHuman = validatorBalance.data.free / Math.pow(10, clientStore.decimals[ 0 ])
-
-    this.reserved = validatorBalance.data.reserved.toString()
-    this.miscFrozen = validatorBalance.data.miscFrozen.toString() // bonded
-    this.feeFrozen = validatorBalance.data.feeFrozen.toString() // locked
-    this.locked = Math.max(validatorBalance.data.miscFrozen, validatorBalance.data.feeFrozen)
-    this.transferrable = (validatorBalance.data.free - (Math.max(validatorBalance.data.miscFrozen, validatorBalance.data.feeFrozen))).toString()
-    this.nonce = validatorBalance.nonce.toHuman()
+          this.balances.reserved = balance.data.reserved.toString()
+          this.balances.miscFrozen = balance.data.miscFrozen.toString() // bonded
+          this.balances.feeFrozen = balance.data.feeFrozen.toString() // locked
+          this.balances.locked = '' + Math.max(balance.data.miscFrozen, balance.data.feeFrozen)
+          this.balances.transferrable = (balance.data.free - (Math.max(balance.data.miscFrozen, balance.data.feeFrozen))).toString()
+          this.balances.nonce = balance.nonce.toHuman()
+        })
   }
 
   async fetchIdentity () {
