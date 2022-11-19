@@ -114,6 +114,7 @@ export class Entity {
     await this.updateSuperdentity()
     await this.fetchBalances()
     await this.fetchLedger()
+    await this.fetchTokenBalances()
     // validator specific
     if (this.validator) {
       await this.updateStakerInfo()
