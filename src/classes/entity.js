@@ -51,6 +51,11 @@ export class Entity {
       nonce: ''
     }
     this.ledger = null
+    this.tokenBalances = []
+    // unsubscribes
+    this.unsubscribeTokenBalances = null
+    this.unsubscribeBalances = null
+    // this.unsubscribeRewardPoints = null
     // validator info
     this.validator = validator
     this.elected = false
@@ -77,6 +82,20 @@ export class Entity {
     const clientStore = useClientStore()
     const entitiesStore = useEntitiesStore()
 
+    // unsubscribe in case this is an update
+    if (this.unsubscribeTokenBalances) {
+      this.unsubscribeTokenBalances()
+      this.unsubscribeTokenBalances = null
+    }
+    if (this.unsubscribeBalances) {
+      this.unsubscribeBalances()
+      this.unsubscribeBalances = null
+    }
+    // if (this.unsubscribeRewardPoints) {
+    //   this.unsubscribeRewardPoints()
+    //   this.unsubscribeRewardPoints = null
+    // }
+
     entitiesStore.incLoading()
 
     this.identicon = toSvg(this.address, 24)
@@ -91,11 +110,12 @@ export class Entity {
     await this.fetchIdentity()
     await this.updateParentIdentity()
     await this.updateSuperdentity()
+    await this.fetchBalances()
+    await this.fetchLedger()
+    // validator specific
     if (this.validator) {
       await this.updateStakerInfo()
     }
-    await this.fetchBalances()
-    await this.fetchLedger()
 
     // loading data done
     entitiesStore.decLoading()
@@ -273,5 +293,22 @@ export class Entity {
     const ledger = await clientStore.client.api.query.staking.ledger(this.address)
     // console.log('ledger:', ledger.toJSON())
     this.ledger = ledger.toJSON()
+  }
+
+  async fetchTokenBalances () {
+    const clientStore = useClientStore()
+
+    const a = clientStore.assets.map(({ id }) => [
+      this.address,
+      id
+    ])
+
+    this.unsubscribeTokenBalances = await clientStore.client.api.query.assets.account.multi(a, (data) => {
+      this.tokenBalances = data.map((balance, i) => {
+        const assetId = parseInt(a[ i ][ 1 ])
+        return { id: assetId, balance: balance.toJSON() }
+      })
+      // console.log('balances:', this.balances)
+    })
   }
 }
