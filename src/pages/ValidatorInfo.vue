@@ -66,9 +66,11 @@
         </div>
         <!-- Right Side -->
         <div class="column">
-          TODO: Right Side - graphs
+          <!-- TODO: Right Side - graphs -->
         </div>
       </div>
+      <!-- End of split page -->
+      <ValidatorRewardPoints :validator="validator" />
     </div>
   </q-page>
 </template>
@@ -80,8 +82,14 @@ import { useEntitiesStore } from 'src/stores/entities'
 // import { useClientStore } from 'src/stores/client'
 import { infoIcon } from 'assets/icons'
 
+import ValidatorRewardPoints from 'components/ValidatorRewardPoints.vue'
+
 export default {
   name: 'ValidatorInfo',
+
+  components: {
+    ValidatorRewardPoints
+  },
 
   setup () {
     const route = useRoute()
@@ -95,7 +103,7 @@ export default {
     const validator = computed(() => {
       const v = entitiesStore.getValidators.find((val) => val.address === route.params.address)
       if (v) {
-        console.log('Selected validator:', v)
+        // console.log('Selected validator:', v, clientStore)
         return v
       }
       return null
