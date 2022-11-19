@@ -66,7 +66,7 @@ export class Entity {
     this.otherStaked = 0
     this.ownStaked = 0
     this.totalStaked = 0
-    this.rewardPoints = 0
+    this.currentRewardPoints = 0
     this.payee = ''
     // this.reputation = 0 // computed - future
     this.lastBlock = ''
@@ -152,11 +152,12 @@ export class Entity {
       return this.stakers && 'total' in this.stakers ? this.formatTokenValue(normalizeValue(this.stakers.total)) : 'unknown'
     })
 
-    this.rewardPoints = computed(() => {
+    this.currentRewardPoints = computed(() => {
       const clientStore = useClientStore()
 
       return clientStore.rewardPoints[ clientStore.rewardPoints.length - 1 ].rewards.individual[ this.address ] || 0
     })
+
   }
 
   formatTokenValue (val) {
