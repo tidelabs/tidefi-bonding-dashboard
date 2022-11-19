@@ -90,7 +90,7 @@
           </q-td>
 
           <q-td key="reward_points" :props="props">
-            {{ props.row.rewardPoints }}
+            {{ props.row.currentRewardPoints }}
           </q-td>
 
           <q-td key="last_block" :props="props">
