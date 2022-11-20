@@ -5,14 +5,14 @@
       class="glass"
     >
       <q-toolbar>
-        <!-- <q-btn
+        <q-btn
           flat
           dense
           round
           icon="menu"
           aria-label="Menu"
           @click="toggleLeftDrawer"
-        /> -->
+        />
 
         <q-toolbar-title>
           Tidefi Staking Dashboard
@@ -30,7 +30,7 @@
       </q-toolbar>
     </q-header>
 
-    <!-- <q-drawer
+    <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
       bordered
@@ -42,13 +42,21 @@
           Essential Links
         </q-item-label>
 
-        <EssentialLink
-          v-for="link in essentialLinks"
+        <InternalLink
+          v-for="link in internalLinks"
+          :key="link.title"
+          v-bind="link"
+        />
+
+        <q-separator />
+
+        <ExternalLink
+          v-for="link in externalLinks"
           :key="link.title"
           v-bind="link"
         />
       </q-list>
-    </q-drawer> -->
+    </q-drawer>
 
     <q-page-container>
       <router-view />
@@ -58,59 +66,69 @@
 
 <script>
 import { defineComponent, ref, onBeforeMount, getCurrentInstance, watch, computed } from 'vue'
-// import EssentialLink from 'components/EssentialLink.vue'
+import InternalLink from 'src/components/InternalLink.vue'
+import ExternalLink from 'src/components/ExternalLink.vue'
 import { useQuasar } from 'quasar'
 import { useChainsStore } from 'stores/chain'
 // import { useEntitiesStore } from 'src/stores/entities'
 import { Client } from '../classes/client'
 // import { Entity } from '../classes/entity'
 import { useClientStore } from 'src/stores/client'
+import {
+  fabTwitter,
+  fabGithub,
+  fabDiscord,
+  mdiHomeCircleOutline,
+  fasHome
+} from 'assets/icons'
 
 const matBrightness2 = 'M0 0h24v24H0z@@fill:none;&&M10 2c-1.82 0-3.53.5-5 1.35C7.99 5.08 10 8.3 10 12s-2.01 6.92-5 8.65C6.47 21.5 8.18 22 10 22c5.52 0 10-4.48 10-10S15.52 2 10 2z'
 const matBrightness5 = 'M0 0h24v24H0z@@fill:none;&&M20 15.31L23.31 12 20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69zM12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z'
 
-const linksList = [
+const internalList = [
   {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
+    title: 'Validator Nodes',
+    // caption: 'quasar.dev',
+    icon: fasHome,
+    link: '/' // { name: 'validators' }
   },
   {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
+    title: 'Validator Lookup',
+    // caption: 'quasar.dev',
+    icon: 'search',
+    link: '/validator' // { name: 'validator' }
+  }
+]
+const externalList = [
+  {
+    title: 'TIDEFI',
+    caption: 'tidefi.com',
+    icon: mdiHomeCircleOutline,
+    link: 'https://tidefi.com'
+  },
+  {
+    title: 'Tide Labs',
+    caption: 'tidelabs.org',
+    icon: 'school',
+    link: 'https://tidelabs.org'
+  },
+  {
+    title: 'GitHub',
+    caption: 'tidelabs on GitHub',
+    icon: fabGithub,
+    link: 'https://github.com/tidelabs'
+  },
+  {
+    title: 'Twitter',
+    caption: '@Tidefi_DEX',
+    icon: fabTwitter,
+    link: 'https://twitter.com/Tidefi_DEX'
   },
   {
     title: 'Discord Chat Channel',
     caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
+    icon: fabDiscord,
+    link: 'https://chat.tidefi.com'
   }
 ]
 
@@ -118,7 +136,8 @@ export default defineComponent({
   name: 'MainLayout',
 
   components: {
-    // EssentialLink
+    InternalLink,
+    ExternalLink
   },
 
   setup () {
@@ -164,6 +183,15 @@ export default defineComponent({
       // await initializeEntities()
     })
 
+    watch(() => $q.dark.isActive, (val) => {
+      console.log(val ? 'On dark mode' : 'On light mode')
+      window.Apex = {
+        theme: {
+          mode: $q.dark.isActive ? 'dark' : 'light'
+        }
+      }
+    })
+
     function setDefaultChain () {
       chainsStore.chainName = chainsStore.chains[ 0 ].name
       chainsStore.chainIndex = 0
@@ -204,7 +232,8 @@ export default defineComponent({
     // }
 
     return {
-      essentialLinks: linksList,
+      internalLinks: internalList,
+      externalLinks: externalList,
       leftDrawerOpen,
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value

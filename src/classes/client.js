@@ -421,7 +421,7 @@ export class Client {
         preferences
       }
     })
-    console.log('se:', se)
+    // console.log('se:', se)
     clientStore.stakerEntries = se
 
     ve.forEach(async (val) => {
@@ -446,6 +446,8 @@ export class Client {
 
     clientStore.rewardPoints = rewardPoints
 
+    console.log('rewardPoints:', rewardPoints)
+
     return {
       erasRewardPoints
     }
@@ -467,7 +469,7 @@ export class Client {
     // this array needs sorting
     rewardsHistory.sort((a, b) => a.era - b.era)
 
-    // console.log('rewardsHistory:', rewardsHistory)
+    console.log('rewardsHistory:', rewardsHistory)
 
     clientStore.rewardsHistory = rewardsHistory
 

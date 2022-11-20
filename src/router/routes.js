@@ -9,12 +9,13 @@ const routes = [
         component: () => import('pages/IndexPage.vue'),
         children: [
           {
-            path: '',
+            name: 'validators',
+            path: '/',
             component: () => import('pages/Validators.vue')
           },
           {
-            name: 'validator',
-            path: 'validator/:address',
+            name: 'validator-lookup',
+            path: 'validator/:address?',
             component: () => import('pages/ValidatorInfo.vue')
           }
         ]

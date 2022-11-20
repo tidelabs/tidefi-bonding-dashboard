@@ -11,7 +11,6 @@
 import { computed } from 'vue'
 import { useClientStore } from 'src/stores/client'
 import { toBaseToken } from 'src/helpers/utils'
-// import BN from 'bignumber.js'
 
 export default {
   name: 'PreviousEraRewards',

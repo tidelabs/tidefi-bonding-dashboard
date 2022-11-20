@@ -56,7 +56,7 @@
                 <div class="border-light identity-svg-wrapper" v-html="props.row.identicon" />
               </div>
               <router-link
-                :to="{ name: 'validator', params: { address: props.row.address } }"
+                :to="{ name: 'validator-lookup', params: { address: props.row.address } }"
                 class="validator-link"
               >
                 <div class="col q-ml-sm">{{ props.row.name }}</div>
@@ -132,7 +132,7 @@
                     <div class="border-light identity-svg-wrapper" v-html="props.row.identicon" />
                   </div>
                   <router-link
-                    :to="{ name: 'validator', params: { address: props.row.address } }"
+                    :to="{ name: 'validator-lookup', params: { address: props.row.address } }"
                     class="validator-link"
                   >
                     <div class="col q-ml-sm">{{ props.row.name }}</div>
@@ -188,6 +188,7 @@
         </q-markup-table>
       </template>
     </q-table>
+    <ErasRewards v-if="erasRewards.length > 0" :rewards="erasRewards" class="q-pa-sm" />
   </q-page>
 </template>
 
@@ -199,6 +200,7 @@ import { useClientStore } from 'src/stores/client'
 import { infoIcon } from 'assets/icons'
 
 import FilterInfo from 'components/FilterInfo.vue'
+import ErasRewards from 'components/ErasRewards.vue'
 
 const solidMinusCircle = 'M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z@@fill:currentColor;fill-rule:evenodd;clip-rule:evenodd;|0 0 20 20'
 const solidPlusCircle = 'M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z@@fill:currentColor;fill-rule:evenodd;clip-rule:evenodd;|0 0 20 20'
@@ -218,7 +220,8 @@ export default {
   name: 'Validators',
 
   components: {
-    FilterInfo
+    FilterInfo,
+    ErasRewards
   },
 
   setup () {
@@ -345,6 +348,8 @@ export default {
       return entitiesStore.isLoading
     })
 
+    const erasRewards = computed(() => clientStore.rewardsHistory)
+
     watch(chainName, (val) => {
       console.log('indexPage: chainName changed', val)
     })
@@ -468,7 +473,10 @@ export default {
       return solidLockOpen
     }
 
+    // console.log('erasRewards:', clientStore.rewardsHistory)
+
     return {
+      erasRewards,
       validators,
       columns,
       filters,

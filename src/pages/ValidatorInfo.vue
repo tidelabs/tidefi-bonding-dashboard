@@ -1,6 +1,9 @@
 <template>
   <q-page padding>
-    <div v-if="validator === null" class="error-message column justify-center items-center">
+    <div v-if="loading" class="column justify-center items-center">
+      <q-spinner-facebook size="lg" />
+    </div>
+    <div v-else-if="validator === null && $route.params.address" class="error-message column justify-center items-center">
       <div class="q-mt-lg">
         Validator address not found!
         <q-icon :name="infoIcon">
@@ -30,7 +33,7 @@
         <!-- Left Side -->
         <div class="column justify-start items-start">
           <div class="row justify-start items-center">
-            <div class="column">
+            <div v-if="validator" class="column">
               <div class="row justify-start items-center">
                 <div class="border-light identity-svg-wrapper" v-html="validator.identicon" />
                 <div class="validator-name">{{ validator.name }}</div>
@@ -70,7 +73,7 @@
         </div>
       </div>
       <!-- End of split page -->
-      <ValidatorRewardPoints :validator="validator" />
+      <ValidatorRewardPoints v-if="validator && validator.erasRewardPoints.length" :erasRewardPoints="validator.erasRewardPoints" />
     </div>
   </q-page>
 </template>
@@ -79,7 +82,7 @@
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useEntitiesStore } from 'src/stores/entities'
-// import { useClientStore } from 'src/stores/client'
+import { useClientStore } from 'src/stores/client'
 import { infoIcon } from 'assets/icons'
 
 import ValidatorRewardPoints from 'components/ValidatorRewardPoints.vue'
@@ -95,8 +98,15 @@ export default {
     const route = useRoute()
     const router = useRouter()
     const entitiesStore = useEntitiesStore()
-    // const clientStore = useClientStore()
+    const clientStore = useClientStore()
     const selectedValidator = ref(null)
+
+    const loading = computed(() => {
+      if (clientStore.isLoading) {
+        return true
+      }
+      return entitiesStore.isLoading
+    })
 
     const validators = computed(() => entitiesStore.getValidators)
 
@@ -177,7 +187,7 @@ export default {
       if (val.address !== route.params.address) {
         // push the new route
         router.push({
-          name: 'validator',
+          name: 'validator-lookup',
           params: {
             address: val.address
           }
@@ -203,6 +213,7 @@ export default {
     // })
 
     return {
+      loading,
       selectedValidator,
       validators,
       validator,
@@ -228,6 +239,7 @@ export default {
   font-size: 1.6rem;
 }
 .identity-table {
-  //
+  border: 1px solid rgba(200,200,200,0.4);
+  border-radius: 4px;
 }
 </style>
