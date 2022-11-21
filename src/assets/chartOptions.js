@@ -34,7 +34,7 @@ export const globalOptions
     //   }
     // },
     grid: {
-      show: false,
+      show: true,
       borderColor: '#40475D',
       padding: {
         left: 0,

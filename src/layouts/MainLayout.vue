@@ -114,7 +114,7 @@ const externalList = [
   },
   {
     title: 'GitHub',
-    caption: 'tidelabs on GitHub',
+    caption: 'tidelabs',
     icon: fabGithub,
     link: 'https://github.com/tidelabs'
   },
@@ -126,7 +126,7 @@ const externalList = [
   },
   {
     title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
+    caption: 'chat.tidefi.com',
     icon: fabDiscord,
     link: 'https://chat.tidefi.com'
   }
