@@ -49,6 +49,11 @@
         />
 
         <q-separator />
+        <q-item-label
+          header
+        >
+          External Links
+        </q-item-label>
 
         <ExternalLink
           v-for="link in externalLinks"
@@ -91,7 +96,7 @@ const internalList = [
     title: 'Home Page',
     // caption: 'quasar.dev',
     icon: fasHome,
-    link: '/' // { name: 'home' }
+    link: '/home' // { name: 'home' }
   },
   {
     title: 'Validator Nodes',

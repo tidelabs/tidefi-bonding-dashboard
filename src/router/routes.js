@@ -10,9 +10,8 @@ const routes = [
         children: [
           {
             name: 'nothing',
-            path: '/',
-            redirect: 'home',
-            component: () => import('pages/HomePage.vue')
+            path: '',
+            redirect: { name: 'home' }
           },
           {
             name: 'home',
