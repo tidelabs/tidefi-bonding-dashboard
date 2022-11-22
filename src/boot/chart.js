@@ -1,6 +1,6 @@
 import { boot } from 'quasar/wrappers'
-import VueApexCharts from 'vue3-apexcharts'
+import HighchartsVue from 'highcharts-vue'
 
 export default boot(({ app }) => {
-  app.use(VueApexCharts)
+  app.use(HighchartsVue)
 })

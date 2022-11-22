@@ -7,8 +7,8 @@
           :value="progressValue"
           show-value
           font-size="12px"
-          color="teal"
-          track-color="grey-3"
+          :color="$q.dark.isActive ? 'yellow' : 'primary'"
+          :track-color="$q.dark.isActive ? 'grey-8' : 'grey-4'"
           size="50px"
           class="col justify-end q-ma-sm"
         >

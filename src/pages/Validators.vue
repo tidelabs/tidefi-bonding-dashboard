@@ -18,13 +18,13 @@
         <div class="row justify-center items-center">
           <div class="q-ma-md">Filters:</div>
           <div class="row justify-evenly items-center q-gutter-sm">
-            <q-btn dense label="Inactive Validators" :icon="alarmClockOutline" no-caps rounded outline @click="filters.inactive = !filters.inactive" :class="{ 'filter-button-active': filters.inactive }" />
-            <q-btn dense label="High Commission" :icon="scalesDuotone" no-caps rounded outline @click="filters.highCommission = !filters.highCommission" :class="{ 'filter-button-active': filters.highCommission }" />
-            <q-btn dense label="Oversubscribed" :icon="notificationImportantTwoTone" no-caps rounded outline @click="filters.oversubscribed = !filters.oversubscribed" :class="{ 'filter-button-active': filters.oversubscribed }" />
-            <q-btn dense label="Blocked Nominations" :icon="personAddDisabledTwoTone" no-caps rounded outline @click="filters.blockedNominations = !filters.blockedNominations" :class="{ 'filter-button-active': filters.blockedNominations }" />
-            <q-btn dense label="Missing Identity" :icon="identityTwoTone" no-caps rounded outline @click="filters.missingIdentity = !filters.missingIdentity" :class="{ 'filter-button-active': filters.missingIdentity }" />
-            <q-btn dense label="Not Staked" :icon="cash100" no-caps rounded outline @click="filters.notStaked = !filters.notStaked" :class="{ 'filter-button-active': filters.notStaked }" />
-            <q-btn dense label="Self Controller" :icon="selfImprovementTwoTone" no-caps rounded outline @click="filters.selfController = !filters.selfController" :class="{ 'filter-button-active': filters.selfController }" />
+            <q-btn dense label="Inactive Validators" :icon="alarmClockOutline" no-caps rounded outline @click="preferencesStore.filters.inactive = !preferencesStore.filters.inactive" :class="{ 'filter-button-active': preferencesStore.filters.inactive }" />
+            <q-btn dense label="High Commission" :icon="scalesDuotone" no-caps rounded outline @click="preferencesStore.filters.highCommission = !preferencesStore.filters.highCommission" :class="{ 'filter-button-active': preferencesStore.filters.highCommission }" />
+            <q-btn dense label="Oversubscribed" :icon="notificationImportantTwoTone" no-caps rounded outline @click="preferencesStore.filters.oversubscribed = !preferencesStore.filters.oversubscribed" :class="{ 'filter-button-active': preferencesStore.filters.oversubscribed }" />
+            <q-btn dense label="Blocked Nominations" :icon="personAddDisabledTwoTone" no-caps rounded outline @click="preferencesStore.filters.blockedNominations = !preferencesStore.filters.blockedNominations" :class="{ 'filter-button-active': preferencesStore.filters.blockedNominations }" />
+            <q-btn dense label="Missing Identity" :icon="identityTwoTone" no-caps rounded outline @click="preferencesStore.filters.missingIdentity = !preferencesStore.filters.missingIdentity" :class="{ 'filter-button-active': preferencesStore.filters.missingIdentity }" />
+            <q-btn dense label="Not Staked" :icon="cash100" no-caps rounded outline @click="preferencesStore.filters.notStaked = !preferencesStore.filters.notStaked" :class="{ 'filter-button-active': preferencesStore.filters.notStaked }" />
+            <q-btn dense label="Self Controller" :icon="selfImprovementTwoTone" no-caps rounded outline @click="preferencesStore.filters.selfController = !preferencesStore.filters.selfController" :class="{ 'filter-button-active': preferencesStore.filters.selfController }" />
             <q-btn dense flat unelevated round :icon="infoIcon" @click="displayFilterInfoModal = !displayFilterInfoModal" />
           </div>
         </div>
@@ -188,19 +188,18 @@
         </q-markup-table>
       </template>
     </q-table>
-    <ErasRewards v-if="erasRewards.length > 0" :rewards="erasRewards" class="q-pa-sm" />
   </q-page>
 </template>
 
 <script>
 import { computed, watch, reactive, ref } from 'vue'
 import { useChainsStore } from 'stores/chain'
-import { useEntitiesStore } from 'src/stores/entities'
-import { useClientStore } from 'src/stores/client'
+import { useEntitiesStore } from 'stores/entities'
+import { useClientStore } from 'stores/client'
+import { usePreferencesStore } from 'stores/preferences'
 import { infoIcon } from 'assets/icons'
 
 import FilterInfo from 'components/FilterInfo.vue'
-import ErasRewards from 'components/ErasRewards.vue'
 
 const solidMinusCircle = 'M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z@@fill:currentColor;fill-rule:evenodd;clip-rule:evenodd;|0 0 20 20'
 const solidPlusCircle = 'M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z@@fill:currentColor;fill-rule:evenodd;clip-rule:evenodd;|0 0 20 20'
@@ -220,14 +219,14 @@ export default {
   name: 'Validators',
 
   components: {
-    FilterInfo,
-    ErasRewards
+    FilterInfo
   },
 
   setup () {
     const chainStore = useChainsStore()
     const entitiesStore = useEntitiesStore()
     const clientStore = useClientStore()
+    const preferencesStore = usePreferencesStore()
     const columns = [
       {
         name: 'flags',
@@ -302,15 +301,6 @@ export default {
         sortable: false
       }
     ]
-    const filters = reactive({
-      inactive: false,
-      highCommission: false,
-      oversubscribed: false,
-      blockedNominations: false,
-      missingIdentity: false,
-      notStaked: false,
-      selfController: false
-    })
     const pagination = reactive({
       rowsPerPage: 15
     })
@@ -330,13 +320,13 @@ export default {
     const filteredValidators = computed(() => {
       return validators.value.filter((val) => {
         let retVal = true
-        if (retVal && filters.inactive && val.elected === false) retVal = false
-        if (retVal && filters.highCommission && parseFloat(val.preferences.commission) > 10.00) retVal = false
-        if (retVal && filters.oversubscribed && isOversubscribed(val)) retVal = false
-        if (retVal && filters.blockedNominations && val.preferences.blocked === true) retVal = false
-        if (retVal && filters.missingIdentity && !hasIdentity(val)) retVal = false
-        if (retVal && filters.notStaked && val.payee !== 'Staked') retVal = false
-        if (retVal && filters.selfController && val.selfController === val.address) retVal = false
+        if (retVal && preferencesStore.filters.inactive && val.elected === false) retVal = false
+        if (retVal && preferencesStore.filters.highCommission && parseFloat(val.preferences.commission) > 10.00) retVal = false
+        if (retVal && preferencesStore.filters.oversubscribed && isOversubscribed(val)) retVal = false
+        if (retVal && preferencesStore.filters.blockedNominations && val.preferences.blocked === true) retVal = false
+        if (retVal && preferencesStore.filters.missingIdentity && !hasIdentity(val)) retVal = false
+        if (retVal && preferencesStore.filters.notStaked && val.payee !== 'Staked') retVal = false
+        if (retVal && preferencesStore.filters.selfController && val.selfController === val.address) retVal = false
         return retVal
       })
     })
@@ -347,8 +337,6 @@ export default {
       }
       return entitiesStore.isLoading
     })
-
-    const erasRewards = computed(() => clientStore.rewardsHistory)
 
     watch(chainName, (val) => {
       console.log('indexPage: chainName changed', val)
@@ -473,13 +461,10 @@ export default {
       return solidLockOpen
     }
 
-    // console.log('erasRewards:', clientStore.rewardsHistory)
-
     return {
-      erasRewards,
       validators,
       columns,
-      filters,
+      preferencesStore,
       pagination,
       tableLoading,
       tokenName,

@@ -1,7 +1,7 @@
 export const globalOptions
   = {
     chart: {
-      foreColor: '#fff',
+      // foreColor: '#fff',
       animations: {
         enabled: true,
         easing: 'linear',

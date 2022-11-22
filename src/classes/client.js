@@ -54,6 +54,8 @@ export class Client {
       await this.fetchErasRewardPoints()
       await this.fetchInvulnerables()
       await this.fetchSubIdentities()
+      await this.fetchElectedInfo()
+      await this.fetchEraExposure()
       await this.fetchValidators()
       await this.fetchAuthoredBlocks() // must come after validators
       await this.fetchErasValidatorReward()
@@ -100,7 +102,7 @@ export class Client {
       )
 
       this.unsubscribeNewHeads = api.derive.chain.subscribeNewHeads((header) => {
-        console.log(`#${ header.number }: ${ header.author }\n`)
+        // console.log(`#${ header.number }: ${ header.author }\n`)
         updateLastBlock(header.number.toNumber(), header.author.toString())
         // console.log(`(${ JSON.stringify(header.toJSON(), null, 2) })\n(${ JSON.stringify(header.toHuman(), null, 2) })\n`)
         const currentHeader = header.toHuman()
@@ -109,7 +111,6 @@ export class Client {
         clientStore.currentHeader = currentHeader
 
         this.fetchAuthoredBlocks()
-        // this.fetchErasValidatorReward()
       })
 
       this.unsubscribeSession = api.derive.session.progress((session) => {
@@ -131,7 +132,7 @@ export class Client {
       })
 
       this.unsubscribeSomeOffline = api.events.imOnline.SomeOffline.is((offline) => {
-        console.log('SOME OFFLINE:', offline.toJSON())
+        console.log('---------- SOME OFFLINE ----------\n', offline.toJSON())
         // not sure this can be cleared when a Validator is back on line
         // clientStore.offline = offline.toJSON()
       })
@@ -140,7 +141,7 @@ export class Client {
     }
   }
 
-  disconect () {
+  disconnect () {
     // TODO: needs more handling
     if (this.api) {
       if (this.unsubscribeNewHeads) {
@@ -151,8 +152,14 @@ export class Client {
     }
   }
 
+  reconnect () {
+    this.disconnect()
+    this.connect()
+  }
+
   // updates previous data asynchronously
   refetchAll () {
+    // fetch asyncronously - we already have data
     this.fetchChainInfo()
     this.fetchConsts()
     this.fetchAssets()
@@ -162,6 +169,8 @@ export class Client {
     this.fetchErasRewardPoints()
     this.fetchInvulnerables()
     this.fetchSubIdentities()
+    this.fetchElectedInfo()
+    this.fetchEraExposure()
     this.fetchValidators()
     this.fetchAuthoredBlocks() // must come after validators
     this.fetchErasValidatorReward()
@@ -353,7 +362,7 @@ export class Client {
     const erasTotalStaked = await this.api.query.staking.erasTotalStake(clientStore.currentEra)
     clientStore.erasTotalStaked = normalizeValue(erasTotalStaked.toHuman())
 
-    // console.log('erasTotalStaked:', clientStore.erasTotalStaked)
+    console.log('erasTotalStaked:', clientStore.erasTotalStaked)
 
     return {
       erasTotalStaked
@@ -427,6 +436,18 @@ export class Client {
     ve.forEach(async (val) => {
       await addOrUpdateEntity(val.address, true)
     })
+  }
+
+  async fetchElectedInfo () {
+    // const clientStore = useClientStore()
+    // const electedInfo = await this.api.derive.staking.electedInfo(clientStore.currentEra)
+    // console.log('electedInfo:', electedInfo.toJSON())
+  }
+
+  async fetchEraExposure () {
+    // const clientStore = useClientStore()
+    // const eraExposure = await this.api.derive.staking.eraExposure(clientStore.currentEra)
+    // console.log('eraExposure:', eraExposure.toJSON())
   }
 
   async fetchErasRewardPoints () {

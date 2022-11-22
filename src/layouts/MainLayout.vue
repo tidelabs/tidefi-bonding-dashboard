@@ -79,7 +79,8 @@ import {
   fabGithub,
   fabDiscord,
   mdiHomeCircleOutline,
-  fasHome
+  fasHome,
+  remNodeTree
 } from 'assets/icons'
 
 const matBrightness2 = 'M0 0h24v24H0z@@fill:none;&&M10 2c-1.82 0-3.53.5-5 1.35C7.99 5.08 10 8.3 10 12s-2.01 6.92-5 8.65C6.47 21.5 8.18 22 10 22c5.52 0 10-4.48 10-10S15.52 2 10 2z'
@@ -87,10 +88,16 @@ const matBrightness5 = 'M0 0h24v24H0z@@fill:none;&&M20 15.31L23.31 12 20 8.69V4h
 
 const internalList = [
   {
-    title: 'Validator Nodes',
+    title: 'Home Page',
     // caption: 'quasar.dev',
     icon: fasHome,
-    link: '/' // { name: 'validators' }
+    link: '/' // { name: 'home' }
+  },
+  {
+    title: 'Validator Nodes',
+    // caption: 'quasar.dev',
+    icon: remNodeTree,
+    link: '/validators' // { name: 'validators' }
   },
   {
     title: 'Validator Lookup',
@@ -146,7 +153,7 @@ export default defineComponent({
     const $q = useQuasar() || vm.proxy.$q || vm.ctx.$q
     const chainsStore = useChainsStore()
     const clientStore = useClientStore()
-    // const entitiesStore = useEntitiesStore()
+    const theme = ref(null)
 
     onBeforeMount(() => {
       let val = $q.localStorage.getItem('chainName')
@@ -159,6 +166,34 @@ export default defineComponent({
       }
     })
 
+    // ----------------------------------------------------
+    // dark mode preferences
+    theme.value = $q.localStorage.getItem('theme')
+
+    watch(() => $q.dark.isActive, val => {
+      theme.value = val ? 'dark' : 'light'
+    })
+
+    watch(theme, (val) => {
+      $q.localStorage.set('theme', val)
+    })
+
+    function setTheme (theme) {
+      if (theme === null) {
+        $q.dark.set('auto')
+      }
+      else if (theme === 'dark') {
+        $q.dark.set(true)
+      }
+      else {
+        $q.dark.set(false)
+      }
+    }
+
+    setTheme(theme.value)
+
+    // ----------------------------------------------------
+    // chain name
     const chainName = computed(() => chainsStore.chainName)
 
     watch(chainName, async () => {
@@ -181,15 +216,6 @@ export default defineComponent({
 
       await initializeClient()
       // await initializeEntities()
-    })
-
-    watch(() => $q.dark.isActive, (val) => {
-      console.log(val ? 'On dark mode' : 'On light mode')
-      window.Apex = {
-        theme: {
-          mode: $q.dark.isActive ? 'dark' : 'light'
-        }
-      }
     })
 
     function setDefaultChain () {
