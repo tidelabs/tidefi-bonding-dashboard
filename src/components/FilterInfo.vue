@@ -20,6 +20,12 @@
               </td>
             </tr>
             <tr>
+              <td class="info-subtitle">Elected Next Set</td>
+              <td class="vertical-top">
+                An inactive or active validator may be elected to the next set.
+              </td>
+            </tr>
+            <tr>
               <td class="info-subtitle">High Commission</td>
               <td class="vertical-top">
                 A validator with a high commission means there is less era
