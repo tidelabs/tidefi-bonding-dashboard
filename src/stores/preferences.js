@@ -4,6 +4,7 @@ export const usePreferencesStore = defineStore('preferences', {
   state: () => ({
     filters: {
       inactive: false,
+      nextSet: false,
       highCommission: false,
       oversubscribed: false,
       blockedNominations: false,

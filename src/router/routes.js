@@ -9,8 +9,14 @@ const routes = [
         component: () => import('pages/IndexPage.vue'),
         children: [
           {
-            name: 'home',
+            name: 'nothing',
             path: '/',
+            redirect: 'home',
+            component: () => import('pages/HomePage.vue')
+          },
+          {
+            name: 'home',
+            path: 'home',
             component: () => import('pages/HomePage.vue')
           },
           {

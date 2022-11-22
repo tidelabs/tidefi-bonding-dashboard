@@ -96,12 +96,12 @@ export default {
     const displayed = ref(props.modelValue)
 
     watch(() => props.modelValue, (val) => {
-      console.log('props.modelValue:', val)
+      // console.log('props.modelValue:', val)
       displayed.value = val
     })
 
     watch(displayed, (val) => {
-      console.log('displayed:', displayed.value)
+      // console.log('displayed:', displayed.value)
       emit('update:modelValue', val)
     })
 

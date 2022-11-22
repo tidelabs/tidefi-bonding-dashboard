@@ -1,5 +1,5 @@
 <template>
-  <q-page padding>
+  <div class="q-ma-md">
     <div v-if="loading" class="column justify-center items-center">
       <q-spinner-facebook size="lg" />
     </div>
@@ -75,7 +75,7 @@
       <!-- End of split page -->
       <ValidatorRewardPoints v-if="validator && validator.erasRewardPoints.length" :erasRewardPoints="validator.erasRewardPoints" />
     </div>
-  </q-page>
+  </div>
 </template>
 
 <script>

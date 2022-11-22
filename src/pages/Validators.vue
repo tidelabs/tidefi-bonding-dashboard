@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <div class="q-ma-md">
     <FilterInfo v-model="displayFilterInfoModal" />
     <q-table
       title="Validators"
@@ -19,6 +19,7 @@
           <div class="q-ma-md">Filters:</div>
           <div class="row justify-evenly items-center q-gutter-sm">
             <q-btn dense label="Inactive Validators" :icon="alarmClockOutline" no-caps rounded outline @click="preferencesStore.filters.inactive = !preferencesStore.filters.inactive" :class="{ 'filter-button-active': preferencesStore.filters.inactive }" />
+            <q-btn dense label="Elected Next Set" :icon="howToVoteTwoTone" no-caps rounded outline @click="preferencesStore.filters.nextSet = !preferencesStore.filters.nextSet" :class="{ 'filter-button-active': preferencesStore.filters.nextSet }" />
             <q-btn dense label="High Commission" :icon="scalesDuotone" no-caps rounded outline @click="preferencesStore.filters.highCommission = !preferencesStore.filters.highCommission" :class="{ 'filter-button-active': preferencesStore.filters.highCommission }" />
             <q-btn dense label="Oversubscribed" :icon="notificationImportantTwoTone" no-caps rounded outline @click="preferencesStore.filters.oversubscribed = !preferencesStore.filters.oversubscribed" :class="{ 'filter-button-active': preferencesStore.filters.oversubscribed }" />
             <q-btn dense label="Blocked Nominations" :icon="personAddDisabledTwoTone" no-caps rounded outline @click="preferencesStore.filters.blockedNominations = !preferencesStore.filters.blockedNominations" :class="{ 'filter-button-active': preferencesStore.filters.blockedNominations }" />
@@ -33,20 +34,36 @@
         <q-tr :props="props">
 
           <q-td key="flags" :props="props">
-            <div class="row justify-end items-center">
-              <q-badge v-if="props.row.blockCount" :label="props.row.blockCount" class="justify-center" style="width: 26px;">
-                <q-tooltip>Blocks produced</q-tooltip>
-              </q-badge>
-              <q-icon :name="isInvulnerable(props.row) ? solidLockClosed : solidLockOpen" size="18px" color="blue-grey-3">
-                <q-tooltip>
-                  {{ isInvulnerable(props.row) ? 'protected' : 'not protected'}}
-                </q-tooltip>
-              </q-icon>
-              <q-icon :name="getIdentityIcon(props.row)" size="18px" color="blue-grey-3">
-                <q-tooltip>
-                  {{ getIdentityTooltip(props.row) }}
-                </q-tooltip>
-              </q-icon>
+            <div class="row justify-evenly items-center no-wrap">
+              <div style="min-width: 33px;">
+                <q-badge v-if="props.row.blockCount" :label="props.row.blockCount" class="justify-center">
+                  <q-tooltip>Blocks produced</q-tooltip>
+                </q-badge>
+              </div>
+
+              <div style="min-width: 18px;">
+                <q-icon :name="isInvulnerable(props.row) ? solidLockClosed : solidLockOpen" size="18px" color="blue-grey-3">
+                  <q-tooltip>
+                    {{ isInvulnerable(props.row) ? 'protected' : 'not protected'}}
+                  </q-tooltip>
+                </q-icon>
+              </div>
+
+              <div style="min-width: 18px;">
+                <q-icon :name="getIdentityIcon(props.row)" size="18px" color="blue-grey-3">
+                  <q-tooltip>
+                    {{ getIdentityTooltip(props.row) }}
+                  </q-tooltip>
+                </q-icon>
+              </div>
+
+              <div style="min-width: 18px;">
+                <q-icon v-if="props.row.nextElected" :name="mdiChevronRightCircle" size="18px" color="green-6">
+                  <q-tooltip>
+                    Validator is elected to the next set
+                  </q-tooltip>
+                </q-icon>
+              </div>
             </div>
           </q-td>
 
@@ -188,7 +205,7 @@
         </q-markup-table>
       </template>
     </q-table>
-  </q-page>
+  </div>
 </template>
 
 <script>
@@ -197,7 +214,7 @@ import { useChainsStore } from 'stores/chain'
 import { useEntitiesStore } from 'stores/entities'
 import { useClientStore } from 'stores/client'
 import { usePreferencesStore } from 'stores/preferences'
-import { infoIcon } from 'assets/icons'
+import { infoIcon, mdiChevronRightCircle } from 'assets/icons'
 
 import FilterInfo from 'components/FilterInfo.vue'
 
@@ -208,6 +225,7 @@ const solidLockClosed = 'M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 
 const solidLockOpen = 'M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 015.905-.75 1 1 0 001.937-.5A5.002 5.002 0 0010 2z@@fill:currentColor;|0 0 20 20'
 
 const scalesDuotone = 'M56,88l32,80c0,17.7-20,24-32,24s-32-6.3-32-24ZM200,56l-32,80c0,17.7,20,24,32,24s32-6.3,32-24Z@@opacity:0.2;&&M239.4,133l-32-80h0l-.5-.9h0l-.6-.8c-.1-.1-.1-.1-.1-.2l-.8-.8a.1.1,0,0,1-.1-.1,1.8,1.8,0,0,0-.7-.5l-.2-.2-.9-.5h-.2l-.8-.3h-.2l-1-.2h-3L136,62V40a8,8,0,0,0-16,0V65.6L54.3,80.2h-.7l-1,.4h-.2l-.8.4a.1.1,0,0,1-.1.1l-.9.7a.1.1,0,0,1-.1.1l-.6.7h-.1a2.4,2.4,0,0,0-.6.9l-.2.2-.4.9h-.1L16.6,165a8,8,0,0,0-.6,3c0,23.3,24.5,32,40,32s40-8.7,40-32a8,8,0,0,0-.6-3L66.9,93.8,120,82V208H104a8,8,0,0,0,0,16h48a8,8,0,0,0,0-16H136V78.4l50.9-11.3L160.6,133a8,8,0,0,0-.6,3c0,23.3,24.5,32,40,32s40-8.7,40-32A8,8,0,0,0,239.4,133ZM56,184c-7.5,0-22.8-3.6-23.9-14.6L56,109.5l23.9,59.9C78.8,180.4,63.5,184,56,184Zm144-32c-7.5,0-22.8-3.6-23.9-14.6L200,77.5l23.9,59.9C222.8,148.4,207.5,152,200,152Z|0 0 256 256'
+const howToVoteTwoTone = 'M0 0h24v24H0V0z@@fill:none;&&M5 19h14v1H5z@@opacity:.3;&&M18 13h-.68l-2 2h1.91L19 17H5l1.78-2h2.05l-2-2H6l-3 3v4c0 1.1.89 2 1.99 2H19c1.1 0 2-.89 2-2v-4l-3-3zm1 7H5v-1h14v1z&&M12.048 12.905L8.505 9.362l4.95-4.95 3.543 3.543z@@opacity:.3;&&M19.11 7.25L14.16 2.3c-.38-.4-1.01-.4-1.4-.01L6.39 8.66c-.39.39-.39 1.02 0 1.41l4.95 4.95c.39.39 1.02.39 1.41 0l6.36-6.36c.39-.39.39-1.02 0-1.41zm-7.06 5.65L8.51 9.36l4.95-4.95L17 7.95l-4.95 4.95z'
 const alarmClockOutline = 'M31.47,3.84a5.78,5.78,0,0,0-7.37-.63,16.08,16.08,0,0,1,8.2,7.65A5.73,5.73,0,0,0,31.47,3.84ZM11.42,3.43a5.77,5.77,0,0,0-7.64.41,5.72,5.72,0,0,0-.38,7.64A16.08,16.08,0,0,1,11.42,3.43ZM16.4,4.09A14,14,0,0,0,8.11,27.88L5.56,30.43A1,1,0,1,0,7,31.84l2.66-2.66a13.9,13.9,0,0,0,16.88-.08l2.74,2.74a1,1,0,0,0,1.41-1.41L28,27.78A14,14,0,0,0,16.4,4.09ZM19.58,29.9A12,12,0,1,1,29.92,19.56,12,12,0,0,1,19.58,29.9ZM24.92,20.34l-6.06-3V9.5a.9.9,0,0,0-1.8,0v9L24.12,22a.9.9,0,1,0,.79-1.62Z|0 0 36 36'
 const notificationImportantTwoTone = 'M12 6c-2.76 0-5 2.24-5 5v7h10v-7c0-2.76-2.24-5-5-5zm1 10h-2v-2h2v2zm0-4h-2V8h2v4z@@opacity:.3;&&M12 23c1.1 0 1.99-.89 1.99-1.99h-3.98c0 1.1.89 1.99 1.99 1.99zm7-6v-6c0-3.35-2.36-6.15-5.5-6.83V3c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v1.17C7.36 4.85 5 7.65 5 11v6l-2 2v1h18v-1l-2-2zm-2 1H7v-7c0-2.76 2.24-5 5-5s5 2.24 5 5v7zM11 8h2v4h-2zm0 6h2v2h-2z'
 const personAddDisabledTwoTone = 'M0 0h24v24H0V0z@@fill:none;&&M9 18h5.87L13 16.13l-1.1.3C9.89 16.99 9.08 17.76 9 18zm8-10c0-1.1-.9-2-2-2-.99 0-1.81.72-1.97 1.67l2.31 2.31C16.27 9.82 17 8.99 17 8z@@opacity:.3;&&M14.48 11.95c.17.02.34.05.52.05 2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4c0 .18.03.35.05.52l3.43 3.43zM15 6c1.1 0 2 .9 2 2 0 .99-.73 1.82-1.67 1.97l-2.31-2.31C13.19 6.72 14.01 6 15 6zm1.69 8.16L22.53 20H23v-2c0-2.14-3.56-3.5-6.31-3.84zM0 3.12l4 4V10H1v2h3v3h2v-3h2.88l2.51 2.51C9.19 15.11 7 16.3 7 18v2h9.88l4 4 1.41-1.41L1.41 1.71 0 3.12zm13.01 13.01L14.88 18H9c.08-.24.88-1.01 2.91-1.57l1.1-.3zM6 9.12l.88.88H6v-.88z'
@@ -233,7 +251,7 @@ export default {
         required: true,
         align: 'right',
         sortable: false,
-        style: 'width: 100px'
+        style: 'width: 115px'
       },
       {
         label: 'Name/Address',
@@ -321,6 +339,7 @@ export default {
       return validators.value.filter((val) => {
         let retVal = true
         if (retVal && preferencesStore.filters.inactive && val.elected === false) retVal = false
+        if (retVal && preferencesStore.filters.nextSet && val.nextElected === false) retVal = false
         if (retVal && preferencesStore.filters.highCommission && parseFloat(val.preferences.commission) > 10.00) retVal = false
         if (retVal && preferencesStore.filters.oversubscribed && isOversubscribed(val)) retVal = false
         if (retVal && preferencesStore.filters.blockedNominations && val.preferences.blocked === true) retVal = false
@@ -343,7 +362,7 @@ export default {
     })
 
     watch(displayFilterInfoModal, (val) => {
-      console.log('displayFilterInfoModal:', displayFilterInfoModal.value)
+      // console.log('displayFilterInfoModal:', displayFilterInfoModal.value)
     })
 
     function customSort (rows, sortBy, descending) {
@@ -376,7 +395,7 @@ export default {
                 ? -1 : 0
           }
           else {
-            // numeric sort
+            // numeric sorts
             let x1 = 0, y1 = 0
             if (sortBy === 'commission') {
               x1 = parseFloat(x.preferences.commission)
@@ -472,7 +491,9 @@ export default {
       solidLockOpen,
       solidMinusCircle,
       solidPlusCircle,
+      mdiChevronRightCircle,
       scalesDuotone,
+      howToVoteTwoTone,
       alarmClockOutline,
       notificationImportantTwoTone,
       personAddDisabledTwoTone,

@@ -58,7 +58,8 @@ export class Entity {
     // this.unsubscribeRewardPoints = null
     // validator info
     this.validator = validator
-    this.elected = false
+    this.elected = false // active
+    this.nextElected = false // next set
     this.stakers = {
       total: '0',
       own: '0',
@@ -72,6 +73,7 @@ export class Entity {
     this.ownStaked = 0
     this.totalStaked = 0
     this.currentRewardPoints = 0
+    this.erasRewardPoints = []
     this.payee = ''
     // this.reputation = 0 // computed - future
     this.lastBlock = ''
@@ -128,10 +130,6 @@ export class Entity {
     // })
 
     this.name = computed(() => {
-      if (this.identity && this.identity.info) {
-        return this.identity.info.display.Raw
-      }
-
       if (this.parent && this.parent.identity.info) {
         let parentName = this.parent.identity.info.display.Raw
         if (!this.super) {
@@ -139,6 +137,11 @@ export class Entity {
         }
         parentName += '/' + this.super[ 1 ].Raw
         return parentName
+      }
+
+      // must come second as you can still have identity
+      if (this.identity && this.identity.info) {
+        return this.identity.info.display.Raw
       }
 
       if (this.address) {
@@ -198,6 +201,15 @@ export class Entity {
       // console.log('validator points:', this.address, points)
 
       return points
+    })
+
+    this.nextElected = computed(() => {
+      const clientStore = useClientStore()
+
+      if (this.validator) {
+        return !!clientStore.nextElected.find((el) => el === this.address)
+      }
+      return false
     })
   }
 

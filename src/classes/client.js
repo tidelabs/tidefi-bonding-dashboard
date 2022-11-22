@@ -12,6 +12,7 @@ export class Client {
 
     this.unsubscribeNewHeads = null
     this.unsubscribeSession = null
+    this.unsubscribeNextElected = null
   }
 
   async connect () {
@@ -54,7 +55,7 @@ export class Client {
       await this.fetchErasRewardPoints()
       await this.fetchInvulnerables()
       await this.fetchSubIdentities()
-      await this.fetchElectedInfo()
+      // await this.fetchElectedInfo()
       await this.fetchEraExposure()
       await this.fetchValidators()
       await this.fetchAuthoredBlocks() // must come after validators
@@ -72,7 +73,9 @@ export class Client {
         // activeValidatorIndices
         electionsCandidates,
         electionsMembers
-        // erasHistoric
+        // erasHistoric,
+        // accounts,
+        // electedInfo
       ] = await Promise.all([
         this.api.query.staking.bondedEras(),
         this.api.query.staking.canceledSlashPayout(),
@@ -84,7 +87,9 @@ export class Client {
         // this.api.query.shared.activeValidatorIndices()
         this.api.query.elections.candidates(),
         this.api.query.elections.members()
-        // this.api.derive.staking.erasHistoric(false)
+        // this.api.derive.staking.erasHistoric(false),
+        // this.api.query.staking.accounts(),
+        // this.api.query.staking.electedInfo()
       ])
 
       console.log(
@@ -98,8 +103,17 @@ export class Client {
         // 'activeValidatorIndices:', activeValidatorIndices, '\n'
         'electionsCandidates:', electionsCandidates.toJSON(), '\n',
         'electionsMembers:', electionsMembers.toJSON(), '\n'
-        // 'erasHistoric:', erasHistoric, '\n'
+        // 'erasHistoric:', erasHistoric, '\n',
+        // 'accounts:', accounts.toJSON(), '\n',
+        // 'electedInfo:', electedInfo.toJSON(), '\n'
       )
+
+      this.testing()
+
+      this.unsubscribeNextElected = this.api.derive.staking.nextElected((elected) => {
+        // console.log('Next Elected:', elected)
+        clientStore.nextElected = elected.map((elect) => elect.toHuman())
+      })
 
       this.unsubscribeNewHeads = api.derive.chain.subscribeNewHeads((header) => {
         // console.log(`#${ header.number }: ${ header.author }\n`)
@@ -141,11 +155,65 @@ export class Client {
     }
   }
 
+  async testing () {
+    const data = await Promise.all([
+      // this.api.derive.staking.account(),
+      // this.api.derive.staking.accounts(),
+      this.api.derive.staking.currentPoints()
+      // this.api.derive.staking.electedInfo(),
+      // this.api.derive.staking.eraExposure(),
+      // this.api.derive.staking.eraPrefs(),
+      // this.api.derive.staking.eraSlashes(),
+      // this.api.derive.staking.erasExposure(),
+      // this.api.derive.staking.erasHistoric(),
+      // this.api.derive.staking.erasPoints(),
+      // this.api.derive.staking.erasPrefs(),
+      // this.api.derive.staking.erasRewards(),
+      // this.api.derive.staking.erasSlashes(),
+      // this.api.derive.staking.keys() // requires 1 arg
+      // this.api.derive.staking.keysMulti(),
+      // this.api.derive.staking.nextElected() // done
+      // this.api.derive.staking.overview(),
+      // this.api.derive.staking.ownExposure(),
+      // this.api.derive.staking.ownExposures(),
+      // this.api.derive.staking.ownSlash(),
+      // this.api.derive.staking.ownSlashes(),
+      // this.api.derive.staking.query(),
+      // this.api.derive.staking.queryMulti(),
+      // this.api.derive.staking.stakerExposure(),
+      // this.api.derive.staking.stakerExposures(),
+      // this.api.derive.staking.stakerPoints(),
+      // this.api.derive.staking.stakerPrefs(),
+      // this.api.derive.staking.stakerRewards(),
+      // this.api.derive.staking.stakerRewardsMulti(),
+      // this.api.derive.staking.stakerRewardsMultiEras(),
+      // this.api.derive.staking.stakerSlashes(),
+      // this.api.derive.staking.stashes(),
+      // this.api.derive.staking.validators(),
+      // this.api.derive.staking.waitingInfo()
+    ])
+
+    console.log('values:', data)
+  }
+
   disconnect () {
     // TODO: needs more handling
     if (this.api) {
       if (this.unsubscribeNewHeads) {
         this.unsubscribeNewHeads()
+        this.unsubscribeNewHeads = null
+      }
+      if (this.unsubscribeSession) {
+        this.unsubscribeSession()
+        this.unsubscribeSession = null
+      }
+      if (this.unsubscribeSomeOffline) {
+        this.unsubscribeSomeOffline()
+        this.unsubscribeSomeOffline = null
+      }
+      if (this.unsubscribeNextElected) {
+        this.unsubscribeNextElected()
+        this.unsubscribeNextElected = null
       }
 
       this.api.disconnect()
@@ -169,7 +237,7 @@ export class Client {
     this.fetchErasRewardPoints()
     this.fetchInvulnerables()
     this.fetchSubIdentities()
-    this.fetchElectedInfo()
+    // this.fetchElectedInfo()
     this.fetchEraExposure()
     this.fetchValidators()
     this.fetchAuthoredBlocks() // must come after validators
@@ -438,16 +506,77 @@ export class Client {
     })
   }
 
+  /*
+    {
+      info: Array
+        [{
+          accountId: xxxxx,
+          controllerId: xxxxx,
+          exposure: {
+            total: #####,
+            own: #####,
+            others: [
+
+            ]
+          },
+          nominators: [] // always seems to be empty
+          rewardDestination: Staked | Stash | Controller | Account | None,
+          stakingLedger: {
+            stash: ???,
+            total: #####,
+            active: Bool,
+            unlocking: Bool,
+            claimedRewards: ???
+          },
+          stashId: #####,
+          validatorPrefs: {
+            commission: #####,
+            blocked: Bool
+          }
+        }],
+        nextElected: [
+          address
+        ],
+        validators: [
+          address
+        ]
+    }
+  */
   async fetchElectedInfo () {
-    // const clientStore = useClientStore()
-    // const electedInfo = await this.api.derive.staking.electedInfo(clientStore.currentEra)
-    // console.log('electedInfo:', electedInfo.toJSON())
+    const clientStore = useClientStore()
+    const electedInfo = []
+
+    // console.log('staking api:', this.api.derive.staking)
+    const electedInfoEra = await this.api.derive.staking.electedInfo(clientStore.currentEra)
+    console.log('electedInfoEra:', electedInfoEra)
+    electedInfo.info = electedInfoEra.info.map((info) => {
+      return {
+        accountId: info.accountId.toHuman(),
+        controllerId: info.controllerId ? info.controllerId.toHuman() : info.controllerId,
+        exposure: info.exposure.toHuman(),
+        nominators: info.nominators.map((nominator) => nominator.toHuman()),
+        rewardDestination: info.rewardDestination.toHuman(),
+        stakingLedger: info.stakingLedger.toHuman(),
+        stashId: info.stashId.toHuman(),
+        validatorPrefs: info.validatorPrefs.toHuman()
+      }
+    })
+    electedInfo.nextElected = electedInfoEra.nextElected.map((elected) => elected.toHuman())
+    electedInfo.validators = electedInfoEra.validators.map((validator) => validator.toHuman())
+    console.log('electedInfo:', electedInfo)
   }
 
+  /*
+    {
+      era: x,
+      nominators: Object { nominator: Array }
+      validators: : Object { validator: Array }
+    }
+  */
   async fetchEraExposure () {
     // const clientStore = useClientStore()
     // const eraExposure = await this.api.derive.staking.eraExposure(clientStore.currentEra)
-    // console.log('eraExposure:', eraExposure.toJSON())
+    // console.log('eraExposure:', eraExposure)
   }
 
   async fetchErasRewardPoints () {
@@ -490,7 +619,7 @@ export class Client {
     // this array needs sorting
     rewardsHistory.sort((a, b) => a.era - b.era)
 
-    console.log('rewardsHistory:', rewardsHistory)
+    // console.log('rewardsHistory:', rewardsHistory)
 
     clientStore.rewardsHistory = rewardsHistory
 

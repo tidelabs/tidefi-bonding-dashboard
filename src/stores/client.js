@@ -51,7 +51,8 @@ export const useClientStore = defineStore('client', {
     stakerEntries: [],
     rewardsHistory: [],
     rewardPoints: [{ era: 0, rewards: { total: 0, individual: {} } }],
-    slashes: []
+    slashes: [],
+    nextElected: []
   }),
 
   getters: {
