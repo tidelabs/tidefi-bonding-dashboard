@@ -465,21 +465,21 @@ export default {
     }
 
     function getIdentityTooltip (validator) {
-      if (validator.identity && validator.identity.info) {
-        return 'Identity is set'
-      }
-      else if (validator.parent && validator.parent.identity.info && validator.super) {
+      if (validator.parent && validator.parent.identity.info && validator.super) {
         return 'Super identity is set'
+      }
+      else if (validator.identity && validator.identity.info) {
+        return 'Identity is set'
       }
       return 'identity is NOT set'
     }
 
     function getIdentityIcon (validator) {
-      if (validator.identity && validator.identity.info) {
-        return solidCheckCircle
-      }
-      else if (validator.parent && validator.parent.identity.info && validator.super) {
+      if (validator.parent && validator.parent.identity.info && validator.super) {
         return solidPlusCircle
+      }
+      else if (validator.identity && validator.identity.info) {
+        return solidCheckCircle
       }
       return solidMinusCircle
     }
