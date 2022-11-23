@@ -42,7 +42,7 @@ export default {
           }
         },
         title: {
-          text: 'Eras Rewards',
+          text: 'Eras Reward Points',
           style: {
             fontSize: '18px',
             fontWeight: 'bold',
@@ -59,7 +59,7 @@ export default {
             fontWeight: 'bold'
           },
           headerFormat: '<span style="font-size: 10px">{point.key}</span><br/>',
-          valueSuffix: ' TDFY'
+          valueSuffix: ' Pts.'
         },
         legend: {
           enabled: false
@@ -83,7 +83,7 @@ export default {
         yAxis: {
           // min: 0,
           title: {
-            text: 'TDFY',
+            text: 'Points',
             style: {
               fontSize: '12px',
               color: $q.dark.isActive ? 'yellow' : 'black'
@@ -137,30 +137,6 @@ export default {
 
       return options
     })
-
-    // computed(() => {
-    //   debugger
-    //   const optionsLine = {
-    //     chart: {
-    //       id: '-validator-reward-points',
-    //       type: 'line'
-    //     },
-    //     stroke: {
-    //       curve: 'straight',
-    //       width: 5
-    //     },
-    //     xaxis: {
-    //       categories: props.erasRewardPoints ? props.erasRewardPoints.map((reward) => reward.era) : []
-    //     },
-    //     title: {
-    //       text: 'Validator Eras Reward Points'
-    //     }
-    //   }
-
-    //   const options = extend(true, globalOptions, optionsLine)
-    //   chart.value && chart.value.updateOptions(toRaw(options))
-    //   return options
-    // })
 
     return {
       chartOptions
