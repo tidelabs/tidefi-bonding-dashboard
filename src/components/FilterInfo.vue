@@ -20,16 +20,16 @@
               </td>
             </tr>
             <tr>
-              <td class="info-subtitle">Elected Next Set</td>
+              <td class="info-subtitle">Not Elected Next Set</td>
               <td class="vertical-top">
                 An inactive or active validator may be elected to the next set.
+                Not being elected to the next set means in the next era this validator will not be producing any blocks.
               </td>
             </tr>
             <tr>
-              <td class="info-subtitle">High Commission</td>
+              <td class="info-subtitle">High Commission (> 10%)</td>
               <td class="vertical-top">
-                A validator with a high commission means there is less era
-                rewards for the nominators. In this case, the filter is
+                A validator with a high commission means there is less era rewards for the nominators.
                 <span class="info-highlight">&gt; 10%</span>.
               </td>
             </tr>
@@ -39,7 +39,7 @@
                 On substrate chains, there is a constant
                 <span class="info-highlight">maxNominatorRewardedPerValidator</span>
                 which is usually defined as <span class="info-highlight">256</span>
-                max nominators. This is the maximum number of nominators that
+                maximum nominators. This is the maximum number of nominators that
                 can share in the era rewards at payout time. However, you can get
                 rewards from an oversubscribed validator by bonding more funds
                 that ensure you are in the top 256 nominators.
@@ -52,11 +52,11 @@
               </td>
             </tr>
             <tr>
-              <td class="info-subtitle">Missing Identity</td>
+              <td class="info-subtitle">No Verified Identity</td>
               <td class="vertical-top">
                 The identity exists so a nominator can recognize a validator. Besides
                 a name, validators can add web, email, twitter, etc. A validator without
-                some sort of identity is less-trustworthy than other validators.
+                some sort of identity is (supposedly) less-trustworthy than other validators.
               </td>
             </tr>
             <tr>
