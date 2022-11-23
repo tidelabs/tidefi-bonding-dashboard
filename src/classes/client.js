@@ -596,7 +596,7 @@ export class Client {
 
     clientStore.rewardPoints = rewardPoints
 
-    console.log('rewardPoints:', rewardPoints)
+    // console.log('rewardPoints:', rewardPoints)
 
     return {
       erasRewardPoints
