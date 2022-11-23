@@ -41,13 +41,13 @@
                 </q-badge>
               </div>
 
-              <div style="min-width: 18px;">
+              <!-- <div style="min-width: 18px;">
                 <q-icon :name="isInvulnerable(props.row) ? solidLockClosed : solidLockOpen" size="18px" color="blue-grey-3">
                   <q-tooltip>
                     {{ isInvulnerable(props.row) ? 'protected' : 'not protected'}}
                   </q-tooltip>
                 </q-icon>
-              </div>
+              </div> -->
 
               <div style="min-width: 18px;">
                 <q-icon :name="getIdentityIcon(props.row)" size="18px" color="blue-grey-3">
@@ -64,6 +64,7 @@
                   </q-tooltip>
                 </q-icon>
               </div>
+
             </div>
           </q-td>
 
@@ -127,16 +128,31 @@
                   <q-badge v-if="props.row.blockCount" :label="props.row.blockCount" class="justify-center" style="width: 26px;">
                     <q-tooltip>Blocks produced</q-tooltip>
                   </q-badge>
-                      <q-icon :name="isInvulnerable(props.row) ? solidLockClosed : solidLockOpen" size="18px" color="blue-grey-3">
-                    <q-tooltip>
-                      {{ isInvulnerable(props.row) ? 'protected' : 'not protected'}}
-                    </q-tooltip>
-                  </q-icon>
-                  <q-icon :name="getIdentityIcon(props.row)" size="18px" color="blue-grey-3">
-                    <q-tooltip>
-                      {{ getIdentityTooltip(props.row) }}
-                    </q-tooltip>
-                  </q-icon>
+
+                  <!-- <div style="min-width: 18px;">
+                    <q-icon :name="isInvulnerable(props.row) ? solidLockClosed : solidLockOpen" size="18px" color="blue-grey-3">
+                      <q-tooltip>
+                        {{ isInvulnerable(props.row) ? 'protected' : 'not protected'}}
+                      </q-tooltip>
+                    </q-icon>
+                  </div> -->
+
+                  <div style="min-width: 18px;">
+                    <q-icon :name="getIdentityIcon(props.row)" size="18px" color="blue-grey-3">
+                      <q-tooltip>
+                        {{ getIdentityTooltip(props.row) }}
+                      </q-tooltip>
+                    </q-icon>
+                  </div>
+
+                  <div style="min-width: 18px;">
+                    <q-icon v-if="props.row.nextElected" :name="mdiChevronRightCircle" size="18px" color="green-6">
+                      <q-tooltip>
+                        Validator is elected to the next set
+                      </q-tooltip>
+                    </q-icon>
+                  </div>
+
                 </div>
               </td>
             </tr>
