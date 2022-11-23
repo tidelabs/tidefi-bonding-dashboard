@@ -46,7 +46,7 @@ export default {
           style: {
             fontSize: '18px',
             fontWeight: 'bold',
-            color: $q.dark.isActive ? 'yellow' : 'currentColor'
+            color: $q.dark.isActive ? 'yellow' : 'black'
           }
         },
         tooltip: {
@@ -55,7 +55,7 @@ export default {
           borderColor: $q.dark.isActive ? 'yellow' : null,
           backgroundColor: 'rgba(200, 200, 200, 0.80)',
           style: {
-            color: $q.dark.isActive ? '#1d1d1d' : 'currentColor',
+            color: $q.dark.isActive ? '#1d1d1d' : 'black',
             fontWeight: 'bold'
           },
           headerFormat: '<span style="font-size: 10px">{point.key}</span><br/>',
@@ -76,7 +76,7 @@ export default {
             text: 'Eras',
             style: {
               fontSize: '12px',
-              color: $q.dark.isActive ? 'yellow' : 'currentColor'
+              color: $q.dark.isActive ? 'yellow' : 'black'
             }
           }
         },
@@ -86,7 +86,7 @@ export default {
             text: 'TDFY',
             style: {
               fontSize: '12px',
-              color: $q.dark.isActive ? 'yellow' : 'currentColor'
+              color: $q.dark.isActive ? 'yellow' : 'black'
             }
           }
         },
