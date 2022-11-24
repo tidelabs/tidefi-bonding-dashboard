@@ -102,6 +102,19 @@ export class Entity {
 
     entitiesStore.incLoading()
 
+    // verify this address exists on-chain
+    const [ entryHash, entrySize ] = await Promise.all([
+      clientStore.client.api.query.system.account.hash(this.address),
+      clientStore.client.api.query.system.account.size(this.address)
+    ])
+
+    if (!entryHash || !entrySize) {
+      entitiesStore.decLoading()
+      return false // failure
+    }
+
+    // console.log('Account:', entryHash, entrySize)
+
     if (!this.identicon) {
       this.identicon = toSvg(this.address, 24)
     }

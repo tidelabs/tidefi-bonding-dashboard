@@ -1,4 +1,6 @@
 import BN from 'bignumber.js'
+import { decodeAddress, encodeAddress } from '@polkadot/keyring'
+import { hexToU8a, isHex } from '@polkadot/util'
 
 export async function getAccountBalances (api, addr) {
   return await api.query.balances.account(addr)
@@ -75,6 +77,15 @@ export function convertSecondsToTime (sec, options = { d: false, h: true, m: tru
   return timeString
 }
 
+export const isValidAddress = (address) => {
+  try {
+    encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address))
+    return true
+  }
+  catch (error) {
+    return false
+  }
+}
 
 export function isVerifiedIdentity (identity) {
   if (!identity || identity.judgements.length === 0) {
