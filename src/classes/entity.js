@@ -383,9 +383,13 @@ export class Entity {
     this.unsubscribeTokenBalances = await clientStore.client.api.query.assets.account.multi(a, (data) => {
       this.tokenBalances = data.map((balance, i) => {
         const assetId = parseInt(a[ i ][ 1 ])
-        return { id: assetId, balance: balance.toJSON() }
+        const balanceHuman = balance.toHuman()
+        const val = { id: assetId, ledger: balance.toJSON() }
+        if (val.ledger !== null) {
+          val.ledger.balance = normalizeValue(balanceHuman.balance)
+        }
+        return val
       })
-      // console.log('balances:', this.balances)
     })
   }
 }
