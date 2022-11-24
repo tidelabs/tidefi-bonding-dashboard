@@ -21,6 +21,11 @@ export const useClientStore = defineStore('client', {
     },
     //
     consts: { // with expected defaults
+      version: {
+        specName: '',
+        implName: '',
+        specVersion: 0
+      },
       bondingDuration: 28,
       existentialDeposit: 1000000000000, // 1 TDFY
       expectedBlockTime: 6000, // ms

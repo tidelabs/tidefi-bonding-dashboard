@@ -37,8 +37,10 @@
           :icon="$q.dark.isActive ? matBrightness5 : matBrightness2"
           @click="$q.dark.toggle()"
         />
-        <div>{{ clientStore.nodeName }} {{ clientStore.nodeVersion }}</div>
-        <!-- <div>Quasar v{{ $q.version }}</div> -->
+        <div class="column">
+          <div>{{ clientStore.nodeName }} {{ clientStore.nodeVersion }}</div>
+          <div>{{ clientStore.consts.version.specName }}/{{ clientStore.consts.version.specVersion }}</div>
+        </div>
       </q-toolbar>
     </q-header>
 

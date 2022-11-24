@@ -276,6 +276,9 @@ export class Client {
     const clientStore = useClientStore()
 
     const [
+      specName,
+      implName,
+      specVersion,
       bondingDuration,
       maxNominations,
       sessionsPerEra,
@@ -286,6 +289,9 @@ export class Client {
       historyDepth
       // nominationPoolsPalletId,
     ] = await Promise.all([
+      this.api.consts.system.version.specName,
+      this.api.consts.system.version.implName,
+      this.api.consts.system.version.specVersion,
       this.api.consts.staking.bondingDuration,
       this.api.consts.staking.maxNominations,
       this.api.consts.staking.sessionsPerEra,
@@ -296,6 +302,13 @@ export class Client {
       this.api.consts.staking.historyDepth || this.api.query.staking.historyDepth()
       // this.api.consts.nominationPools.palletId,
     ])
+
+    const version = {
+      specName: specName.toHuman(),
+      implName: implName.toHuman(),
+      specVersion: specVersion.toJSON()
+    }
+    clientStore.consts.version = version
 
     clientStore.consts.bondingDuration = bondingDuration.toJSON()
     clientStore.consts.maxNominations = maxNominations.toJSON()
