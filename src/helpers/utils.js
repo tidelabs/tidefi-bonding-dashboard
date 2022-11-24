@@ -74,3 +74,13 @@ export function convertSecondsToTime (sec, options = { d: false, h: true, m: tru
 
   return timeString
 }
+
+
+export function isVerifiedIdentity (identity) {
+  if (!identity || identity.judgements.length === 0) {
+    return false
+  }
+  return identity.judgements
+    .filter(([ , judgement ]) => !judgement.isFeePaid)
+    .some(([ , judgement ]) => judgement.isKnownGood || judgement.isReasonable)
+}
