@@ -52,14 +52,18 @@
       <template v-slot:body="props">
         <q-tr :props="props">
 
-          <q-td key="flags" :props="props">
+          <q-td key="block_count" :props="props">
             <div class="row justify-evenly items-center no-wrap">
               <div style="min-width: 33px;">
                 <q-badge v-if="props.row.blockCount" :label="props.row.blockCount" class="justify-center">
                   <q-tooltip>Blocks produced this era</q-tooltip>
                 </q-badge>
               </div>
+            </div>
+          </q-td>
 
+          <q-td key="flags" :props="props">
+            <div class="row justify-evenly items-center no-wrap">
               <!-- <div style="min-width: 18px;">
                 <q-icon :name="isInvulnerable(props.row) ? solidLockClosed : solidLockOpen" size="18px" color="blue-grey-3">
                   <q-tooltip>
@@ -281,6 +285,14 @@ export default {
     const preferencesStore = usePreferencesStore()
     const columns = [
       {
+        label: 'Blocks',
+        name: 'block_count',
+        required: true,
+        align: 'center',
+        sortable: true,
+        style: 'width: 30px'
+      },
+      {
         name: 'flags',
         required: true,
         align: 'right',
@@ -435,7 +447,11 @@ export default {
           else {
             // numeric sorts
             let x1 = 0, y1 = 0
-            if (sortBy === 'commission') {
+            if (sortBy === 'block_count') {
+              x1 = parseFloat(x.blockCount)
+              y1 = parseFloat(y.blockCount)
+            }
+            else if (sortBy === 'commission') {
               x1 = parseFloat(x.preferences.commission)
               y1 = parseFloat(y.preferences.commission)
             }
