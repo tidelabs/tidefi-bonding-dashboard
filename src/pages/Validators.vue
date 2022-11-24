@@ -378,7 +378,7 @@ export default {
         if (retVal && preferencesStore.filters.highCommission && parseFloat(val.preferences.commission) > 10.00) retVal = false
         if (retVal && preferencesStore.filters.oversubscribed && isOversubscribed(val)) retVal = false
         if (retVal && preferencesStore.filters.blockedNominations && val.preferences.blocked === true) retVal = false
-        if (retVal && preferencesStore.filters.missingIdentity && !hasIdentity(val)) retVal = false
+        if (retVal && preferencesStore.filters.missingIdentity && !val.hasIdentity) retVal = false
         if (retVal && preferencesStore.filters.notStaked && val.payee !== 'Staked') retVal = false
         if (retVal && preferencesStore.filters.selfController && val.selfController === val.address) retVal = false
         return retVal
@@ -473,20 +473,6 @@ export default {
       return validator.nominatorCount.value > clientStore.consts.maxNominatorRewardedPerValidator
     }
 
-    function hasIdentity (validator) {
-      return getIdentityType(validator) !== 'identity_none'
-    }
-
-    function getIdentityType (validator) {
-      if (validator.identity && validator.identity.info) {
-        return 'identity_check'
-      }
-      else if (validator.parent && validator.parent.identity.info && validator.super) {
-        return 'identity_plus'
-      }
-      return 'identity_none'
-    }
-
     function getIdentityTooltip (validator) {
       if (validator.parent && validator.parent.identity.info && validator.super) {
         return 'Super identity is set'
@@ -543,7 +529,6 @@ export default {
       infoIcon,
       displayFilterInfoModal,
       customSort,
-      getIdentityType,
       getIdentityIcon,
       getIdentityTooltip,
       isInvulnerable,

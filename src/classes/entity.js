@@ -58,6 +58,8 @@ export class Entity {
     // this.unsubscribeRewardPoints = null
     // validator info
     this.validator = validator
+    this.identityType = 'identity_none' // identity_plus | identity_check
+    this.hasIdentity = false
     this.elected = false // active
     this.nextElected = false // next set
     this.stakers = {
@@ -150,6 +152,18 @@ export class Entity {
 
       return '<unknown>'
     })
+
+    this.identityType = computed(() => {
+      if (this.identity && this.identity.info) {
+        return 'identity_check'
+      }
+      else if (this.parent && this.parent.identity.info && this.super) {
+        return 'identity_plus'
+      }
+      return 'identity_none'
+    })
+
+    this.hasIdentity = computed(() => this.identityType !== 'identity_none')
 
     this.nominatorCount = computed(() => {
       if (this.stakers && this.stakers.others && this.stakers.others.length > 0) {
