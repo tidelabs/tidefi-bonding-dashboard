@@ -472,8 +472,8 @@ export default {
               y1 = y.totalStaked === 'unknown' ? 0 : y.totalStaked
             }
             else if (sortBy === 'reward_points') {
-              x1 = x.rewardPoints === 'unknown' ? 0 : x.rewardPoints
-              y1 = y.rewardPoints === 'unknown' ? 0 : y.rewardPoints
+              x1 = x.currentRewardPoints === 'unknown' ? 0 : x.currentRewardPoints
+              y1 = y.currentRewardPoints === 'unknown' ? 0 : y.currentRewardPoints
             }
 
             return parseFloat(x1) - parseFloat(y1)
