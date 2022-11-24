@@ -356,9 +356,20 @@ export class Entity {
   async fetchLedger () {
     const clientStore = useClientStore()
 
-    const ledger = await clientStore.client.api.query.staking.ledger(this.address)
-    // console.log('ledger:', ledger.toJSON())
-    this.ledger = ledger.toJSON()
+    const ledgerData = await clientStore.client.api.query.staking.ledger(this.address)
+    if (ledgerData) {
+      const ledger = ledgerData.toHuman()
+      // console.log('Ledger:', ledger)
+      const ledgerJSON = ledgerData.toJSON()
+      if (ledger) {
+        if ('active' in ledger) {
+          ledger.active = normalizeValue(ledger.active)
+        }
+        ledger.claimedRewards = ledgerJSON.claimedRewards
+        ledger.total = normalizeValue(ledger.total)
+        this.ledger = ledger
+      }
+    }
   }
 
   async fetchTokenBalances () {
