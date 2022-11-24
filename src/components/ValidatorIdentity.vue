@@ -1,5 +1,5 @@
 <template>
-  <table class="identity-table">
+  <table v-if="validator.hasIdentity" class="identity-table">
     <tbody>
       <tr v-if="parentName">
         <td>Parent Name:</td><td>{{ parentName }}</td>
