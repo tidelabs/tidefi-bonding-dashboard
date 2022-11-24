@@ -137,13 +137,12 @@
         </q-tr>
       </template>
       <template v-slot:item="props">
-        <q-markup-table class="q-ma-md" style="min-width: 300px;">
+        <q-markup-table class="q-ma-md full-width" style="min-width: 300px;">
           <tbody>
 
             <tr>
-              <td></td>
-              <td>
-                <div class="row justify-start items-center">
+              <td colspan="2">
+                <div class="row justify-center items-center">
                   <q-badge v-if="props.row.blockCount" :label="props.row.blockCount" class="justify-center" style="width: 26px;">
                     <q-tooltip>Blocks produced this era</q-tooltip>
                   </q-badge>
@@ -548,10 +547,6 @@ export default {
 
   .token {
     font-size: 11px;
-  }
-
-  .filter-button-active {
-    color: fuchsia;
   }
 
   .validator-link {
