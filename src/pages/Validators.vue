@@ -56,7 +56,7 @@
             <div class="row justify-evenly items-center no-wrap">
               <div style="min-width: 33px;">
                 <q-badge v-if="props.row.blockCount" :label="props.row.blockCount" class="justify-center">
-                  <q-tooltip>Blocks produced</q-tooltip>
+                  <q-tooltip>Blocks produced this era</q-tooltip>
                 </q-badge>
               </div>
 
@@ -145,7 +145,7 @@
               <td>
                 <div class="row justify-start items-center">
                   <q-badge v-if="props.row.blockCount" :label="props.row.blockCount" class="justify-center" style="width: 26px;">
-                    <q-tooltip>Blocks produced</q-tooltip>
+                    <q-tooltip>Blocks produced this era</q-tooltip>
                   </q-badge>
 
                   <!-- <div style="min-width: 18px;">
