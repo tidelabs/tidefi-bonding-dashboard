@@ -6,7 +6,7 @@ import {
   getParentIdentity,
   getSuperIdentity
 } from '../helpers/validators'
-import { trimHash, toBaseToken, normalizeValue } from '../helpers/utils'
+import { trimHash, toBaseToken, normalizeValue, isVerifiedIdentity } from '../helpers/utils'
 import BN from 'bignumber.js'
 import { useClientStore } from 'stores/client'
 import { useEntitiesStore } from 'stores/entities'
@@ -58,7 +58,7 @@ export class Entity {
     // this.unsubscribeRewardPoints = null
     // validator info
     this.validator = validator
-    this.identityType = 'identity_none' // identity_plus | identity_check
+    this.identityType = 'identity_none' // identity_plus | identity_check | identity_verified
     this.hasIdentity = false
     this.elected = false // active
     this.nextElected = false // next set
@@ -145,18 +145,18 @@ export class Entity {
     // })
 
     this.name = computed(() => {
-      if (this.parent && this.parent.identity.info) {
-        let parentName = this.parent.identity.info.display.Raw
+      if (this?.parent && this?.parent?.identity?.info) {
+        let parentName = this?.parent?.identity?.info?.display?.Raw
         if (!this.super) {
           return parentName
         }
-        parentName += '/' + this.super[ 1 ].Raw
+        parentName += '/' + this?.super[ 1 ].Raw
         return parentName
       }
 
       // must come second as you can still have identity
-      if (this.identity && this.identity.info) {
-        return this.identity.info.display.Raw
+      if (this?.identity && this?.identity?.info) {
+        return this?.identity?.info?.display?.Raw
       }
 
       if (this.address) {
@@ -167,10 +167,13 @@ export class Entity {
     })
 
     this.identityType = computed(() => {
-      if (this.identity && this.identity.info) {
+      if (isVerifiedIdentity(this?.identity || this?.parent?.identity)) {
+        return 'identity_verified'
+      }
+      else if (this?.identity && this?.identity?.info) {
         return 'identity_check'
       }
-      else if (this.parent && this.parent.identity.info && this.super) {
+      else if (this?.parent && this?.parent?.identity?.info && this?.super) {
         return 'identity_plus'
       }
       return 'identity_none'
@@ -238,6 +241,9 @@ export class Entity {
       }
       return false
     })
+
+    // success
+    return true
   }
 
   formatTokenValue (val) {
