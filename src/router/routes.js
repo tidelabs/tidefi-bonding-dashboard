@@ -27,6 +27,11 @@ const routes = [
             name: 'validator-lookup',
             path: 'validator/:address?',
             component: () => import('pages/ValidatorInfo.vue')
+          },
+          {
+            name: 'address-lookup',
+            path: 'address/:address?',
+            component: () => import('pages/AddressLookup.vue')
           }
         ]
       }

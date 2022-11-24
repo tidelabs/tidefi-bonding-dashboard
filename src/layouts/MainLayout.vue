@@ -104,25 +104,32 @@ import {
 
 const matBrightness2 = 'M0 0h24v24H0z@@fill:none;&&M10 2c-1.82 0-3.53.5-5 1.35C7.99 5.08 10 8.3 10 12s-2.01 6.92-5 8.65C6.47 21.5 8.18 22 10 22c5.52 0 10-4.48 10-10S15.52 2 10 2z'
 const matBrightness5 = 'M0 0h24v24H0z@@fill:none;&&M20 15.31L23.31 12 20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69zM12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z'
+const icoInputSearch = 'M21 12V10C21 7.23858 18.7614 5 16 5H8C5.23858 5 3 7.23858 3 10V10C3 12.7614 5.23858 15 8 15H12@@stroke-width:1.5;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;&&M20.1241 19.1185C20.6654 18.5758 21 17.827 21 17C21 15.3431 19.6569 14 18 14C16.3431 14 15 15.3431 15 17C15 18.6569 16.3431 20 18 20C18.8299 20 19.581 19.663 20.1241 19.1185ZM20.1241 19.1185L22 21@@stroke-width:1.5;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;'
 
 const internalList = [
   {
     title: 'Home Page',
-    // caption: 'quasar.dev',
+    caption: 'Chain info',
     icon: fasHome,
     link: '/home' // { name: 'home' }
   },
   {
     title: 'Validator Nodes',
-    // caption: 'quasar.dev',
+    caption: 'Comparative data',
     icon: remNodeTree,
     link: '/validators' // { name: 'validators' }
   },
   {
     title: 'Validator Lookup',
-    // caption: 'quasar.dev',
+    caption: 'Quantitative data',
     icon: 'search',
-    link: '/validator' // { name: 'validator' }
+    link: '/validator' // { name: 'validator-lookup' }
+  },
+  {
+    title: 'Address Lookup',
+    caption: 'Look yourself up!',
+    icon: icoInputSearch,
+    link: '/address' // { name: 'address-lookup' }
   }
 ]
 const externalList = [
