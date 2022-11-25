@@ -158,7 +158,7 @@ const externalList = [
     link: 'https://twitter.com/Tidefi_DEX'
   },
   {
-    title: 'Discord Chat Channel',
+    title: 'Discord Chat',
     caption: 'chat.tidefi.com',
     icon: fabDiscord,
     link: 'https://chat.tidefi.com'
