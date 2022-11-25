@@ -211,7 +211,7 @@ export class Entity {
     this.currentRewardPoints = computed(() => {
       const clientStore = useClientStore()
 
-      return clientStore.rewardPoints[ clientStore.rewardPoints.length - 1 ].rewards.individual[ this.address ] || 0
+      return clientStore.rewardPoints[ clientStore.rewardPoints.length - 1 ]?.rewards?.individual[ this.address ] || 0
     })
 
     this.erasRewardPoints = computed(() => {
@@ -221,9 +221,9 @@ export class Entity {
       clientStore.rewardPoints.forEach((era) => {
         if (era.rewards.individual[ this.address ]) {
           points.push({
-            era: era.era,
-            total: era.rewards.total,
-            amount: era.rewards.individual[ this.address ]
+            era: era?.era,
+            total: era?.rewards?.total,
+            amount: era?.rewards?.individual[ this.address ]
           })
         }
       })
@@ -285,6 +285,7 @@ export class Entity {
           if (!this.identity) {
             this.identity = {}
           }
+          // TODO: judgements will need to be checked for verified identities
           this.identity.judgements = identityHuman.judgements
         }
       }
