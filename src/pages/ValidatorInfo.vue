@@ -40,7 +40,6 @@
                 <div class="validator-name">{{ validator.name }}</div>
               </div>
               <div>{{ validator.address }}</div>
-              <Identity :entity="validator" />
             </div>
           </div>
         </div>
@@ -49,6 +48,11 @@
           <!-- TODO: Right Side - graphs? -->
         </div>
       </div>
+      <div class="row justify-start items-stretch full-width q-gutter-sm">
+        <Identity :entity="validator" />
+        <Nominators :validator="validator" />
+      </div>
+
       <!-- End of split page -->
       <ErasRewardPoints v-if="validator && validator.erasRewardPoints.length" :erasRewardPoints="validator.erasRewardPoints" />
     </div>
@@ -61,16 +65,18 @@ import { useRoute, useRouter } from 'vue-router'
 import { useEntitiesStore } from 'src/stores/entities'
 import { useClientStore } from 'src/stores/client'
 import { infoIcon } from 'assets/icons'
+import { isValidAddress } from 'src/helpers/utils'
 
 import ErasRewardPoints from 'src/components/ErasRewardPoints.vue'
 import Identity from 'src/components/Identity.vue'
-import { isValidAddress } from 'src/helpers/utils'
+import Nominators from 'src/components/Nominators.vue'
 
 export default {
   name: 'ValidatorInfo',
 
   components: {
     Identity,
+    Nominators,
     ErasRewardPoints
   },
 
