@@ -120,6 +120,7 @@ export default {
 
 <style lang="scss" scoped>
 .identity-table {
+  max-width: 300px;
   border: 1px solid rgba(200,200,200,0.4);
   border-radius: 4px;
   margin-top: 8px;
