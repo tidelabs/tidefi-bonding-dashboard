@@ -40,13 +40,13 @@
                 <div class="validator-name">{{ validator.name }}</div>
               </div>
               <div>{{ validator.address }}</div>
-              <ValidatorIdentity :validator="validator" />
+              <Identity :entity="validator" />
             </div>
           </div>
         </div>
         <!-- Right Side -->
         <div class="column">
-          <!-- TODO: Right Side - graphs -->
+          <!-- TODO: Right Side - graphs? -->
         </div>
       </div>
       <!-- End of split page -->
@@ -63,13 +63,13 @@ import { useClientStore } from 'src/stores/client'
 import { infoIcon } from 'assets/icons'
 
 import ValidatorRewardPoints from 'components/ValidatorRewardPoints.vue'
-import ValidatorIdentity from 'src/components/ValidatorIdentity.vue'
+import Identity from 'src/components/Identity.vue'
 
 export default {
   name: 'ValidatorInfo',
 
   components: {
-    ValidatorIdentity,
+    Identity,
     ValidatorRewardPoints
   },
 

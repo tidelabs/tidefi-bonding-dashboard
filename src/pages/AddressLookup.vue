@@ -25,7 +25,7 @@
                 <div class="validator-name">{{ entity.name }}</div>
               </div>
               <div>{{ entity.address }}</div>
-              <ValidatorIdentity :validator="entity" />
+              <Identity :entity="entity" />
             </div>
           </div>
         </div>
@@ -47,13 +47,13 @@ import { Entity } from '../classes/entity'
 import { useEntitiesStore } from 'src/stores/entities'
 import { useClientStore } from 'src/stores/client'
 
-import ValidatorIdentity from 'src/components/ValidatorIdentity.vue'
+import Identity from 'src/components/Identity.vue'
 
 export default {
   name: 'Address Lookup',
 
   components: {
-    ValidatorIdentity
+    Identity
   },
 
   setup (props) {
