@@ -46,21 +46,23 @@ export class Client {
       clientStore.api = api
       clientStore.client = this
 
-      await this.fetchChainInfo()
-      await this.fetchConsts()
-      await this.fetchAssets()
-      await this.fetchEras()
-      await this.fetchCounts()
-      await this.fetchErasTotalStake()
-      await this.fetchErasRewardPoints()
-      await this.fetchInvulnerables()
-      await this.fetchSubIdentities()
-      // await this.fetchElectedInfo()
-      await this.fetchEraExposure()
-      await this.fetchValidators()
-      await this.fetchAuthoredBlocks() // must come after validators
-      await this.fetchErasValidatorReward()
-      await this.fetchUnappliedSlashes()
+      this.refetchAll()
+
+      // await this.fetchChainInfo()
+      // await this.fetchConsts()
+      // await this.fetchAssets()
+      // await this.fetchEras()
+      // await this.fetchCounts()
+      // await this.fetchErasTotalStake()
+      // await this.fetchErasRewardPoints()
+      // await this.fetchInvulnerables()
+      // await this.fetchSubIdentities()
+      // // await this.fetchElectedInfo()
+      // await this.fetchEraExposure()
+      // await this.fetchValidators()
+      // await this.fetchAuthoredBlocks() // must come after validators
+      // await this.fetchErasValidatorReward()
+      // await this.fetchUnappliedSlashes()
 
       const [
         bondedEras,
