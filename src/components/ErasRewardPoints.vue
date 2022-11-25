@@ -1,5 +1,5 @@
 <template>
-  <div class="column full-width">
+  <div class="column full-width q-ma-sm">
     <q-card>
       <highcharts
         :options="chartOptions"
@@ -13,7 +13,7 @@ import { computed } from 'vue'
 import { useQuasar } from 'quasar'
 
 export default {
-  name: 'ValidatorRewardPoints',
+  name: 'ErasRewardPoints',
   props: {
     erasRewardPoints: {
       type: Array,

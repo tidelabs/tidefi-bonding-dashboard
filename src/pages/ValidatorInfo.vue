@@ -50,7 +50,7 @@
         </div>
       </div>
       <!-- End of split page -->
-      <ValidatorRewardPoints v-if="validator && validator.erasRewardPoints.length" :erasRewardPoints="validator.erasRewardPoints" />
+      <ErasRewardPoints v-if="validator && validator.erasRewardPoints.length" :erasRewardPoints="validator.erasRewardPoints" />
     </div>
   </div>
 </template>
@@ -62,15 +62,16 @@ import { useEntitiesStore } from 'src/stores/entities'
 import { useClientStore } from 'src/stores/client'
 import { infoIcon } from 'assets/icons'
 
-import ValidatorRewardPoints from 'components/ValidatorRewardPoints.vue'
+import ErasRewardPoints from 'src/components/ErasRewardPoints.vue'
 import Identity from 'src/components/Identity.vue'
+import { isValidAddress } from 'src/helpers/utils'
 
 export default {
   name: 'ValidatorInfo',
 
   components: {
     Identity,
-    ValidatorRewardPoints
+    ErasRewardPoints
   },
 
   setup () {
@@ -90,10 +91,12 @@ export default {
     const validators = computed(() => entitiesStore.getValidators)
 
     const validator = computed(() => {
-      const v = entitiesStore.getValidators.find((val) => val.address === route.params.address)
-      if (v) {
-        // console.log('Selected validator:', v, clientStore)
-        return v
+      if (isValidAddress(route.params.address)) {
+        const v = validators.value.find((val) => val.address === route.params.address)
+        if (v) {
+          // console.log('Selected validator:', v, clientStore)
+          return v
+        }
       }
       return null
     })
