@@ -231,7 +231,7 @@
 
             <tr>
               <td class="text-weight-bold">Reward Points</td>
-              <td>{{ props.row.rewardPoints }}</td>
+              <td>{{ props.row.currentRewardPoints }}</td>
             </tr>
 
             <tr>
@@ -292,14 +292,15 @@ export default {
         required: true,
         align: 'center',
         sortable: true,
-        style: 'width: 30px'
+        style: 'max-width: 33px; padding-left: 0; padding-right: 0;'
       },
       {
+        label: 'Flags',
         name: 'flags',
         required: true,
         align: 'right',
         sortable: false,
-        style: 'width: 115px'
+        style: 'width: 50px; padding-left: 0; padding-right: 0;'
       },
       {
         label: 'Name/Address',
