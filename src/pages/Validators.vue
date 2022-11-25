@@ -17,7 +17,6 @@
       <template v-slot:top>
         <div class="full-width row justify-start items-center">
           <q-expansion-item
-            label="Exclude from Search"
             class="full-width rounded-borders"
           >
             <template v-slot:header>
@@ -30,16 +29,16 @@
               </q-item-section>
             </template>
             <q-card class="rounded-borders">
-              <q-card-section>
+              <q-card-section class="q-gutter-sm">
                 <!-- <div class="row justify-evenly items-center q-gutter-sm"> -->
-                  <q-toggle color="purple-13" v-model="preferencesStore.filters.inactive" label="Inactive Validators" />
-                  <q-toggle color="purple-13" v-model="preferencesStore.filters.nextSet" label="Not Elected Next Set" />
-                  <q-toggle color="purple-13" v-model="preferencesStore.filters.highCommission" label="High Commission (>10%)" />
-                  <q-toggle color="purple-13" v-model="preferencesStore.filters.oversubscribed" label="Oversubscribed" />
-                  <q-toggle color="purple-13" v-model="preferencesStore.filters.blockedNominations" label="Blocked Nominations" />
-                  <q-toggle color="purple-13" v-model="preferencesStore.filters.missingIdentity" label="No Verified Identity" />
-                  <q-toggle color="purple-13" v-model="preferencesStore.filters.notStaked" label="Not Staked" />
-                  <q-toggle color="purple-13" v-model="preferencesStore.filters.selfController" label="Self Controller" />
+                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.inactive" label="Inactive Validators" />
+                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.nextSet" label="Not Elected Next Set" />
+                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.highCommission" label="High Commission (>10%)" />
+                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.oversubscribed" label="Oversubscribed" />
+                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.blockedNominations" label="Blocked Nominations" />
+                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.missingIdentity" label="No Verified Identity" />
+                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.notStaked" label="Not Staked" />
+                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.selfController" label="Self Controller" />
                   <!-- <q-toggle v-model="preferencesStore.filters.belowAvgPoints" label="Below Average Era Pints" /> -->
                   <!-- <q-toggle v-model="preferencesStore.filters.slashed" label="Slashed" /> -->
                   <!-- <q-toggle v-model="preferencesStore.filters.noGovernance" label="No Governance Participation" /> -->
@@ -569,6 +568,9 @@ export default {
   .q-table th, .q-table td {
     padding: 7px 8px;
     background-color: inherit;
+  }
+  .q-table--dense .q-table__top {
+    padding: 6px 0px;
   }
 
   .token {
