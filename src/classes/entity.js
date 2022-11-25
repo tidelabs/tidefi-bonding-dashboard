@@ -167,19 +167,23 @@ export class Entity {
     })
 
     this.identityType = computed(() => {
-      if (isVerifiedIdentity(this?.identity || this?.parent?.identity)) {
+      if (isVerifiedIdentity(this.identity || (this.parent && this.parent.identity))) {
         return 'identity_verified'
       }
-      else if (this?.identity && this?.identity?.info) {
+      else if (this.identity && this.identity.info) {
         return 'identity_check'
       }
-      else if (this?.parent && this?.parent?.identity?.info && this?.super) {
+      else if (this.parent && this.parent.identity.info && this.super) {
         return 'identity_plus'
       }
       return 'identity_none'
     })
 
-    this.hasIdentity = computed(() => this.identityType !== 'identity_none')
+    this.hasIdentity = computed(() => {
+      const value = this.identityType !== 'identity_none'
+      console.log(`IdentityType (${ this.name }): ${ this.identityType }`)
+      return value
+    })
 
     this.nominatorCount = computed(() => {
       if (this.stakers && this.stakers.others && this.stakers.others.length > 0) {

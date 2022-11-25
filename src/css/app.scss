@@ -47,3 +47,46 @@
   max-height: 25px;
   margin: 2px;
 }
+
+.info-table {
+  table-layout: fixed;
+  border-collapse: collapse;
+  border-spacing: 0;
+  max-width: 300px;
+  border-radius: 4px;
+  padding: 2px;
+  margin-top: 8px;
+  transition: color 0.3s, background-color 0.3s;
+}
+
+.info-table table {
+  width: 100%;
+}
+
+.info-table thead,
+.info-table tbody {
+  // padding: 4px 8px;
+  overflow: hidden;
+}
+
+.info-table thead {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.info-table th,
+.info-table tr,
+.info-table td {
+  // padding: 2px 6px;
+}
+
+.q-dark div,
+.body--dark div {
+  .info-table thead {
+    color: #FFFF00;
+  }
+  .info-table thead,
+  .info-table tbody {
+    background-color: var(--q-dark);
+  }
+}

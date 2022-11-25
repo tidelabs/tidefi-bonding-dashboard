@@ -1,30 +1,36 @@
 <template>
-  <table v-if="entity.hasIdentity" class="identity-table">
-    <tbody>
-      <tr v-if="parentName">
-        <td>Parent Name:</td><td>{{ parentName }}</td>
-      </tr>
-      <tr v-if="superName">
-        <td>Super Name:</td><td>{{ superName }}</td>
-      </tr>
-      <tr v-if="email">
-        <td>Email:</td><td>{{ email }}</td>
-      </tr>
-      <tr v-if="legal">
-        <td>Legal:</td><td>{{ legal }}</td>
-      </tr>
-      <tr v-if="riot">
-        <td>Riot:</td><td>{{ riot }}</td>
-      </tr>
-      <tr v-if="twitter">
-        <td>Twitter:</td><td>{{ twitter }}</td>
-      </tr>
-      <tr v-if="web">
-        <td>Web:</td><td>{{ web }}</td>
-      </tr>
-    </tbody>
-  </table>
-
+  <q-card v-if="hasIdentity" class="info-table">
+    <table>
+      <thead>
+        <tr>
+          <th colspan="2">Identity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-if="parentName">
+          <td>Parent Name:</td><td>{{ parentName }}</td>
+        </tr>
+        <tr v-if="superName">
+          <td>Super Name:</td><td>{{ superName }}</td>
+        </tr>
+        <tr v-if="email">
+          <td>Email:</td><td>{{ email }}</td>
+        </tr>
+        <tr v-if="legal">
+          <td>Legal:</td><td>{{ legal }}</td>
+        </tr>
+        <tr v-if="riot">
+          <td>Riot:</td><td>{{ riot }}</td>
+        </tr>
+        <tr v-if="twitter">
+          <td>Twitter:</td><td>{{ twitter }}</td>
+        </tr>
+        <tr v-if="web">
+          <td>Web:</td><td>{{ web }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </q-card>
 </template>
 
 <script>
@@ -105,6 +111,12 @@ export default {
       return ''
     })
 
+    const hasIdentity = computed(() => {
+      return !!(parentName.value || superName.value
+        || email.value || legal.value || riot.value
+        || twitter.value || web.value)
+    })
+
     return {
       parentName,
       superName,
@@ -112,17 +124,9 @@ export default {
       legal,
       riot,
       twitter,
-      web
+      web,
+      hasIdentity
     }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.identity-table {
-  max-width: 300px;
-  border: 1px solid rgba(200,200,200,0.4);
-  border-radius: 4px;
-  margin-top: 8px;
-}
-</style>
