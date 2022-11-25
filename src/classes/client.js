@@ -228,12 +228,13 @@ export class Client {
   }
 
   // updates previous data asynchronously
-  refetchAll () {
-    // fetch asyncronously - we already have data
-    this.fetchChainInfo()
-    this.fetchConsts()
-    this.fetchAssets()
-    this.fetchEras()
+  async refetchAll () {
+    // wait on some
+    await this.fetchChainInfo()
+    await this.fetchConsts()
+    await this.fetchAssets()
+    await this.fetchEras()
+    // others that are reactive
     this.fetchCounts()
     this.fetchErasTotalStake()
     this.fetchErasRewardPoints()
