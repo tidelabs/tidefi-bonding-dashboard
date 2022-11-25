@@ -1,5 +1,5 @@
 <template>
-  <div class="q-ma-md">
+  <div class="q-ma-sm">
     <FilterInfo v-model="displayFilterInfoModal" />
     <q-table
       title="Validators"
