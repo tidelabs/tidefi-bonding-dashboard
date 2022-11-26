@@ -3,6 +3,7 @@
     <q-card>
       <highcharts
         :options="chartOptions"
+        class="full-width"
       />
     </q-card>
   </div>

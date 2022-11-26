@@ -34,13 +34,17 @@
         <!-- Left Side -->
         <div class="column justify-start items-start">
           <div class="row justify-start items-center">
+
             <div v-if="validator" class="column">
-              <div class="row justify-start items-center">
-                <div class="border-light identity-svg-wrapper" v-html="validator.identicon" />
-                <div class="validator-name">{{ validator.name }}</div>
-              </div>
-              <div>{{ validator.address }}</div>
+              <q-card class="q-ma-sm q-pa-sm">
+                <div class="row justify-start items-center">
+                  <div class="border-light identity-svg-wrapper" v-html="validator.identicon" />
+                  <div class="validator-name">{{ validator.name }}</div>
+                </div>
+                <div>{{ validator.address }}</div>
+              </q-card>
             </div>
+
           </div>
         </div>
         <!-- Right Side -->

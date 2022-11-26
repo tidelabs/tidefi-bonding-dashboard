@@ -1,5 +1,5 @@
 <template>
-  <q-card class="info-table">
+  <q-card v-if="validator" class="info-table">
     <table>
       <thead>
         <tr>
@@ -48,7 +48,8 @@ export default {
   props: {
     validator: {
       type: Object,
-      required: true
+      required: false,
+      validator: (prop) => typeof prop === 'object' || prop === null
     }
   }
 

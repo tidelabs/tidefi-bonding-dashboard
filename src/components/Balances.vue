@@ -1,9 +1,9 @@
 <template>
-  <q-card v-if="hasBalances" class="info-table">
+  <q-card v-if="entity && hasBalances" class="info-table">
     <table>
       <thead>
         <tr>
-          <th colspan="2">Balances</th>
+          <th colspan="2">Balances (TDFY)</th>
         </tr>
       </thead>
       <tbody>

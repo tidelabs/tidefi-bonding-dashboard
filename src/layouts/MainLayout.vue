@@ -30,7 +30,7 @@
           </q-icon>
           </q-toolbar-title>
 
-        <div class="column q-toolbar__title text-right ellipsis" style="font-size: 10px;">
+        <div class="column q-toolbar__title text-right ellipsis" style="font-size: 12px;">
           <div class="ellipsis">{{ clientStore.nodeName }} {{ clientStore.nodeVersion }}</div>
           <div class="ellipsis">{{ clientStore.consts.version.specName }}/{{ clientStore.consts.version.specVersion }}</div>
         </div>

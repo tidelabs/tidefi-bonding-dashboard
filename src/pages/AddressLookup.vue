@@ -19,14 +19,17 @@
         <!-- Left Side -->
         <div class="column justify-start items-start">
           <div class="row justify-start items-center">
+
             <div v-if="entity" class="column">
-              <div class="row justify-start items-center">
-                <div class="border-light identity-svg-wrapper" v-html="entity.identicon" />
-                <div class="validator-name">{{ entity.name }}</div>
-              </div>
-              <div>{{ entity.address }}</div>
-              <Identity :entity="entity" />
+              <q-card class="q-ma-sm q-pa-sm">
+                <div class="row justify-start items-center">
+                  <div class="border-light identity-svg-wrapper" v-html="entity.identicon" />
+                  <div class="validator-name">{{ entity.name }}</div>
+                </div>
+                <div>{{ entity.address }}</div>
+              </q-card>
             </div>
+
           </div>
         </div>
         <!-- Right Side -->
@@ -100,9 +103,9 @@ export default {
         const success = await entity.value.connect()
         if (!success) {
           entity.value = null
-          // return
+          return
         }
-        // console.log('entity:', entity.value)
+        console.log('entity:', entity.value)
       }
       else {
         entity.value = null
