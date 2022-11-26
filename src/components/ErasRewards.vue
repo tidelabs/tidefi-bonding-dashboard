@@ -1,8 +1,10 @@
 <template>
   <div class="column full-width">
-    <q-card>
+    <q-card class="column full-width">
       <highcharts
         :options="chartOptions"
+        class="column full-width"
+        style="max-width: 100%;"
       />
     </q-card>
   </div>

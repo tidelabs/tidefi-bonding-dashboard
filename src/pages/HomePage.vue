@@ -1,5 +1,5 @@
 <template>
-  <div class="column">
+  <div class="column full-width">
     <ErasRewards v-if="erasRewards.length > 0" :rewards="erasRewards" class="q-pa-sm" />
   </div>
 </template>
