@@ -61,6 +61,7 @@
 
       <!-- End of split page -->
       <ErasRewardPoints v-if="validator && validator.erasRewardPoints.length" :erasRewardPoints="validator.erasRewardPoints" />
+      <StakerRewards v-if="stakerRewardsData.length > 0" :rewards="stakerRewardsData" />
     </div>
   </div>
 </template>
@@ -72,12 +73,14 @@ import { useEntitiesStore } from 'src/stores/entities'
 import { useClientStore } from 'src/stores/client'
 import { infoIcon } from 'assets/icons'
 import { isValidAddress } from 'src/helpers/utils'
+import { stakerRewards } from 'src/helpers/stakerRewards'
 
 import ErasRewardPoints from 'src/components/ErasRewardPoints.vue'
 import Identity from 'src/components/Identity.vue'
 import Nominators from 'src/components/Nominators.vue'
 import ValidatorStats from 'src/components/ValidatorStats.vue'
 import Balances from 'src/components/Balances.vue'
+import StakerRewards from 'src/components/StakerRewards.vue'
 
 export default {
   name: 'ValidatorInfo',
@@ -87,7 +90,8 @@ export default {
     Nominators,
     ValidatorStats,
     Balances,
-    ErasRewardPoints
+    ErasRewardPoints,
+    StakerRewards
   },
 
   setup () {
@@ -96,6 +100,7 @@ export default {
     const entitiesStore = useEntitiesStore()
     const clientStore = useClientStore()
     const selectedValidator = ref(null)
+    const stakerRewardsData = ref([])
 
     const loading = computed(() => {
       if (clientStore.isLoading) {
@@ -111,6 +116,7 @@ export default {
         const v = validators.value.find((val) => val.address === route.params.address)
         if (v) {
           // console.log('Selected validator:', v, clientStore)
+
           return v
         }
       }
@@ -129,29 +135,25 @@ export default {
       }
     })
 
-    watch(validator, (val) => {
+    watch(validator, async (val) => {
       if (val) {
         selectedValidator.value = val
+        stakerRewardsData.value = []
+        stakerRewards(clientStore.client.api, val.address, true)
+          .then((result) => {
+            stakerRewardsData.value = result
+            // console.log('StakerRewards:', stakerRewardsData.value)
+          })
       }
     })
-
-    // const previousHistoryErasCount = computed(() => clientStore.getPreviousHistoryErasCount)
-
-    // const erasList = computed(() => {
-    //   const erasList = []
-    //   const api = clientStore.client.api
-
-    //   Array.from(Array(previousHistoryErasCount.value)).forEach(async (_, i) => {
-    //     const eraStackers = await
-    //   })
-    // })
 
     return {
       loading,
       selectedValidator,
       validators,
       validator,
-      infoIcon
+      infoIcon,
+      stakerRewardsData
     }
   }
 }

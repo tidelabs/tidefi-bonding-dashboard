@@ -43,6 +43,7 @@
       </div>
 
       <!-- End of split page -->
+      <StakerRewards v-if="stakerRewardsData.length > 0" :rewards="stakerRewardsData" />
     </div>
   </div>
 </template>
@@ -54,16 +55,19 @@ import { isValidAddress } from '../helpers/utils'
 import { Entity } from '../classes/entity'
 import { useEntitiesStore } from 'src/stores/entities'
 import { useClientStore } from 'src/stores/client'
+import { stakerRewards } from 'src/helpers/stakerRewards'
 
 import Identity from 'src/components/Identity.vue'
 import Balances from 'src/components/Balances.vue'
+import StakerRewards from 'src/components/StakerRewards.vue'
 
 export default {
   name: 'Address Lookup',
 
   components: {
     Identity,
-    Balances
+    Balances,
+    StakerRewards
   },
 
   setup (props) {
@@ -73,6 +77,7 @@ export default {
     const clientStore = useClientStore()
     const selectedAddress = ref(null)
     const entity = ref(null)
+    const stakerRewardsData = ref([])
 
     onBeforeMount(() => {
       if (clientStore.client && route.params.address && isValidAddress(route.params.address)) {
@@ -105,7 +110,14 @@ export default {
           entity.value = null
           return
         }
-        console.log('entity:', entity.value)
+
+        // console.log('entity:', entity.value)
+        stakerRewardsData.value = []
+        stakerRewards(clientStore.client.api, entity.value.address, true)
+          .then((result) => {
+            stakerRewardsData.value = result
+            // console.log('StakerRewards:', stakerRewardsData.value)
+          })
       }
       else {
         entity.value = null
@@ -125,7 +137,8 @@ export default {
       loading,
       selectedAddress,
       isValidAddress,
-      entity
+      entity,
+      stakerRewardsData
     }
   }
 }
