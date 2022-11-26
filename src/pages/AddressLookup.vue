@@ -34,6 +34,11 @@
           <!-- TODO: Right Side - graphs -->
         </div>
       </div>
+      <div class="row justify-start items-stretch full-width q-gutter-sm">
+        <Identity :entity="entity" />
+        <Balances :entity="entity" />
+      </div>
+
       <!-- End of split page -->
     </div>
   </div>
@@ -48,12 +53,14 @@ import { useEntitiesStore } from 'src/stores/entities'
 import { useClientStore } from 'src/stores/client'
 
 import Identity from 'src/components/Identity.vue'
+import Balances from 'src/components/Balances.vue'
 
 export default {
   name: 'Address Lookup',
 
   components: {
-    Identity
+    Identity,
+    Balances
   },
 
   setup (props) {
@@ -93,9 +100,9 @@ export default {
         const success = await entity.value.connect()
         if (!success) {
           entity.value = null
-          return
+          // return
         }
-        console.log('entity:', entity.value)
+        // console.log('entity:', entity.value)
       }
       else {
         entity.value = null

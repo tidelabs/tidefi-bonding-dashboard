@@ -12,7 +12,15 @@
             <td>
               <div class="row justify-start items-center">
                 <div class="border-light identity-svg-wrapper" v-html="identicon" />
-                <div>{{ hashAddress }}<q-tooltip>{{ address }}</q-tooltip></div>
+                <div>
+                  <router-link
+                    :to="{ name: 'address-lookup', params: { address: address } }"
+                    class="entity-link"
+                  >
+                    {{ hashAddress }}
+                  </router-link>
+                  <q-tooltip>{{ address }}</q-tooltip>
+                </div>
               </div>
             </td>
             <td class="text-right">

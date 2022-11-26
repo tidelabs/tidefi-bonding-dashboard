@@ -51,6 +51,8 @@
       <div class="row justify-start items-stretch full-width q-gutter-sm">
         <Identity :entity="validator" />
         <Nominators :validator="validator" />
+        <ValidatorStats :validator="validator" />
+        <Balances :entity="validator" />
       </div>
 
       <!-- End of split page -->
@@ -70,6 +72,8 @@ import { isValidAddress } from 'src/helpers/utils'
 import ErasRewardPoints from 'src/components/ErasRewardPoints.vue'
 import Identity from 'src/components/Identity.vue'
 import Nominators from 'src/components/Nominators.vue'
+import ValidatorStats from 'src/components/ValidatorStats.vue'
+import Balances from 'src/components/Balances.vue'
 
 export default {
   name: 'ValidatorInfo',
@@ -77,6 +81,8 @@ export default {
   components: {
     Identity,
     Nominators,
+    ValidatorStats,
+    Balances,
     ErasRewardPoints
   },
 

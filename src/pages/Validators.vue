@@ -97,7 +97,7 @@
               </div>
               <router-link
                 :to="{ name: 'validator-lookup', params: { address: props.row.address } }"
-                class="validator-link"
+                class="entity-link"
               >
                 <div class="col q-ml-sm">{{ props.row.name }}</div>
               </router-link>
@@ -187,7 +187,7 @@
                   </div>
                   <router-link
                     :to="{ name: 'validator-lookup', params: { address: props.row.address } }"
-                    class="validator-link"
+                    class="entity-link"
                   >
                     <div class="col q-ml-sm">{{ props.row.name }}</div>
                   </router-link>
@@ -575,10 +575,5 @@ export default {
 
   .token {
     font-size: 11px;
-  }
-
-  .validator-link {
-    text-decoration: underline dotted;
-    color: inherit;
   }
 </style>

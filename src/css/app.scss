@@ -29,6 +29,11 @@
 
 }
 
+.entity-link {
+  text-decoration: underline dotted;
+  color: inherit;
+}
+
 .panel {
   min-width: 140px !important;
 }
@@ -49,9 +54,6 @@
 }
 
 .info-table {
-  table-layout: fixed;
-  border-collapse: collapse;
-  border-spacing: 0;
   max-width: 300px;
   width: 100%;
   border-radius: 4px;
@@ -60,25 +62,27 @@
   transition: color 0.3s, background-color 0.3s;
 }
 
+@media (max-width: $breakpoint-xs-max) {
+  .info-table {
+    max-width: 100%;
+  }
+}
+
 .info-table table {
   width: 100%;
+  // table-layout: fixed;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 .info-table thead,
 .info-table tbody {
-  // padding: 4px 8px;
   overflow: hidden;
 }
 
 .info-table thead {
   font-size: 18px;
   font-weight: bold;
-}
-
-.info-table th,
-.info-table tr,
-.info-table td {
-  // padding: 2px 6px;
 }
 
 .q-dark div,

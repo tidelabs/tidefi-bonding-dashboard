@@ -42,70 +42,71 @@ export default {
   props: {
     entity: {
       type: Object,
-      required: true
+      required: false,
+      validator: (prop) => typeof prop === 'object' || prop === null
     }
   },
 
   setup (props) {
     const parentName = computed(() => {
-      if (props.entity.parent && props.entity.parent.identity.info.display !== 'None') {
+      if (props.entity && props.entity.parent && props.entity.parent.identity.info.display !== 'None') {
         return props.entity.parent.identity.info.display.Raw
       }
       return ''
     })
 
     const superName = computed(() => {
-      if (props.entity.super && props.entity.super.length > 0) {
+      if (props.entity && props.entity.super && props.entity.super.length > 0) {
         return props.entity.super[ 1 ].Raw
       }
       return ''
     })
 
     const email = computed(() => {
-      if (props.entity.parent && props.entity.parent.identity.info.email !== 'None') {
+      if (props.entity && props.entity.parent && props.entity.parent.identity.info.email !== 'None') {
         return props.entity.parent.identity.info.email.Raw
       }
-      if (props.entity.identity && props.entity.identity.info.email !== 'None') {
+      if (props.entity && props.entity.identity && props.entity.identity.info.email !== 'None') {
         return props.entity.identity.info.email.Raw
       }
       return ''
     })
 
     const legal = computed(() => {
-      if (props.entity.parent && props.entity.parent.identity.info.legal !== 'None') {
+      if (props.entity && props.entity.parent && props.entity.parent.identity.info.legal !== 'None') {
         return props.entity.parent.identity.info.legal.Raw
       }
-      if (props.entity.identity && props.entity.identity.info.legal !== 'None') {
+      if (props.entity && props.entity.identity && props.entity.identity.info.legal !== 'None') {
         return props.entity.identity.info.legal.Raw
       }
       return ''
     })
 
     const riot = computed(() => {
-      if (props.entity.parent && props.entity.parent.identity.info.riot !== 'None') {
+      if (props.entity && props.entity.parent && props.entity.parent.identity.info.riot !== 'None') {
         return props.entity.parent.identity.info.riot.Raw
       }
-      if (props.entity.identity && props.entity.identity.info.riot !== 'None') {
+      if (props.entity && props.entity.identity && props.entity.identity.info.riot !== 'None') {
         return props.entity.identity.info.riot.Raw
       }
       return ''
     })
 
     const twitter = computed(() => {
-      if (props.entity.parent && props.entity.parent.identity.info.twitter !== 'None') {
+      if (props.entity && props.entity.parent && props.entity.parent.identity.info.twitter !== 'None') {
         return props.entity.parent.identity.info.twitter.Raw
       }
-      if (props.entity.identity && props.entity.identity.info.twitter !== 'None') {
+      if (props.entity && props.entity.identity && props.entity.identity.info.twitter !== 'None') {
         return props.entity.identity.info.twitter.Raw
       }
       return ''
     })
 
     const web = computed(() => {
-      if (props.entity.parent && props.entity.parent.identity.info.web !== 'None') {
+      if (props.entity && props.entity.parent && props.entity.parent.identity.info.web !== 'None') {
         return props.entity.parent.identity.info.web.Raw
       }
-      if (props.entity.identity && props.entity.identity.info.web !== 'None') {
+      if (props.entity && props.entity.identity && props.entity.identity.info.web !== 'None') {
         return props.entity.identity.info.web.Raw
       }
       return ''

@@ -6,7 +6,7 @@ import {
   getParentIdentity,
   getSuperIdentity
 } from '../helpers/validators'
-import { trimHash, toBaseToken, normalizeValue, isVerifiedIdentity } from '../helpers/utils'
+import { trimHash, toBaseToken, normalizeValue, isVerifiedIdentity } from 'src/helpers/utils'
 import BN from 'bignumber.js'
 import { useClientStore } from 'stores/client'
 import { useEntitiesStore } from 'stores/entities'
@@ -181,7 +181,7 @@ export class Entity {
 
     this.hasIdentity = computed(() => {
       const value = this.identityType !== 'identity_none'
-      console.log(`IdentityType (${ this.name }): ${ this.identityType }`)
+      console.log(`IdentityType (${ this.name.value }): ${ this.identityType.value }`)
       return value
     })
 
