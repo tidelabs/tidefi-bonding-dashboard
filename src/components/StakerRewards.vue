@@ -3,7 +3,7 @@
     <q-card class="column full-width">
       <highcharts
         :options="chartOptions"
-        class="column full-width"
+        class="column full-width staker-rewards"
         style="max-width: 100%;"
       />
     </q-card>
@@ -23,6 +23,16 @@ export default {
     rewards: {
       type: Array,
       required: true
+    },
+    isValidator: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    subtitle: {
+      type: String,
+      required: false,
+      default: ''
     }
   },
 
@@ -56,37 +66,44 @@ export default {
 
     const chartOptions = computed(() => {
       const options = {
+        // colors: [ '#FF00FF', '#00FF00' ],
+        colors: $q.dark.isActive ? [ '#8087E8', '#A3EDBA', '#F19E53', '#6699A1',
+          '#E1D369', '#87B4E7', '#DA6D85', '#BBBAC5' ] : [ '#8087E8', '#A3EDBA',
+          '#F19E53', '#6699A1', '#E1D369', '#87B4E7', '#DA6D85', '#BBBAC5' ],
         chart: {
           type: 'column',
+          styledMode: false,
           backgroundColor: 'transparent',
           style: {
-            color: $q.dark.isActive ? 'yellow' : null
+            color: $q.dark.isActive ? 'yellow' : 'black'
           },
           height: '300',
           zooming: {
             type: 'x'
           }
         },
-        accessibility: {
-          enabled: false,
-          point: {
-            descriptionFormatter: function (p) {
-              // console.log(p)
-              return p.category + ', ' + p.y + ' TDFY.'
-            }
-          }
-        },
         title: {
-          text: 'Stakers Rewards per Era',
+          text: props.isValidator ? 'Validator Rewards per Era' : 'Stakers Rewards per Era',
           style: {
             fontSize: '18px',
             fontWeight: 'bold',
             color: $q.dark.isActive ? 'yellow' : 'black'
           }
         },
+        subtitle: {
+          text: props.subtitle,
+          style: {
+            fontSize: '18px',
+            fontWeight: 'bold',
+            color: $q.dark.isActive ? 'yellow' : 'black'
+          }
+        },
+        accessibility: {
+          enabled: false
+        },
         tooltip: {
           enabled: true,
-          shadow: true,
+          shadow: false,
           borderColor: $q.dark.isActive ? 'yellow' : null,
           backgroundColor: 'rgba(200, 200, 200, 0.80)',
           style: {
@@ -102,7 +119,22 @@ export default {
           useHTML: true
         },
         legend: {
-          enabled: false
+          enabled: true,
+          backgroundColor: 'transparent',
+          itemStyle: {
+            fontWeight: '400',
+            fontSize: '12px',
+            color: $q.dark.isActive ? '#fff' : '#2F2B38'
+          },
+          itemHoverStyle: {
+            fontWeight: '700',
+            color: $q.dark.isActive ? '#fff' : '#46465C'
+          }
+        },
+        labels: {
+          style: {
+            color: $q.dark.isActive ? '#707073' : '#46465C'
+          }
         },
         credits: {
           enabled: false
@@ -114,44 +146,112 @@ export default {
             text: 'Eras',
             style: {
               fontSize: '12px',
-              color: $q.dark.isActive ? 'yellow' : 'black'
+              // color: $q.dark.isActive ? 'yellow' : 'black'
+              color: $q.dark.isActive ? 'yelow' : 'black'
             }
-          }
+          },
+          gridLineColor: $q.dark.isActive ? '#707073' : '#ccc',
+          labels: {
+            style: {
+              color: $q.dark.isActive ? '#fff' : '#46465C',
+              fontSize: '12px'
+            }
+          },
+          lineColor: $q.dark.isActive ? '#707073' : '#ccc',
+          minorGridLineColor: $q.dark.isActive ? '#505053' : '#ebebeb',
+          tickColor: $q.dark.isActive ? '#707073' : '#ccc'
         },
         yAxis: [
           {
             title: {
-              text: 'Validator Reward',
+              text: 'Total Validator Reward',
               style: {
-                fontSize: '12px'
+                fontSize: '12px',
+                color: $q.dark.isActive ? 'yellow' : 'black',
+                fontWeight: '300'
                 // color: $q.dark.isActive ? 'yellow' : 'black'
               }
-            }
+            },
+            gridLineColor: $q.dark.isActive ? '#707073' : '#ccc',
+            labels: {
+              style: {
+                fontSize: '12px',
+                color: $q.dark.isActive ? '#fff' : '#46465C',
+                fontWeight: '300'
+              }
+            },
+            lineColor: $q.dark.isActive ? '#707073' : '#ccc',
+            minorGridLineColor: $q.dark.isActive ? '#505053' : '#ebebeb',
+            tickColor: $q.dark.isActive ? '#707073' : '#ccc',
+            tickWidth: 1
           },
           {
             title: {
               text: 'This Nominator Reward',
               style: {
-                fontSize: '12px'
+                fontSize: '12px',
+                color: $q.dark.isActive ? 'yellow' : 'black',
+                fontWeight: '300'
                 // color: $q.dark.isActive ? 'yellow' : 'black'
               }
-            }
+            },
+            gridLineColor: $q.dark.isActive ? '#707073' : '#ccc',
+            labels: {
+              style: {
+                fontSize: '12px',
+                color: $q.dark.isActive ? '#fff' : '#46465C',
+                fontWeight: '300'
+              }
+            },
+            lineColor: $q.dark.isActive ? '#707073' : '#ccc',
+            minorGridLineColor: $q.dark.isActive ? '#505053' : '#ebebeb',
+            tickColor: $q.dark.isActive ? '#707073' : '#ccc',
+            tickWidth: 1
           }
         ],
+        // scrollablePlotArea: {
+        //   minWidth: 400
+        // },
         plotOptions: {
+          series: {
+            dataLabels: {
+              color: $q.dark.isActive ? '#46465C' : '#46465C',
+              style: {
+                fontSize: '13px'
+              }
+            },
+            marker: {
+              lineColor: $q.dark.isActive ? '#333' : '#46465C'
+            }
+          },
           column: {
             pointPadding: 0.2,
-            // borderWidth: 0,
-            borderRadius: 2
+            borderWidth: 0,
+            borderRadius: 2,
+            groupPadding: 0.2,
+            shadow: false
           },
           states: {
             hover: {
               enabled: true,
               radius: 3,
-              lineColor: $q.dark.isActive ? '#FFFF00' : null
+              lineColor: $q.dark.isActive ? '#FFFF00' : '#ccc'
             }
           }
         },
+        // drilldown: {
+        //   activeAxisLabelStyle: {
+        //     color: '#F0F0F3'
+        //   },
+        //   activeDataLabelStyle: {
+        //     color: '#F0F0F3'
+        //   },
+        //   drillUpButton: {
+        //     theme: {
+        //       fill: '#fff'
+        //     }
+        //   }
+        // },
         responsive: {
           rules: [
             {
@@ -182,14 +282,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.highcharts-color-0 {
-  fill: #FF0000;
-  stroke: #FFFF00;
-}
-.highcharts-color-1 {
-  fill: #00FFFF;
-  stroke: #FFFF00;
-}
-</style>

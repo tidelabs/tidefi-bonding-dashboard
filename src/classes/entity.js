@@ -189,7 +189,7 @@ export class Entity {
 
     this.hasIdentity = computed(() => {
       const value = this.identityType !== 'identity_none'
-      console.log(`IdentityType (${ this.name.value }): ${ this.identityType.value }`)
+      // console.log(`IdentityType (${ this.name.value }): ${ this.identityType.value }`)
       return value
     })
 
