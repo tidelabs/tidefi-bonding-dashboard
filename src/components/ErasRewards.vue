@@ -38,7 +38,10 @@ export default {
           style: {
             color: $q.dark.isActive ? 'yellow' : null
           },
-          height: '300'
+          height: '300',
+          zooming: {
+            type: 'x'
+          }
         },
         accessibility: {
           point: {
