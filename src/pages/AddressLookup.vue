@@ -40,6 +40,7 @@
       <div class="row justify-start items-stretch full-width q-gutter-sm">
         <Identity :entity="entity" />
         <Balances :entity="entity" />
+        <Ledger :entity="entity" />
       </div>
 
       <!-- End of split page -->
@@ -59,6 +60,7 @@ import { useClientStore } from 'src/stores/client'
 import Identity from 'src/components/Identity.vue'
 import Balances from 'src/components/Balances.vue'
 import StakerRewards from 'src/components/StakerRewards.vue'
+import Ledger from 'src/components/Ledger.vue'
 
 export default {
   name: 'Address Lookup',
@@ -66,7 +68,8 @@ export default {
   components: {
     Identity,
     Balances,
-    StakerRewards
+    StakerRewards,
+    Ledger
   },
 
   setup (props) {

@@ -57,11 +57,12 @@
         <Nominators :validator="validator" />
         <ValidatorStats :validator="validator" />
         <Balances :entity="validator" />
+        <Ledger :entity="validator" />
       </div>
 
       <!-- End of split page -->
       <ErasRewardPoints v-if="validator && validator.erasRewardPoints.length" :erasRewardPoints="validator.erasRewardPoints" />
-      <StakerRewards v-if="validator.stakerRewards.length > 0" :rewards="validator.stakerRewards" :isValidator="true" />
+      <StakerRewards v-if="validator && validator.stakerRewards.length > 0" :rewards="validator.stakerRewards" :isValidator="true" />
     </div>
   </div>
 </template>
@@ -81,6 +82,7 @@ import Nominators from 'src/components/Nominators.vue'
 import ValidatorStats from 'src/components/ValidatorStats.vue'
 import Balances from 'src/components/Balances.vue'
 import StakerRewards from 'src/components/StakerRewards.vue'
+import Ledger from 'src/components/Ledger.vue'
 
 export default {
   name: 'ValidatorInfo',
@@ -91,7 +93,8 @@ export default {
     ValidatorStats,
     Balances,
     ErasRewardPoints,
-    StakerRewards
+    StakerRewards,
+    Ledger
   },
 
   setup () {
