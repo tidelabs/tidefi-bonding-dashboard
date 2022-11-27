@@ -186,7 +186,7 @@ export default {
           },
           {
             title: {
-              text: 'This Nominator Reward',
+              text: props.isValidator ? 'Validator Self-staked Reward' : 'This Nominator Reward',
               style: {
                 fontSize: '12px',
                 color: $q.dark.isActive ? 'yellow' : 'black',
@@ -267,7 +267,7 @@ export default {
               : []
           },
           {
-            name: 'This Nominator Reward',
+            name: props.isValidator ? 'Validator Self-staked Reward' : 'This Nominator Reward',
             data: props.rewards
               ? props.rewards.map((eraReward) => totalReward(eraReward))
               : []
