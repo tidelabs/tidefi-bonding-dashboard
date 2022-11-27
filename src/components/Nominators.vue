@@ -4,11 +4,11 @@
       <table>
         <thead>
           <tr>
-            <th colspan="2">Nominators</th>
+            <th colspan="3">Nominators</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="{address, hashAddress, formattedValue, identicon} in nominators" :key="address">
+          <tr v-for="{address, hashAddress, formattedValue, identicon, value} in nominators" :key="address">
             <td>
               <div class="row justify-start items-center">
                 <div class="border-light identity-svg-wrapper" v-html="identicon" />
@@ -25,6 +25,9 @@
             </td>
             <td class="text-right">
               {{ formattedValue }}
+            </td>
+            <td class="text-right">
+              {{ calcPercentage(value) }}%
             </td>
           </tr>
         </tbody>
@@ -68,6 +71,12 @@ export default {
       return nominators
     }) ?? []
 
+    const total = computed(() => nominators.value.reduce((sum, nominator) => sum + parseInt(nominator.value), 0))
+
+    function calcPercentage (value) {
+      return (value * 100 / total.value).toFixed(2)
+    }
+
     function formatTokenValue (val) {
       const clientStore = useClientStore()
 
@@ -75,8 +84,15 @@ export default {
     }
 
     return {
-      nominators
+      nominators,
+      calcPercentage
     }
   }
 }
 </script>
+
+<style>
+.info-table {
+  max-width: 400px;
+}
+</style>
