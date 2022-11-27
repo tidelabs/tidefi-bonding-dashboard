@@ -8,7 +8,7 @@
       </thead>
       <tbody>
         <tr>
-          <td>Free</td>
+          <td>Balance</td>
           <td class="text-right">{{ free }}</td>
         </tr>
         <tr>
