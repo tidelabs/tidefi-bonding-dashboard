@@ -66,7 +66,6 @@ export default {
 
     const chartOptions = computed(() => {
       const options = {
-        // colors: [ '#FF00FF', '#00FF00' ],
         colors: $q.dark.isActive ? [ '#8087E8', '#A3EDBA', '#F19E53', '#6699A1',
           '#E1D369', '#87B4E7', '#DA6D85', '#BBBAC5' ] : [ '#8087E8', '#A3EDBA',
           '#F19E53', '#6699A1', '#E1D369', '#87B4E7', '#DA6D85', '#BBBAC5' ],
@@ -104,7 +103,7 @@ export default {
         tooltip: {
           enabled: true,
           shadow: false,
-          borderColor: $q.dark.isActive ? 'yellow' : null,
+          borderColor: $q.dark.isActive ? 'yellow' : 'black',
           backgroundColor: 'rgba(200, 200, 200, 0.80)',
           style: {
             color: $q.dark.isActive ? '#1d1d1d' : 'black',
@@ -140,13 +139,14 @@ export default {
           enabled: false
         },
         xAxis: {
-          categories: props.rewards ? props.rewards.map((eraReward) => eraReward.era) : [],
+          categories: props.rewards
+            ? props.rewards.map((eraReward) => eraReward.era)
+            : [],
           crosshair: true,
           title: {
             text: 'Eras',
             style: {
               fontSize: '12px',
-              // color: $q.dark.isActive ? 'yellow' : 'black'
               color: $q.dark.isActive ? 'yelow' : 'black'
             }
           },
@@ -169,7 +169,6 @@ export default {
                 fontSize: '12px',
                 color: $q.dark.isActive ? 'yellow' : 'black',
                 fontWeight: '300'
-                // color: $q.dark.isActive ? 'yellow' : 'black'
               }
             },
             gridLineColor: $q.dark.isActive ? '#707073' : '#ccc',
@@ -192,7 +191,6 @@ export default {
                 fontSize: '12px',
                 color: $q.dark.isActive ? 'yellow' : 'black',
                 fontWeight: '300'
-                // color: $q.dark.isActive ? 'yellow' : 'black'
               }
             },
             gridLineColor: $q.dark.isActive ? '#707073' : '#ccc',
@@ -264,11 +262,15 @@ export default {
         series: [
           {
             name: 'Validator Reward',
-            data: props.rewards ? props.rewards.map((eraReward) => totalPool(eraReward)) : []
+            data: props.rewards
+              ? props.rewards.map((eraReward) => totalPool(eraReward))
+              : []
           },
           {
             name: 'This Nominator Reward',
-            data: props.rewards ? props.rewards.map((eraReward) => totalReward(eraReward)) : []
+            data: props.rewards
+              ? props.rewards.map((eraReward) => totalReward(eraReward))
+              : []
           }
         ]
       }

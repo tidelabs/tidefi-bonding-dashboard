@@ -26,23 +26,18 @@ export default {
 
     const chartOptions = computed(() => {
       const options = {
+        colors: $q.dark.isActive ? [ '#8087E8', '#A3EDBA', '#F19E53', '#6699A1',
+          '#E1D369', '#87B4E7', '#DA6D85', '#BBBAC5' ] : [ '#8087E8', '#A3EDBA',
+          '#F19E53', '#6699A1', '#E1D369', '#87B4E7', '#DA6D85', '#BBBAC5' ],
         chart: {
           type: 'spline',
           backgroundColor: 'transparent',
           style: {
-            color: $q.dark.isActive ? 'yellow' : null
+            color: $q.dark.isActive ? 'yellow' : 'black'
           },
           height: '300',
           zooming: {
             type: 'x'
-          }
-        },
-        accessibility: {
-          point: {
-            descriptionFormatter: function (p) {
-              console.log(p)
-              return p.category + ', ' + p.y + ' TDFY.'
-            }
           }
         },
         title: {
@@ -53,20 +48,41 @@ export default {
             color: $q.dark.isActive ? 'yellow' : 'black'
           }
         },
+        accessibility: {
+          enabled: false
+        },
         tooltip: {
           enabled: true,
-          shadow: true,
-          borderColor: $q.dark.isActive ? 'yellow' : null,
+          shadow: false,
+          borderColor: $q.dark.isActive ? 'yellow' : 'black',
           backgroundColor: 'rgba(200, 200, 200, 0.80)',
           style: {
             color: $q.dark.isActive ? '#1d1d1d' : 'black',
             fontWeight: 'bold'
           },
-          headerFormat: '<span style="font-size: 10px">{point.key}</span><br/>',
-          valueSuffix: ' Pts.'
+          valueSuffix: ' TDFY',
+          headerFormat: '<span style="font-size: 10px">Era: {point.key}</span><br><table>',
+          pointFormat: '<tr><td style="padding:0;">{series.name}:</td><td style="text-align: right;"><strong>{point.y:.4f}</strong></td></tr>',
+          footerFormat: '</table>',
+          useHTML: true
         },
         legend: {
-          enabled: false
+          enabled: true,
+          backgroundColor: 'transparent',
+          itemStyle: {
+            fontWeight: '400',
+            fontSize: '12px',
+            color: $q.dark.isActive ? '#fff' : '#2F2B38'
+          },
+          itemHoverStyle: {
+            fontWeight: '700',
+            color: $q.dark.isActive ? '#fff' : '#46465C'
+          }
+        },
+        labels: {
+          style: {
+            color: $q.dark.isActive ? '#707073' : '#46465C'
+          }
         },
         credits: {
           enabled: false
@@ -82,7 +98,17 @@ export default {
               fontSize: '12px',
               color: $q.dark.isActive ? 'yellow' : 'black'
             }
-          }
+          },
+          gridLineColor: $q.dark.isActive ? '#707073' : '#ccc',
+          labels: {
+            style: {
+              color: $q.dark.isActive ? '#fff' : '#46465C',
+              fontSize: '12px'
+            }
+          },
+          lineColor: $q.dark.isActive ? '#707073' : '#ccc',
+          minorGridLineColor: $q.dark.isActive ? '#505053' : '#ebebeb',
+          tickColor: $q.dark.isActive ? '#707073' : '#ccc'
         },
         yAxis: {
           // min: 0,
@@ -90,35 +116,49 @@ export default {
             text: 'Points',
             style: {
               fontSize: '12px',
-              color: $q.dark.isActive ? 'yellow' : 'black'
+              color: $q.dark.isActive ? 'yellow' : 'black',
+              fontWeight: '300'
             }
-          }
+          },
+          gridLineColor: $q.dark.isActive ? '#707073' : '#ccc',
+          labels: {
+            style: {
+              fontSize: '12px',
+              color: $q.dark.isActive ? '#fff' : '#46465C',
+              fontWeight: '300'
+            }
+          },
+          lineColor: $q.dark.isActive ? '#707073' : '#ccc',
+          minorGridLineColor: $q.dark.isActive ? '#505053' : '#ebebeb',
+          tickColor: $q.dark.isActive ? '#707073' : '#ccc',
+          tickWidth: 1
         },
         plotOptions: {
-          column: {
-            pointPadding: 0.2,
-            borderWidth: 0
-          },
-          areaspline: {
+          series: {
+            dataLabels: {
+              color: $q.dark.isActive ? '#46465C' : '#46465C',
+              style: {
+                fontSize: '13px'
+              }
+            },
             marker: {
-              enabled: true,
-              fillColor: $q.dark.isActive ? 'yellow' : null
+              lineColor: $q.dark.isActive ? '#333' : '#46465C'
             }
           },
           spline: {
-            lineColor: $q.dark.isActive ? '#FF00FF' : null,
+            lineColor: '#00FF00',
             lineWidth: 1,
             marker: {
               enabled: true,
-              color: $q.dark.isActive ? 'yellow' : null,
-              fillColor: $q.dark.isActive ? '#00FF00' : null
+              // color: $q.dark.isActive ? 'yellow' : null,
+              fillColor: '#FF00FF'
             }
           },
           states: {
             hover: {
               enabled: true,
               radius: 3,
-              lineColor: $q.dark.isActive ? '#FFFF00' : null
+              lineColor: $q.dark.isActive ? '#FFFF00' : '#ccc'
             }
           }
         },
