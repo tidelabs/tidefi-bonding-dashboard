@@ -4,7 +4,7 @@
       <table>
         <thead>
           <tr>
-            <th colspan="3">Nominators</th>
+            <th colspan="3">Nominators ({{ validator.nominatorCount }})</th>
           </tr>
         </thead>
         <tbody>
