@@ -2,7 +2,6 @@ import { normalizeValue } from '../helpers/utils'
 
 export async function stakerRewards (api, address, withActivity = true) {
   const rewardsContainer = await api.derive.staking.stakerRewards(address, withActivity)
-  console.log('rewardsContainer:', rewardsContainer)
 
   const rewards = rewardsContainer.map((data) => {
     const validators = Object.keys(data.validators).map((key) => {
@@ -15,12 +14,12 @@ export async function stakerRewards (api, address, withActivity = true) {
       //   value
       // )
       return {
-        key,
+        key, // validator address
         pool, // validator pool
         reward // reward
       }
     })
-    console.log('validators', validators)
+    // console.log('validators', validators)
     return {
       ...data,
       era: data.era.toJSON(),
@@ -28,7 +27,7 @@ export async function stakerRewards (api, address, withActivity = true) {
       validators
     }
   })
-  console.log('rewards:', rewards)
+  // console.log('rewards:', rewards)
 
   // const rewards = rewardsContainer.map((data) => {
   //   return data.map((data2) => {

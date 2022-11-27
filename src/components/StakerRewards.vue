@@ -93,7 +93,8 @@ export default {
           valueSuffix: ' TDFY',
           headerFormat: '<span style="font-size: 10px">Era: {point.key}</span><br><table>',
           pointFormat: '<tr><td style="padding:0;">{series.name}:</td><td style="text-align: right;"><strong>{point.y:.4f}</strong></td></tr>',
-          footerFormat: '<tr><td>Percentage</td><td></td></tr></table>',
+          footerFormat: '</table>',
+          // footerFormat: '<tr><td>Percentage</td><td></td></tr></table>',
           shared: true,
           useHTML: true
         },

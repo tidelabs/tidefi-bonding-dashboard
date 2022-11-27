@@ -61,7 +61,7 @@
 
       <!-- End of split page -->
       <ErasRewardPoints v-if="validator && validator.erasRewardPoints.length" :erasRewardPoints="validator.erasRewardPoints" />
-      <StakerRewards v-if="stakerRewardsData.length > 0" :rewards="stakerRewardsData" />
+      <StakerRewards v-if="validator.stakerRewards.length > 0" :rewards="validator.stakerRewards" />
     </div>
   </div>
 </template>

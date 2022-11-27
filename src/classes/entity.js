@@ -10,6 +10,7 @@ import { trimHash, toBaseToken, normalizeValue, isVerifiedIdentity } from 'src/h
 import BN from 'bignumber.js'
 import { useClientStore } from 'stores/client'
 import { useEntitiesStore } from 'stores/entities'
+import { stakerRewards } from 'src/helpers/stakerRewards'
 
 export async function addOrUpdateEntity (address, validator = false) {
   const entitiesStore = useEntitiesStore()
@@ -77,6 +78,7 @@ export class Entity {
     this.currentRewardPoints = 0
     this.erasRewardPoints = []
     this.payee = ''
+    this.stakerRewards = []
     // this.reputation = 0 // computed - future
     this.lastBlock = ''
     this.blockCount = 0
@@ -136,6 +138,12 @@ export class Entity {
     if (this.validator) {
       await this.updateStakerInfo()
     }
+
+    // ones that will be done asynchronously
+    stakerRewards(clientStore.client.api, this.address, true)
+      .then((rewards) => {
+        this.stakerRewards = rewards
+      })
 
     // loading data done
     entitiesStore.decLoading()
