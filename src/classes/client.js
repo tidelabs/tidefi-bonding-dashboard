@@ -446,7 +446,7 @@ export class Client {
     const erasTotalStaked = await this.api.query.staking.erasTotalStake(clientStore.currentEra)
     clientStore.erasTotalStaked = normalizeValue(erasTotalStaked.toHuman())
 
-    console.log('erasTotalStaked:', clientStore.erasTotalStaked)
+    // console.log('erasTotalStaked:', clientStore.erasTotalStaked)
 
     return {
       erasTotalStaked
@@ -564,7 +564,7 @@ export class Client {
 
     // console.log('staking api:', this.api.derive.staking)
     const electedInfoEra = await this.api.derive.staking.electedInfo(clientStore.currentEra)
-    console.log('electedInfoEra:', electedInfoEra)
+    // console.log('electedInfoEra:', electedInfoEra)
     electedInfo.info = electedInfoEra.info.map((info) => {
       return {
         accountId: info.accountId.toHuman(),
@@ -579,7 +579,7 @@ export class Client {
     })
     electedInfo.nextElected = electedInfoEra.nextElected.map((elected) => elected.toHuman())
     electedInfo.validators = electedInfoEra.validators.map((validator) => validator.toHuman())
-    console.log('electedInfo:', electedInfo)
+    // console.log('electedInfo:', electedInfo)
   }
 
   /*

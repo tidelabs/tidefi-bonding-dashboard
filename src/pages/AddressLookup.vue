@@ -108,6 +108,7 @@ export default {
           entity.value = null
           // return
         }
+        // console.log('entity:', entity, clientStore)
       }
       else {
         entity.value = null
