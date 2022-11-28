@@ -91,7 +91,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .info-table {
   max-width: 400px;
 }
