@@ -15,7 +15,7 @@
             style="min-width: 300px;"
           />
       </div>
-      <div class="row justify-between items-start full-width">
+      <div class="row full-width">
         <EntityName :entity="entity" />
       </div>
       <div class="row justify-start items-stretch full-width q-gutter-sm">
@@ -25,7 +25,9 @@
       </div>
 
       <!-- End of split page -->
-      <StakerRewards v-if="entity?.stakerRewards && entity?.stakerRewards?.length > 0" :rewards="entity.stakerRewards" />
+      <div class="column full-width q-mt-md q-gutter-sm">
+        <StakerRewards v-if="entity?.stakerRewards && entity?.stakerRewards?.length > 0" :rewards="entity.stakerRewards" />
+      </div>
     </div>
   </div>
 </template>

@@ -13,7 +13,7 @@
         </q-icon>
       </div>
       <div>
-        Did you change networks while on this page?
+        <!-- Did you change networks while on this page? -->
       </div>
     </div>
 
@@ -33,7 +33,7 @@
           style="min-width: 300px;"
         />
       </div>
-      <div class="row justify-between items-start full-width">
+      <div class="row  full-width">
         <EntityName :entity="validator" />
       </div>
       <div class="row justify-start items-stretch full-width q-gutter-sm">
@@ -45,8 +45,10 @@
       </div>
 
       <!-- End of split page -->
-      <ErasRewardPoints v-if="validator && validator.erasRewardPoints.length" :erasRewardPoints="validator.erasRewardPoints" />
-      <StakerRewards v-if="validator && validator.stakerRewards.length > 0" :rewards="validator.stakerRewards" :isValidator="true" />
+      <div class="column full-width q-mt-md q-gutter-sm">
+        <ErasRewardPoints v-if="validator && validator.erasRewardPoints.length" :erasRewardPoints="validator.erasRewardPoints" />
+        <StakerRewards v-if="validator && validator.stakerRewards.length > 0" :rewards="validator.stakerRewards" :isValidator="true" />
+      </div>
     </div>
   </div>
 </template>
@@ -114,7 +116,7 @@ export default {
     })
 
     watch(selectedValidator, (val) => {
-      if (val.address !== route.params.address) {
+      if (val && val.address !== route.params.address) {
         // push the new route
         router.push({
           name: 'validator-lookup',
