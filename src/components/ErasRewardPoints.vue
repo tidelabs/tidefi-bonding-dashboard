@@ -1,9 +1,9 @@
 <template>
-  <div class="column full-width q-ma-sm">
-    <q-card>
+  <div class="column full-width q-ma-md">
+    <q-card class="column full-width">
       <highcharts
         :options="chartOptions"
-        class="full-width"
+        class="column full-width"
       />
     </q-card>
   </div>
