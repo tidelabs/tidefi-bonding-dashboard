@@ -48,22 +48,6 @@ export class Client {
 
       this.refetchAll()
 
-      // await this.fetchChainInfo()
-      // await this.fetchConsts()
-      // await this.fetchAssets()
-      // await this.fetchEras()
-      // await this.fetchCounts()
-      // await this.fetchErasTotalStake()
-      // await this.fetchErasRewardPoints()
-      // await this.fetchInvulnerables()
-      // await this.fetchSubIdentities()
-      // // await this.fetchElectedInfo()
-      // await this.fetchEraExposure()
-      // await this.fetchValidators()
-      // await this.fetchAuthoredBlocks() // must come after validators
-      // await this.fetchErasValidatorReward()
-      // await this.fetchUnappliedSlashes()
-
       const [
         bondedEras,
         canceledSlashPayout,
@@ -229,7 +213,7 @@ export class Client {
 
   // updates previous data asynchronously
   async refetchAll () {
-    // wait on some
+    // wait on some dependencies
     await this.fetchChainInfo()
     await this.fetchConsts()
     await this.fetchAssets()
@@ -518,7 +502,7 @@ export class Client {
     clientStore.stakerEntries = se
 
     ve.forEach(async (val) => {
-      await addOrUpdateEntity(val.address, true)
+      addOrUpdateEntity(val.address, true)
     })
   }
 
