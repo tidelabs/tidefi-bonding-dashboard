@@ -31,26 +31,7 @@
         />
       </div>
       <div class="row justify-between items-start full-width">
-        <!-- Left Side -->
-        <div class="column justify-start items-start">
-          <div class="row justify-start items-center">
-
-            <div v-if="validator" class="column">
-              <q-card class="q-ma-sm q-pa-sm">
-                <div class="row justify-start items-center">
-                  <div class="border-light identity-svg-wrapper" v-html="validator.identicon" />
-                  <div class="validator-name">{{ validator.name }}</div>
-                </div>
-                <div>{{ validator.address }}</div>
-              </q-card>
-            </div>
-
-          </div>
-        </div>
-        <!-- Right Side -->
-        <div class="column">
-          <!-- TODO: Right Side - graphs? -->
-        </div>
+        <EntityName :entity="validator" />
       </div>
       <div class="row justify-start items-stretch full-width q-gutter-sm">
         <Identity :entity="validator" />
@@ -76,6 +57,7 @@ import { infoIcon } from 'assets/icons'
 import { isValidAddress } from 'src/helpers/utils'
 import { stakerRewards } from 'src/helpers/stakerRewards'
 
+import EntityName from 'src/components/EntityName.vue'
 import ErasRewardPoints from 'src/components/ErasRewardPoints.vue'
 import Identity from 'src/components/Identity.vue'
 import Nominators from 'src/components/Nominators.vue'
@@ -94,7 +76,8 @@ export default {
     Balances,
     ErasRewardPoints,
     StakerRewards,
-    Ledger
+    Ledger,
+    EntityName
   },
 
   setup () {

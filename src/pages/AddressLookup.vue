@@ -16,26 +16,7 @@
           />
       </div>
       <div class="row justify-between items-start full-width">
-        <!-- Left Side -->
-        <div class="column justify-start items-start">
-          <div class="row justify-start items-center">
-
-            <div v-if="entity" class="column">
-              <q-card class="q-ma-sm q-pa-sm">
-                <div class="row justify-start items-center">
-                  <div class="border-light identity-svg-wrapper" v-html="entity.identicon" />
-                  <div class="validator-name">{{ entity.name }}</div>
-                </div>
-                <div>{{ entity.address }}</div>
-              </q-card>
-            </div>
-
-          </div>
-        </div>
-        <!-- Right Side -->
-        <div class="column">
-          <!-- TODO: Right Side - graphs -->
-        </div>
+        <EntityName :entity="entity" />
       </div>
       <div class="row justify-start items-stretch full-width q-gutter-sm">
         <Identity :entity="entity" />
@@ -57,6 +38,7 @@ import { Entity } from '../classes/entity'
 import { useEntitiesStore } from 'src/stores/entities'
 import { useClientStore } from 'src/stores/client'
 
+import EntityName from 'src/components/EntityName.vue'
 import Identity from 'src/components/Identity.vue'
 import Balances from 'src/components/Balances.vue'
 import StakerRewards from 'src/components/StakerRewards.vue'
@@ -69,7 +51,8 @@ export default {
     Identity,
     Balances,
     StakerRewards,
-    Ledger
+    Ledger,
+    EntityName
   },
 
   setup (props) {
