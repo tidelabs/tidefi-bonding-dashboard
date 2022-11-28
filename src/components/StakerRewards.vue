@@ -261,7 +261,7 @@ export default {
         },
         series: [
           {
-            name: 'Validator Reward',
+            name: 'Total Validator Reward',
             data: props.rewards
               ? props.rewards.map((eraReward) => totalPool(eraReward))
               : []
