@@ -21,8 +21,11 @@
       <div class="row justify-center items-center full-width q-mb-lg">
         <q-select
           v-model="selectedValidator"
-          :options="validators"
+          :options="validatorsOption"
           option-label="name"
+          use-input
+          input-debounce="0"
+          @filter="filterValidators"
           map-options
           outlined
           color="purple-13"
@@ -87,6 +90,7 @@ export default {
     const clientStore = useClientStore()
     const selectedValidator = ref(null)
     const stakerRewardsData = ref([])
+    const validatorsOption = ref([])
 
     const loading = computed(() => {
       if (clientStore.isLoading) {
@@ -133,13 +137,29 @@ export default {
       }
     })
 
+    function filterValidators (val, update) {
+      if (val === '') {
+        update(() => {
+          validatorsOption.value = validators.value
+        })
+        return
+      }
+
+      update(() => {
+        const needle = val.toLowerCase()
+        validatorsOption.value = validators.value.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
+      })
+    }
+
     return {
       loading,
       selectedValidator,
       validators,
       validator,
       infoIcon,
-      stakerRewardsData
+      stakerRewardsData,
+      filterValidators,
+      validatorsOption
     }
   }
 }
@@ -149,8 +169,5 @@ export default {
 .error-message {
   font-size: 1.2rem;
   color: red;
-}
-.validator-name {
-  font-size: 1.6rem;
 }
 </style>
