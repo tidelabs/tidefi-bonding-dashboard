@@ -54,7 +54,7 @@
 }
 
 .info-table {
-  max-width: 300px;
+  max-width: 320px;
   width: 100%;
   border-radius: 4px;
   padding: 2px;
@@ -64,7 +64,7 @@
 
 @media (max-width: $breakpoint-xs-max) {
   .info-table {
-    max-width: 100%;
+    max-width: 100% !important;
   }
 }
 
@@ -93,5 +93,8 @@
   .info-table thead,
   .info-table tbody {
     background-color: var(--q-dark);
+  }
+  .q-item.q-router-link--active, .q-item--active {
+    color: #FFFF00;
   }
 }
