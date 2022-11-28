@@ -97,6 +97,7 @@ import { useChainsStore } from 'stores/chain'
 import { Client } from '../classes/client'
 // import { Entity } from '../classes/entity'
 import { useClientStore } from 'src/stores/client'
+import { usePreferencesStore } from 'src/stores/preferences'
 import {
   fabTwitter,
   fabGithub,
@@ -183,6 +184,7 @@ export default defineComponent({
     const $q = useQuasar() || vm.proxy.$q || vm.ctx.$q
     const chainsStore = useChainsStore()
     const clientStore = useClientStore()
+    const preferencesStore = usePreferencesStore()
     const theme = ref(null)
 
     onBeforeMount(() => {
@@ -194,6 +196,8 @@ export default defineComponent({
       else {
         chainsStore.chainName = chainsStore.chains[ 0 ].name
       }
+
+      preferencesStore.restoreFilters()
     })
 
     // ----------------------------------------------------

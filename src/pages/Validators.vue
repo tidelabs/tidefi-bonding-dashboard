@@ -36,12 +36,13 @@
                   <q-toggle dense color="purple-13" v-model="preferencesStore.filters.highCommission" label="High Commission (>10%)" />
                   <q-toggle dense color="purple-13" v-model="preferencesStore.filters.oversubscribed" label="Oversubscribed" />
                   <q-toggle dense color="purple-13" v-model="preferencesStore.filters.blockedNominations" label="Blocked Nominations" />
-                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.missingIdentity" label="No Verified Identity" />
+                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.missingIdentity" label="Missing Identity" />
+                  <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.noVerifiedIdentity" label="No Verified Identity" /> -->
                   <q-toggle dense color="purple-13" v-model="preferencesStore.filters.notStaked" label="Not Staked" />
                   <q-toggle dense color="purple-13" v-model="preferencesStore.filters.selfController" label="Self Controller" />
-                  <!-- <q-toggle v-model="preferencesStore.filters.belowAvgPoints" label="Below Average Era Pints" /> -->
-                  <!-- <q-toggle v-model="preferencesStore.filters.slashed" label="Slashed" /> -->
-                  <!-- <q-toggle v-model="preferencesStore.filters.noGovernance" label="No Governance Participation" /> -->
+                  <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.belowAvgPoints" label="Below Average Era Points" /> -->
+                  <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.slashed" label="Slashed" /> -->
+                  <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.noGovernance" label="No Governance Participation" /> -->
                 <!-- </div> -->
               </q-card-section>
             </q-card>
@@ -392,8 +393,12 @@ export default {
         if (retVal && preferencesStore.filters.oversubscribed && isOversubscribed(val)) retVal = false
         if (retVal && preferencesStore.filters.blockedNominations && val.preferences.blocked === true) retVal = false
         if (retVal && preferencesStore.filters.missingIdentity && !val.hasIdentity) retVal = false
+        if (retVal && preferencesStore.filters.noVerifiedIdentity && !val.hasVerifiedIdentity) retVal = false
         if (retVal && preferencesStore.filters.notStaked && val.payee !== 'Staked') retVal = false
         if (retVal && preferencesStore.filters.selfController && val.selfController === val.address) retVal = false
+        if (retVal && preferencesStore.filters.belowAvgPoints && val.belowAvgPoints) retVal = false
+        if (retVal && preferencesStore.filters.slashed && val.slashed) retVal = false
+        if (retVal && preferencesStore.filters.noGovernance && val.noGovernance) retVal = false
         return retVal
       })
     })
@@ -411,6 +416,10 @@ export default {
 
     watch(chainName, (val) => {
       console.log('indexPage: chainName changed', val)
+    })
+
+    watch(preferencesStore.filters, () => {
+      preferencesStore.saveFilters()
     })
 
     watch(displayFilterInfoModal, (val) => {

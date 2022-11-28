@@ -61,6 +61,10 @@ export class Entity {
     this.validator = validator
     this.identityType = 'identity_none' // identity_plus | identity_check | identity_verified
     this.hasIdentity = false
+    this.hasVerifiedIdentity = false // TODO:
+    this.belowAvgPoints = false // TODO:
+    this.slashed = false // TODO:
+    this.noGovernance = false // TODO:
     this.elected = false // active
     this.nextElected = false // next set
     this.stakers = {
