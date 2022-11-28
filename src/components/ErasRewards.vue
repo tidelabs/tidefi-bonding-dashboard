@@ -73,7 +73,7 @@ export default {
           useHTML: true
         },
         legend: {
-          enabled: true,
+          enabled: false,
           backgroundColor: 'transparent',
           itemStyle: {
             fontWeight: '400',
