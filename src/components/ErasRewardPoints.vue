@@ -60,14 +60,14 @@ export default {
             color: $q.dark.isActive ? '#1d1d1d' : 'black',
             fontWeight: 'bold'
           },
-          valueSuffix: ' TDFY',
+          valueSuffix: ' Pts.',
           headerFormat: '<span style="font-size: 10px">Era: {point.key}</span><br><table>',
-          pointFormat: '<tr><td style="padding:0;">{series.name}:</td><td style="text-align: right;"><strong>{point.y:.4f}</strong></td></tr>',
+          pointFormat: '<tr><td style="padding:0;">{series.name}:</td><td style="text-align: right;"><strong>{point.y}</strong></td></tr>',
           footerFormat: '</table>',
           useHTML: true
         },
         legend: {
-          enabled: true,
+          enabled: false,
           backgroundColor: 'transparent',
           itemStyle: {
             fontWeight: '400',
