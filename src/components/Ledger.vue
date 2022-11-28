@@ -9,11 +9,11 @@
     </table>
     <table>
       <tbody>
-        <template v-for="{ name, symbol, balance } in availableLedgers" :key="name">
+        <template v-for="{ name, symbol, balance, total } in availableLedgers" :key="name">
           <tr>
             <td>{{ name }}</td>
             <td>{{ symbol }}</td>
-            <td class="text-right">{{ balance }}</td>
+            <td class="text-right">{{ balance }}<q-tooltip>{{ total }} {{ symbol }}</q-tooltip></td>
           </tr>
         </template>
       </tbody>
@@ -50,7 +50,8 @@ export default {
           available.push({
             name: token.asset.name,
             symbol: token.asset.symbol,
-            balance: toBaseToken(tb.ledger.balance, token.asset.decimals)
+            balance: toBaseToken(tb.ledger.balance, token.asset.decimals),
+            total: toBaseToken(tb.ledger.balance, token.asset.decimals, token.asset.decimals)
           })
         }
       })
