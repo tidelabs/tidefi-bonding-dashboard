@@ -36,6 +36,14 @@ export const useEntitiesStore = defineStore('entities', {
     },
     getValidatorByAddess (address) {
       return this.entities.find((entity) => entity.address === address)
+    },
+    getValidatorsSorted () {
+      return this.getValidators.sort((a, b) => {
+        return a.name.toLowerCase() > b.name.toLowerCase()
+          ? 1
+          : a.name.toLowerCase() < b.name.toLowerCase()
+            ? -1 : 0
+      })
     }
   }
 })

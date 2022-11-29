@@ -101,7 +101,7 @@ export default {
       return entitiesStore.isLoading
     })
 
-    const validators = computed(() => entitiesStore.getValidators)
+    const validators = computed(() => entitiesStore.getValidatorsSorted())
 
     const validator = computed(() => {
       if (isValidAddress(route.params.address)) {
