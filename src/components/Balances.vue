@@ -57,8 +57,9 @@ export default {
 
     const freeBalance = computed(() => {
       if (props.entity && props.entity.balances) {
-        const total = String(parseInt(props.entity.balances.freeBalance) + parseInt(props.entity.bonded))
-        return formatTokenValue(normalizeValue(total))
+        // const total = String(parseInt(props.entity.balances.freeBalance) + parseInt(props.entity.bonded))
+        // return formatTokenValue(normalizeValue(total))
+        return formatTokenValue(normalizeValue(props.entity.balances.freeBalance))
       }
       return 0
     })
