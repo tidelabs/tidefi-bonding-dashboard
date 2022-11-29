@@ -43,13 +43,20 @@ export class Entity {
     //
     this.identicon = null
     this.balances = {
-      free: 0,
-      freeHuman: '',
-      reserved: 0,
-      miscFrozen: 0, // bonded
-      locked: 0, // locked
-      transferrable: 0,
-      nonce: ''
+      freeBalance: 0,
+      frozenFee: 0,
+      frozenMisc: 0,
+      reservedBalance: 0,
+      availableBalance: 0,
+      lockedBalance: 0,
+      lockedBreakdown: [],
+      vestingLocked: 0,
+      isVesting: false,
+      vestedBalance: 0,
+      vestedClaimable: 0,
+      vesting: 0,
+      vestingTotal: 0,
+      namedReserves: []
     }
     this.ledger = null
     this.tokenBalances = []
@@ -76,6 +83,7 @@ export class Entity {
       commission: 0,
       blocked: false
     }
+    this.bonded = 0
     this.otherStaked = 0
     this.ownStaked = 0
     this.totalStaked = 0
@@ -209,6 +217,18 @@ export class Entity {
       return 0
     })
 
+    this.bonded = computed(() => {
+      if (this.balances.lockedBreakdown && this.balances.lockedBreakdown.length > 0) {
+        const breakdown = this.balances.lockedBreakdown.find((bd) => {
+          return bd.id.trim() === 'staking'
+        })
+        if (breakdown) {
+          return breakdown.amount
+        }
+      }
+      return 0
+    })
+
     this.otherStaked = computed(() => {
       if (this.stakers && 'total' in this.stakers) {
         const total = this.stakers.total
@@ -281,18 +301,33 @@ export class Entity {
     const clientStore = useClientStore()
 
     this.unsubscribeBalances
-      = await clientStore.client.api.query.system.account(
+      = await clientStore.client.api.derive.balances.all(
         this.address, (balance) => {
-          this.balances.free = balance.data.free.toString()
-          this.balances.freeHuman = balance.data.free / Math.pow(10, clientStore.decimals[ 0 ])
-
-          this.balances.reserved = balance.data.reserved.toString()
-          this.balances.miscFrozen = balance.data.miscFrozen.toString() // bonded
-          this.balances.feeFrozen = balance.data.feeFrozen.toString() // locked
-          this.balances.locked = '' + Math.max(balance.data.miscFrozen, balance.data.feeFrozen)
-          this.balances.transferrable = (balance.data.free - (Math.max(balance.data.miscFrozen, balance.data.feeFrozen))).toString()
-          this.balances.nonce = balance.nonce.toHuman()
+          this.balances.freeBalance = balance.freeBalance.toString()
+          this.balances.frozenFee = balance.frozenFee.toString()
+          this.balances.frozenMisc = balance.frozenMisc.toString()
+          this.balances.reservedBalance = balance.reservedBalance.toString()
+          this.balances.votingBalance = balance.votingBalance.toString()
+          this.balances.availableBalance = balance.availableBalance.toString()
+          this.balances.lockedBalance = balance.lockedBalance.toString()
+          this.balances.lockedBreakdown = balance.lockedBreakdown
+            .map((breakdown) => breakdown.toHuman())
+            .map((breakdown) => {
+              return {
+                ...breakdown,
+                amount: normalizeValue(breakdown.amount)
+              }
+            })
+          this.balances.vestingLocked = balance.vestingLocked.toString()
+          this.balances.isVesting = balance.isVesting
+          this.balances.vestedBalance = balance.vestedBalance.toString()
+          this.balances.vestedClaimable = balance.vestedClaimable.toString()
+          this.balances.vesting = balance.vesting.toString()
+          this.balances.vestingTotal = balance.vestingTotal.toString()
+          this.balances.namedReserves = balance.namedReserves.map((reserve) => reserve.toHuman())
         })
+
+    // console.log('balances:', this.balances)
   }
 
   async fetchIdentity () {

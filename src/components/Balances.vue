@@ -9,7 +9,7 @@
       <tbody>
         <tr>
           <td>Balance</td>
-          <td class="text-right">{{ free }}</td>
+          <td class="text-right">{{ freeBalance }}</td>
         </tr>
         <tr>
           <td>Bonded</td>
@@ -55,49 +55,47 @@ export default {
       return clientStore.decimals.length > 0 ? toBaseToken(val, clientStore.decimals[ 0 ]) : 0
     }
 
-    const free = computed(() => {
+    const freeBalance = computed(() => {
       if (props.entity && props.entity.balances) {
-        return formatTokenValue(normalizeValue(props.entity.balances.free))
+        const total = String(parseInt(props.entity.balances.freeBalance) + parseInt(props.entity.bonded))
+        return formatTokenValue(normalizeValue(total))
       }
       return 0
     })
 
     const bonded = computed(() => {
-      if (props.entity && props.entity.balances) {
-        return formatTokenValue(normalizeValue(props.entity.balances.miscFrozen))
-      }
-      return 0
+      return formatTokenValue(normalizeValue(props.entity.bonded))
     })
 
     const locked = computed(() => {
       if (props.entity && props.entity.balances) {
-        return formatTokenValue(normalizeValue(props.entity.balances.locked))
+        return formatTokenValue(normalizeValue(props.entity.balances.lockedBalance))
       }
       return 0
     })
 
     const reserved = computed(() => {
       if (props.entity && props.entity.balances) {
-        return formatTokenValue(normalizeValue(props.entity.balances.reserved))
+        return formatTokenValue(normalizeValue(props.entity.balances.reservedBalance))
       }
       return 0
     })
 
     const transferrable = computed(() => {
       if (props.entity && props.entity.balances) {
-        return formatTokenValue(normalizeValue(props.entity.balances.transferrable))
+        return formatTokenValue(normalizeValue(props.entity.balances.availableBalance))
       }
       return 0
     })
 
     const hasBalances = computed(() => {
-      return free.value || bonded.value
+      return freeBalance.value || bonded.value
         || locked.value || reserved.value
         || transferrable.value
     })
 
     return {
-      free,
+      freeBalance,
       bonded,
       locked,
       reserved,
