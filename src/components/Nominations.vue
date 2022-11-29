@@ -14,7 +14,7 @@
                 <div class="border-light identity-svg-wrapper" v-html="validator.identicon" />
                 <div class="q-ml-sm">
                   <router-link
-                    :to="{ name: 'address-lookup', params: { address: validator.address } }"
+                    :to="{ name: 'validator-lookup', params: { address: validator.address } }"
                     class="entity-link full-width"
                   >
                     {{ validator.name }}
