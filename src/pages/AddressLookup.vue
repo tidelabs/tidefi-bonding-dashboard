@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { computed, ref, watch, onBeforeMount } from 'vue'
+import { computed, ref, watch, onBeforeMount, inject } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { isValidAddress } from '../helpers/utils'
 import { Entity } from '../classes/entity'
@@ -60,10 +60,19 @@ export default {
   setup (props) {
     const route = useRoute()
     const router = useRouter()
+    const bus = inject('bus')
     const entitiesStore = useEntitiesStore()
     const clientStore = useClientStore()
     const selectedAddress = ref(null)
     const entity = ref(null)
+
+    bus.on('session-ended', () => {
+      // is there an entity loaded up?
+      if (entity.value) {
+        // if so, refresh it's data
+        entity.value.connect()
+      }
+    })
 
     onBeforeMount(() => {
       if (clientStore.client && route.params.address && isValidAddress(route.params.address)) {
