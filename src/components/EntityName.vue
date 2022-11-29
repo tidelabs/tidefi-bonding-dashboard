@@ -1,5 +1,5 @@
 <template>
-  <div v-if="entity" class="column">
+  <div v-if="entity" class="column full-width">
     <q-card class="q-ma-sm q-pa-sm info-table">
       <div class="row justify-start items-center">
         <div v-html="entity.identicon" class="border-light identity-svg-wrapper" style="margin-right: 12px;" />
