@@ -45,14 +45,15 @@ export default {
       props.entity.tokenBalances.forEach((tb) => {
         if (tb.ledger) {
           const token = clientStore.getTokenAsset(tb.id)
-          console.log('Token:', token)
-
-          available.push({
-            name: token.asset.name,
-            symbol: token.asset.symbol,
-            balance: toBaseToken(tb.ledger.balance, token.asset.decimals),
-            total: toBaseToken(tb.ledger.balance, token.asset.decimals, token.asset.decimals)
-          })
+          // console.log('Token:', token)
+          if (token) {
+            available.push({
+              name: token.asset.name,
+              symbol: token.asset.symbol,
+              balance: toBaseToken(tb.ledger.balance, token.asset.decimals),
+              total: toBaseToken(tb.ledger.balance, token.asset.decimals, token.asset.decimals)
+            })
+          }
         }
       })
       // console.log('available:', available)
