@@ -33,6 +33,9 @@ export const useEntitiesStore = defineStore('entities', {
     },
     decLoading () {
       this.loadingCount--
+    },
+    getValidatorByAddess (address) {
+      return this.entities.find((entity) => entity.address === address)
     }
   }
 })

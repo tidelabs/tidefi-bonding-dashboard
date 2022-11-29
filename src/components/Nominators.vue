@@ -69,7 +69,7 @@ export default {
       nominators.sort((a, b) => parseFloat(b.value) - parseFloat(a.value))
 
       return nominators
-    }) ?? []
+    })
 
     const total = computed(() => nominators.value.reduce((sum, nominator) => sum + parseInt(nominator.value), 0))
 

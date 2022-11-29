@@ -83,6 +83,7 @@ export class Entity {
     this.erasRewardPoints = []
     this.payee = ''
     this.stakerRewards = []
+    this.nominations = []
     // this.reputation = 0 // computed - future
     this.lastBlock = ''
     this.blockCount = 0
@@ -148,6 +149,10 @@ export class Entity {
       .then((rewards) => {
         this.stakerRewards = rewards
       })
+
+    const nominations = await clientStore.client.api.query.staking.nominators(this.address)
+    this.nominations = nominations.toJSON()
+    // console.log('nominations:', this.nominations)
 
     // loading data done
     entitiesStore.decLoading()

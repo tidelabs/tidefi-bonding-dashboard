@@ -76,8 +76,5 @@ export const useClientStore = defineStore('client', {
     getTokenAsset (assetId) {
       return this.assets.find((asset) => asset.id === assetId)
     }
-    // increment () {
-    //   this.counter++
-    // }
   }
 })

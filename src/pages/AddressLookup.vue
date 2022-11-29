@@ -22,6 +22,7 @@
         <Identity :entity="entity" />
         <Balances :entity="entity" />
         <Ledger :entity="entity" />
+        <Nominations :entity="entity" />
       </div>
 
       <!-- End of split page -->
@@ -45,6 +46,7 @@ import Identity from 'src/components/Identity.vue'
 import Balances from 'src/components/Balances.vue'
 import StakerRewards from 'src/components/StakerRewards.vue'
 import Ledger from 'src/components/Ledger.vue'
+import Nominations from 'src/components/Nominations.vue'
 
 export default {
   name: 'Address Lookup',
@@ -54,7 +56,8 @@ export default {
     Balances,
     StakerRewards,
     Ledger,
-    EntityName
+    EntityName,
+    Nominations
   },
 
   setup (props) {
