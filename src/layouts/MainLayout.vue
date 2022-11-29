@@ -116,25 +116,25 @@ const internalList = [
     title: 'Home Page',
     caption: 'Chain info',
     icon: fasHome,
-    link: '/home' // { name: 'home' }
+    to: { name: 'home' }
   },
   {
     title: 'Validator Nodes',
     caption: 'Comparative data',
     icon: remNodeTree,
-    link: '/validators' // { name: 'validators' }
+    to: { name: 'validators' }
   },
   {
     title: 'Validator Lookup',
     caption: 'Quantitative data',
     icon: 'search',
-    link: '/validator' // { name: 'validator-lookup' }
+    to: { name: 'validator-lookup' }
   },
   {
     title: 'Address Lookup',
     caption: 'Look yourself up!',
     icon: icoInputSearch,
-    link: '/address' // { name: 'address-lookup' }
+    to: { name: 'address-lookup' }
   }
 ]
 const externalList = [
