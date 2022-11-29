@@ -222,11 +222,15 @@ export class Entity {
     })
 
     this.ownStaked = computed(() => {
-      return this.stakers && 'own' in this.stakers ? this.formatTokenValue(normalizeValue(this.stakers.own)) : this.formatTokenValue(this.balances.locked)
+      return this.stakers && 'own' in this.stakers
+        ? this.formatTokenValue(normalizeValue(this.stakers.own)) // validator
+        : this.formatTokenValue(this.balances.locked) // staker
     })
 
     this.totalStaked = computed(() => {
-      return this.stakers && 'total' in this.stakers ? this.formatTokenValue(normalizeValue(this.stakers.total)) : 'unknown'
+      return this.stakers && 'total' in this.stakers
+        ? this.formatTokenValue(normalizeValue(this.stakers.total))
+        : 'unknown'
     })
 
     this.currentRewardPoints = computed(() => {
