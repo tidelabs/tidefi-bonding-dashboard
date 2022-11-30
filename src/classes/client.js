@@ -43,6 +43,10 @@ export class Client {
           console.log('The API had a FATAL error!', error)
           // this.logger.error('The API had a FATAL error... exiting!')
         }
+        else {
+          console.log('The API had an error!', error)
+        }
+        this.reconnect()
       })
 
       // save to clientStore
