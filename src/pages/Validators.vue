@@ -114,6 +114,10 @@
             <div v-else>{{ props.row.payee }}</div>
           </q-td>
 
+          <q-td key="last_paid_out" :props="props">
+            {{ props.row.lastPaidOut }}
+          </q-td>
+
           <q-td key="other_staked" :props="props">
             {{ props.row.otherStaked }}<span class="text-weight-thin token">&nbsp;{{ tokenName }}</span>
           </q-td>
@@ -206,6 +210,13 @@
               <td>
                 <div v-if="props.row.payee.Account">Account<q-tooltip>{{ props.row.payee.Account }}</q-tooltip></div>
                 <div v-else>{{ props.row.payee }}</div>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="text-weight-bold">Payout</td>
+              <td>
+                {{ props.row.lastPaidOut }}
               </td>
             </tr>
 
@@ -322,6 +333,14 @@ export default {
         required: true,
         align: 'left',
         sortable: true
+      },
+      {
+        label: 'Payout',
+        name: 'last_paid_out',
+        required: false,
+        align: 'right',
+        sortable: false
+        // style: 'width: 160px'
       },
       {
         label: 'Other Staked',

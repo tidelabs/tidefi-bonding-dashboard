@@ -11,6 +11,7 @@ import BN from 'bignumber.js'
 import { useClientStore } from 'stores/client'
 import { useEntitiesStore } from 'stores/entities'
 import { stakerRewards } from 'src/helpers/stakerRewards'
+import useErasTime from 'src/helpers/erasTime'
 
 export async function addOrUpdateEntity (address, validator = false) {
   const entitiesStore = useEntitiesStore()
@@ -63,6 +64,7 @@ export class Entity {
     // unsubscribes
     this.unsubscribeTokenBalances = null
     this.unsubscribeBalances = null
+    this.unsubscribeStakingInfo = null
     // this.unsubscribeRewardPoints = null
     // validator info
     this.validator = validator
@@ -83,6 +85,7 @@ export class Entity {
       commission: 0,
       blocked: false
     }
+    this.lastPaidOut = 'unknown'
     this.bonded = 0
     this.otherStaked = 0
     this.ownStaked = 0
@@ -92,6 +95,33 @@ export class Entity {
     this.payee = ''
     this.stakerRewards = []
     this.nominations = []
+    // Staking Info
+    this.stakingInfo = {
+      controllerId: '',
+      exposure: {
+        own: 0,
+        total: 0,
+        others: []
+      },
+      nextSessionIds: [],
+      nominators: [],
+      redeemable: 0,
+      rewardDestination: '',
+      sessionIds: [],
+      stakingLedger: {
+        active: '',
+        claimedRewards: [],
+        stash: '',
+        total: 0,
+        unlocking: []
+      },
+      stashId: '',
+      unlocking: false,
+      validatorPrefs: {
+        commission: 10000000,
+        blocked: false
+      }
+    }
     // this.reputation = 0 // computed - future
     this.lastBlock = ''
     this.blockCount = 0
@@ -109,6 +139,10 @@ export class Entity {
     if (this.unsubscribeBalances) {
       this.unsubscribeBalances()
       this.unsubscribeBalances = null
+    }
+    if (this.unsubscribeStakingInfo) {
+      this.unsubscribeStakingInfo()
+      this.unsubscribeStakingInfo = null
     }
     // if (this.unsubscribeRewardPoints) {
     //   this.unsubscribeRewardPoints()
@@ -150,6 +184,7 @@ export class Entity {
     // validator specific
     if (this.validator) {
       await this.updateStakerInfo()
+      await this.fetchStakingInfo()
     }
 
     // ones that will be done asynchronously
@@ -287,6 +322,22 @@ export class Entity {
       return false
     })
 
+    this.lastPaidOut = computed(() => {
+      const clientStore = useClientStore()
+      const { lastPaidOut } = useErasTime()
+
+      if (!this.elected) {
+        return ''
+      }
+
+      if (this.stakingInfo && this.stakingInfo.stakingLedger && this.stakingInfo.stakingLedger.claimedRewards && this.stakingInfo.stakingLedger.claimedRewards.length > 0) {
+        const lastEraPaid = this.stakingInfo.stakingLedger.claimedRewards[ this.stakingInfo.stakingLedger.claimedRewards.length - 1 ]
+        return lastPaidOut(clientStore.previousEra, lastEraPaid).value
+      }
+
+      return ''
+    })
+
     // success
     return true
   }
@@ -412,6 +463,42 @@ export class Entity {
         this.preferences = validatorEntry.data
       }
     }
+  }
+
+  async fetchStakingInfo () {
+    const clientStore = useClientStore()
+
+    this.unsubscribeStakingInfo
+    = await clientStore.client.api.derive.staking.account(this.address,
+        (si) => {
+          // console.log('si:', si)
+          const stakingInfo = {}
+          stakingInfo.accountId = si.accountId.toHuman()
+          stakingInfo.controllerId = si.controllerId.toHuman()
+
+          const exposureHuman = si.exposure.toHuman()
+          stakingInfo.exposure = si.exposure.toJSON()
+          stakingInfo.exposure.others = exposureHuman.others
+
+          stakingInfo.nextSessionIds = si.nextSessionIds.map((id) => id.toHuman())
+          stakingInfo.nominators = si.nominators.map((id) => id.toHuman())
+          stakingInfo.redeemable = si.redeemable.toJSON()
+          stakingInfo.rewardDestination = si.rewardDestination.toHuman()
+          stakingInfo.sessionIds = si.sessionIds.map((id) => id.toHuman())
+
+          const stakingLedgerHuman = si.stakingLedger.toHuman()
+          stakingInfo.stakingLedger = si.stakingLedger.toJSON()
+          stakingInfo.stakingLedger.active = normalizeValue(stakingLedgerHuman.active)
+          stakingInfo.stakingLedger.total = normalizeValue(stakingLedgerHuman.total)
+
+          stakingInfo.stashId = si.stashId.toHuman()
+          stakingInfo.unlocking = si.unlocking ?? false
+          stakingInfo.validatorPrefs = si.validatorPrefs.toJSON()
+
+          this.stakingInfo = stakingInfo
+
+          // console.log('stakingInfo:', this.stakingInfo)
+        })
   }
 
   async fetchLedger () {
