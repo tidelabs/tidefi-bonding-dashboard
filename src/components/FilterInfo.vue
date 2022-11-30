@@ -9,7 +9,7 @@
           of nominators to select from. Below is a description for each
           filter and it's use.
         </div>
-        <table class="info-table q-mt-md">
+        <table class="info-table q-mt-md" style="max-width: 100%;">
           <tbody>
             <tr>
               <td class="info-subtitle">Inactive Validators</td>
@@ -23,26 +23,20 @@
               <td class="info-subtitle">Not Elected Next Set</td>
               <td class="vertical-top">
                 An inactive or active validator may be elected to the next set.
-                Not being elected to the next set means in the next era this validator will not be producing any blocks.
+                Not being elected to the next set means in the next era this validator will not be producing any blocks and not getting any era rewards.
               </td>
             </tr>
             <tr>
-              <td class="info-subtitle">High Commission (> 10%)</td>
+              <td class="info-subtitle">High Commission<br>(> 10%)</td>
               <td class="vertical-top">
                 A validator with a high commission means there is less era rewards for the nominators.
-                <span class="info-highlight">&gt; 10%</span>.
               </td>
             </tr>
             <tr>
               <td class="info-subtitle">Oversubscribed</td>
               <td class="vertical-top">
-                On substrate chains, there is a constant
-                <span class="info-highlight">maxNominatorRewardedPerValidator</span>
-                which is usually defined as <span class="info-highlight">256</span>
-                maximum nominators. This is the maximum number of nominators that
-                can share in the era rewards at payout time. However, you can get
-                rewards from an oversubscribed validator by bonding more funds
-                that ensure you are in the top 256 nominators.
+                There is a maximum {{ maxNominatorRewardedPerValidator }} nominators allowed per validator
+                that can share era rewards. Any nominators over this count, based on their bonded amounts, are oversubscribed and will not share in the era rewads.
               </td>
             </tr>
             <tr>
@@ -52,7 +46,7 @@
               </td>
             </tr>
             <tr>
-              <td class="info-subtitle">No Verified Identity</td>
+              <td class="info-subtitle">No Identity</td>
               <td class="vertical-top">
                 The identity exists so a nominator can recognize a validator. Besides
                 a name, validators can add web, email, twitter, etc. A validator without
@@ -89,6 +83,8 @@
 
 <script>
 import { ref, watch } from 'vue'
+import { useClientStore } from 'src/stores/client'
+
 export default {
   name: 'FilterInfo',
 
@@ -99,6 +95,8 @@ export default {
   emits: ['update:modelValue'],
 
   setup (props, { emit }) {
+    const clientStore = useClientStore()
+
     const displayed = ref(props.modelValue)
 
     watch(() => props.modelValue, (val) => {
@@ -112,7 +110,8 @@ export default {
     })
 
     return {
-      displayed
+      displayed,
+      maxNominatorRewardedPerValidator: clientStore.consts.maxNominatorRewardedPerValidator
     }
   }
 }
