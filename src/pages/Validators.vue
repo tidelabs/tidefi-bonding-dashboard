@@ -401,7 +401,11 @@ export default {
       return ''
     })
 
-    const validators = computed(() => entitiesStore.getValidators)
+    const validators = computed(() => {
+      const v = entitiesStore.getValidators
+      // console.log('validators:', v)
+      return v
+    })
 
     const filteredValidators = computed(() => {
       return validators.value.filter((val) => {
