@@ -273,19 +273,21 @@ export class Entity {
         return this.formatTokenValue(val)
       }
 
-      return 'unknown'
+      return 0
     })
 
     this.ownStaked = computed(() => {
       return this.stakers && 'own' in this.stakers
         ? this.formatTokenValue(normalizeValue(this.stakers.own)) // validator
-        : this.formatTokenValue(this.balances.locked) // staker
+        : this.balances.locked
+          ? this.formatTokenValue(this.balances.locked) // staker
+          : 0
     })
 
     this.totalStaked = computed(() => {
       return this.stakers && 'total' in this.stakers
         ? this.formatTokenValue(normalizeValue(this.stakers.total))
-        : 'unknown'
+        : 0
     })
 
     this.currentRewardPoints = computed(() => {
@@ -528,16 +530,18 @@ export class Entity {
       id
     ])
 
-    this.unsubscribeTokenBalances = await clientStore.client.api.query.assets.account.multi(a, (data) => {
-      this.tokenBalances = data.map((balance, i) => {
-        const assetId = parseInt(a[ i ][ 1 ])
-        const balanceHuman = balance.toHuman()
-        const val = { id: assetId, ledger: balance.toJSON() }
-        if (val.ledger !== null) {
-          val.ledger.balance = normalizeValue(balanceHuman.balance)
-        }
-        return val
-      })
-    })
+    this.unsubscribeTokenBalances
+    = await clientStore.client.api.query.assets.account.multi(a,
+        (data) => {
+          this.tokenBalances = data.map((balance, i) => {
+            const assetId = parseInt(a[ i ][ 1 ])
+            const balanceHuman = balance.toHuman()
+            const val = { id: assetId, ledger: balance.toJSON() }
+            if (val.ledger !== null) {
+              val.ledger.balance = normalizeValue(balanceHuman.balance)
+            }
+            return val
+          })
+        })
   }
 }
