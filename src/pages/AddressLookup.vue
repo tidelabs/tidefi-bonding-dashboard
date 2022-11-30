@@ -34,12 +34,13 @@
 </template>
 
 <script>
-import { computed, ref, watch, onBeforeMount, inject } from 'vue'
+import { computed, ref, watch, onBeforeMount, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { isValidAddress } from '../helpers/utils'
 import { Entity } from '../classes/entity'
 import { useEntitiesStore } from 'src/stores/entities'
 import { useClientStore } from 'src/stores/client'
+import mitt from 'mitt'
 
 import EntityName from 'src/components/EntityName.vue'
 import Identity from 'src/components/Identity.vue'
@@ -63,13 +64,13 @@ export default {
   setup (props) {
     const route = useRoute()
     const router = useRouter()
-    const bus = inject('bus')
+    const emitter = mitt()
     const entitiesStore = useEntitiesStore()
     const clientStore = useClientStore()
     const selectedAddress = ref(null)
     const entity = ref(null)
 
-    bus.on('session-ended', () => {
+    emitter.on('session-ended', () => {
       // is there an entity loaded up?
       if (entity.value) {
         // if so, refresh it's data
@@ -81,6 +82,11 @@ export default {
       if (clientStore.client && route.params.address && isValidAddress(route.params.address)) {
         selectedAddress.value = route.params.address
       }
+    })
+
+    onUnmounted(() => {
+      // remove handler
+      emitter.off('session-ended')
     })
 
     const loading = computed(() => {

@@ -4,14 +4,14 @@ import { useClientStore } from 'src/stores/client'
 import { useEntitiesStore } from 'src/stores/entities'
 import { normalizeValue } from '../helpers/utils'
 import { addOrUpdateEntity, updateLastBlock } from './entity'
-import { inject } from 'vue'
+import mitt from 'mitt'
 
 export class Client {
   constructor (chain) {
     this.chain = chain
     this.api = null
 
-    this.bus = inject('bus')
+    this.emitter = mitt()
 
     this.unsubscribeNewHeads = null
     this.unsubscribeSession = null
@@ -127,11 +127,12 @@ export class Client {
           // refetch data when session ends
           console.log('---------- SESSION ENDED ----------')
           this.refetchAll()
-          this.bus.emit('session-ended')
+          this.emitter.emit('session-ended')
         }
 
         if (clientStore.session.eraLength - clientStore.session.eraProgress === 1) {
           console.log('---------- ERA ENDED ----------')
+          this.emitter.emit('era-ended')
         }
       })
 
