@@ -375,6 +375,7 @@ export class Client {
 
     clientStore.activeEra = activeEra.toJSON()
     clientStore.currentEra = currentEra.toJSON()
+    clientStore.sessionIndex = sessionIndex.toJSON()
 
     return {
       activeEra,
