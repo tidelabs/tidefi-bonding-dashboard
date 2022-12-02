@@ -5,6 +5,16 @@ import { useEntitiesStore } from 'src/stores/entities'
 import { normalizeValue } from '../helpers/utils'
 import { addOrUpdateEntity, updateLastBlock } from './entity'
 import mitt from 'mitt'
+import BN from 'bignumber.js'
+
+export const DefaultParams = {
+  auctionAdjust: 0,
+  auctionMax: 0,
+  falloff: 0.05,
+  maxInflation: 0.1,
+  minInflation: 0.025,
+  stakeTarget: 0.5
+}
 
 export class Client {
   constructor (chain) {
@@ -355,10 +365,12 @@ export class Client {
 
     const [
       activeEra,
-      currentEra
+      currentEra,
+      sessionIndex
     ] = await Promise.all([
       this.api.query.staking.activeEra(),
-      this.api.query.staking.currentEra()
+      this.api.query.staking.currentEra(),
+      this.api.query.session.currentIndex()
     ])
 
     clientStore.activeEra = activeEra.toJSON()
@@ -383,7 +395,8 @@ export class Client {
       minValidatorBond,
       validatorCount,
       minCommission,
-      totalIssuance
+      totalIssuance,
+      auctionCounter
     ] = await Promise.all([
       this.api.query.staking.counterForNominators(),
       this.api.query.staking.counterForValidators(),
@@ -394,7 +407,8 @@ export class Client {
       this.api.query.staking.minValidatorBond(),
       this.api.query.staking.validatorCount(),
       this.api.query.staking.minCommission(),
-      this.api.query.balances.totalIssuance()
+      this.api.query.balances.totalIssuance(),
+      this.api.query?.auctions?.auctionCounter() ?? 0
     ])
 
     clientStore.counterForNominators = counterForNominators.toJSON()
@@ -408,6 +422,23 @@ export class Client {
     clientStore.minCommission = minCommission.toJSON()
 
     clientStore.totalIssuance = normalizeValue(totalIssuance.toHuman())
+    clientStore.auctionCounter = auctionCounter === 0 ? auctionCounter : auctionCounter.toString()
+
+    const {
+      idealInterest,
+      idealStake,
+      inflation,
+      stakedFraction,
+      stakedReturn
+    } = this.calcInflation()
+
+    clientStore.inflation = {
+      idealInterest,
+      idealStake,
+      inflation,
+      stakedFraction,
+      stakedReturn
+    }
 
     return {
       counterForNominators,
@@ -672,5 +703,43 @@ export class Client {
         validator.blockCount = authoredBlock.blocks
       }
     })
+  }
+
+  calcInflation () {
+    const clientStore = useClientStore()
+
+    const BN_MILLION = BN(1000000)
+
+    const totalStaked = BN(clientStore.erasTotalStaked)
+    const totalIssuance = BN(clientStore.totalIssuance)
+    const numAuctions = BN(clientStore.numAuctions)
+    // console.log('numAuctions:', numAuctions.toNumber())
+
+    const stakedFraction
+      = totalStaked.isZero() || totalIssuance.isZero()
+        ? 0
+        : totalStaked.multipliedBy(BN_MILLION).div(totalIssuance).toNumber() / BN_MILLION.toNumber()
+
+    const idealStake
+      = DefaultParams.stakeTarget
+        - Math.min(DefaultParams.auctionMax, numAuctions.toNumber()) * DefaultParams.auctionAdjust
+
+    const idealInterest = DefaultParams.maxInflation / idealStake
+
+    const inflation
+      = 100
+      * (DefaultParams.minInflation
+        + (stakedFraction <= idealStake
+          ? (stakedFraction * (idealInterest - (DefaultParams.minInflation / idealStake)))
+          : (((idealInterest * idealStake) - DefaultParams.minInflation) * Math.pow(2, (idealStake - stakedFraction) / DefaultParams.falloff))
+        ))
+
+    return {
+      idealInterest,
+      idealStake,
+      inflation,
+      stakedFraction,
+      stakedReturn: stakedFraction ? inflation / stakedFraction : 0
+    }
   }
 }

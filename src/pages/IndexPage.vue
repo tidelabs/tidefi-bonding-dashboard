@@ -6,6 +6,8 @@
       <ActiveEra />
       <TotalIssuance />
       <TotalStaked />
+      <Inflation />
+      <ApyReturns />
       <PreviousEraRewards />
       <TotalValidators />
       <TotalNominators />
@@ -24,6 +26,8 @@ import TotalIssuance from 'components/TotalIssuance.vue'
 import ActiveEra from 'components/ActiveEra.vue'
 import CurrentEpoch from 'components/CurrentEpoch.vue'
 import PreviousEraRewards from 'components/PreviousEraRewards.vue'
+import Inflation from 'src/components/Inflation.vue'
+import ApyReturns from 'src/components/ApyReturns.vue'
 
 export default defineComponent({
   name: 'IndexPage',
@@ -35,7 +39,9 @@ export default defineComponent({
     TotalIssuance,
     ActiveEra,
     CurrentEpoch,
-    PreviousEraRewards
+    PreviousEraRewards,
+    Inflation,
+    ApyReturns
   }
 })
 </script>

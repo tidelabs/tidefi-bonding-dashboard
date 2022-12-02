@@ -40,10 +40,13 @@ export const useClientStore = defineStore('client', {
     //
     activeEra: { index: 0, start: 0 }, // index, start (time)
     currentEra: 0,
+    sessionIndex: 0,
     bondedEras: [],
     //
     totalIssuance: 0,
     erasTotalStaked: 0,
+    auctionCounter: 0,
+    numAuctions: 0,
     //
     subIdentities: [],
     invulnerables: [],
@@ -57,7 +60,14 @@ export const useClientStore = defineStore('client', {
     rewardsHistory: [],
     rewardPoints: [{ era: 0, rewards: { total: 0, individual: {} } }],
     slashes: [],
-    nextElected: []
+    nextElected: [],
+    inflation: {
+      idealInterest: 0,
+      idealStake: 0,
+      inflation: 0,
+      stakedFraction: 0,
+      stakedReturn: 0
+    }
   }),
 
   getters: {
