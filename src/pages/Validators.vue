@@ -522,8 +522,12 @@ export default {
               y1 = y.totalStaked === 'unknown' ? 0 : y.totalStaked
             }
             else if (sortBy === 'staked_return') {
-              x1 = x.stakedReturn
-              y1 = y.stakedReturn
+              x1 = x.stakedReturn || 0
+              y1 = y.stakedReturn || 0
+            }
+            else if (sortBy === 'reward_points') {
+              x1 = x.currentRewardPoints || 0
+              y1 = y.currentRewardPoints || 0
             }
 
             return parseFloat(x1) - parseFloat(y1)
