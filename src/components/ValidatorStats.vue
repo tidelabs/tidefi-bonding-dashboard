@@ -7,19 +7,23 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr v-if="validator.stakedReturn">
+          <td>Staked Return</td>
+          <td class="text-right">{{ validator.stakedReturn }}%</td>
+        </tr>
+        <tr v-if="validator.nominatorCount">
           <td>Nominators</td>
           <td class="text-right">{{ validator.nominatorCount }}</td>
         </tr>
-        <tr>
+        <tr v-if="validator.otherStaked">
           <td>Other Staked</td>
           <td class="text-right">{{ validator.otherStaked }}</td>
         </tr>
-        <tr>
+        <tr v-if="validator.ownStaked">
           <td>Own Staked</td>
           <td class="text-right">{{ validator.ownStaked }}</td>
         </tr>
-        <tr>
+        <tr v-if="validator.totalStaked">
           <td>Total Staked</td>
           <td class="text-right">{{ validator.totalStaked }}</td>
         </tr>
@@ -33,6 +37,10 @@
             <div v-if="validator.payee.Account">Account<q-tooltip>{{ validator.payee.Account }}</q-tooltip></div>
             <div v-else>{{ validator.payee }}</div>
           </td>
+        </tr>
+        <tr v-if="validator.lastPaidOut">
+          <td>Payout</td>
+          <td class="text-right">{{ validator.lastPaidOut }}</td>
         </tr>
       </tbody>
     </table>

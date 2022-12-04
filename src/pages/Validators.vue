@@ -119,7 +119,7 @@
           </q-td>
 
           <q-td key="other_staked" :props="props">
-            {{ props.row.otherStaked }}<span class="text-weight-thin token">&nbsp;{{ tokenName }}</span>
+            {{ props.row.otherStaked || ''}}<span v-if="props.row.otherStaked" class="text-weight-thin token">&nbsp;{{ tokenName }}</span>
           </q-td>
 
           <q-td key="nominator_count" :props="props">
@@ -127,15 +127,19 @@
           </q-td>
 
           <q-td key="own_staked" :props="props">
-            {{ props.row.ownStaked }}<span class="text-weight-thin token">&nbsp;{{ tokenName }}</span>
+            {{ props.row.ownStaked || '' }}<span v-if="props.row.ownStaked" class="text-weight-thin token">&nbsp;{{ tokenName }}</span>
           </q-td>
 
           <q-td key="total_staked" :props="props">
-            {{ props.row.totalStaked }}<span class="text-weight-thin token">&nbsp;{{ tokenName }}</span>
+            {{ props.row.totalStaked || ''}}<span v-if="props.row.totalStaked" class="text-weight-thin token">&nbsp;{{ tokenName }}</span>
+          </q-td>
+
+          <q-td key="staked_return" :props="props">
+            {{ props.row.stakedReturn || '' }}<span v-if="props.row.stakedReturn">%</span>
           </q-td>
 
           <q-td key="reward_points" :props="props">
-            {{ props.row.currentRewardPoints }}
+            {{ props.row.currentRewardPoints || ''}}
           </q-td>
 
           <q-td key="last_block" :props="props">
@@ -222,17 +226,17 @@
 
             <tr>
               <td class="text-weight-bold">Other Staked</td>
-              <td>{{ props.row.otherStaked }}<span class="text-weight-thin token">&nbsp;{{ tokenName }}</span></td>
+              <td>{{ props.row.otherStaked || ''}}<span v-if="props.row.otherStaked" class="text-weight-thin token">&nbsp;{{ tokenName }}</span></td>
             </tr>
 
             <tr>
               <td class="text-weight-bold">Nominators</td>
-              <td>{{ props.row.nominatorCount }}</td>
+              <td>{{ props.row.nominatorCount || ''}}</td>
             </tr>
 
             <tr>
               <td class="text-weight-bold">Own Staked</td>
-              <td>{{ props.row.ownStaked }}<span class="text-weight-thin token">&nbsp;{{ tokenName }}</span></td>
+              <td>{{ props.row.ownStaked || '' }}<span v-if="props.row.ownStaked" class="text-weight-thin token">&nbsp;{{ tokenName }}</span></td>
             </tr>
 
             <tr>
@@ -241,8 +245,13 @@
             </tr>
 
             <tr>
+              <td class="text-weight-bold">Staked Return</td>
+              <td>{{ props.row.stakedReturn || '' }}<span v-if="props.row.totalStaked">%</span></td>
+            </tr>
+
+            <tr>
               <td class="text-weight-bold">Reward Points</td>
-              <td>{{ props.row.currentRewardPoints }}</td>
+              <td>{{ props.row.currentRewardPoints || ' '}}</td>
             </tr>
 
             <tr>
@@ -368,6 +377,13 @@ export default {
       {
         label: 'Total Staked',
         name: 'total_staked',
+        required: false,
+        align: 'right',
+        sortable: true
+      },
+      {
+        label: 'Staked Return',
+        name: 'staked_return',
         required: false,
         align: 'right',
         sortable: true
@@ -505,9 +521,9 @@ export default {
               x1 = x.totalStaked === 'unknown' ? 0 : x.totalStaked
               y1 = y.totalStaked === 'unknown' ? 0 : y.totalStaked
             }
-            else if (sortBy === 'reward_points') {
-              x1 = x.currentRewardPoints === 'unknown' ? 0 : x.currentRewardPoints
-              y1 = y.currentRewardPoints === 'unknown' ? 0 : y.currentRewardPoints
+            else if (sortBy === 'staked_return') {
+              x1 = x.stakedReturn
+              y1 = y.stakedReturn
             }
 
             return parseFloat(x1) - parseFloat(y1)

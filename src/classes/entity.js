@@ -11,7 +11,11 @@ import BN from 'bignumber.js'
 import { useClientStore } from 'stores/client'
 import { useEntitiesStore } from 'stores/entities'
 import { stakerRewards } from 'src/helpers/stakerRewards'
-import useErasTime from 'src/helpers/erasTime'
+// import useErasTime from 'src/helpers/erasTime'
+import { calcInflation } from 'src/helpers/calcInflation'
+
+const BN_HUNDRED = BN(100)
+const BN_MAX_INTEGER = BN(Number.MAX_SAFE_INTEGER)
 
 export async function addOrUpdateEntity (address, validator = false) {
   const entitiesStore = useEntitiesStore()
@@ -120,6 +124,13 @@ export class Entity {
       validatorPrefs: {
         commission: 10000000,
         blocked: false
+      },
+      inflation: {
+        idealInterest: 0,
+        idealStake: 0,
+        inflation: 0,
+        stakedFraction: 0,
+        stakedReturn: 0
       }
     }
     // this.reputation = 0 // computed - future
@@ -181,6 +192,11 @@ export class Entity {
     await this.fetchBalances()
     await this.fetchLedger()
     await this.fetchTokenBalances()
+
+    const nominations = await clientStore.client.api.query.staking.nominators(this.address)
+    this.nominations = nominations.toJSON()
+    // console.log('nominations:', this.nominations)
+
     // validator specific
     if (this.validator) {
       await this.updateStakerInfo()
@@ -193,9 +209,27 @@ export class Entity {
         this.stakerRewards = rewards
       })
 
-    const nominations = await clientStore.client.api.query.staking.nominators(this.address)
-    this.nominations = nominations.toJSON()
-    // console.log('nominations:', this.nominations)
+    if (this.stakers && 'total' in this.stakers) {
+      const {
+        idealInterest,
+        idealStake,
+        inflation,
+        stakedFraction,
+        stakedReturn
+      } = calcInflation(this.stakers.total)
+
+      this.inflation = {
+        idealInterest,
+        idealStake,
+        inflation,
+        stakedFraction,
+        stakedReturn
+      }
+
+      // console.log('Validator Inflation:', this.inflation)
+
+      this.calcValidatorReturn()
+    }
 
     // loading data done
     entitiesStore.decLoading()
@@ -322,22 +356,6 @@ export class Entity {
         return !!clientStore.nextElected.find((el) => el === this.address)
       }
       return false
-    })
-
-    this.lastPaidOut = computed(() => {
-      const clientStore = useClientStore()
-      const { lastPaidOut } = useErasTime()
-
-      if (!this.elected) {
-        return ''
-      }
-
-      if (this.stakingInfo && this.stakingInfo.stakingLedger && this.stakingInfo.stakingLedger.claimedRewards && this.stakingInfo.stakingLedger.claimedRewards.length > 0) {
-        const lastEraPaid = this.stakingInfo.stakingLedger.claimedRewards[ this.stakingInfo.stakingLedger.claimedRewards.length - 1 ]
-        return lastPaidOut(clientStore.previousEra, lastEraPaid).value
-      }
-
-      return ''
     })
 
     // success
@@ -467,6 +485,65 @@ export class Entity {
     }
   }
 
+  calcLastPaidOut () {
+    const clientStore = useClientStore()
+
+    if (!this.elected) {
+      this.lastPaidOut = ''
+      return
+    }
+
+    if (this.stakingInfo && this.stakingInfo.stakingLedger && this.stakingInfo.stakingLedger.claimedRewards && this.stakingInfo.stakingLedger.claimedRewards.length > 0) {
+      const lastEraPaid = this.stakingInfo.stakingLedger.claimedRewards[ this.stakingInfo.stakingLedger.claimedRewards.length - 1 ]
+
+      if (lastEraPaid === -1) {
+        this.lastPaidOut = 'never'
+        return
+      }
+
+      const days = clientStore.previousEra - lastEraPaid
+      switch (days) {
+        case 0:
+          this.lastPaidOut = 'recently'
+          break
+        case 1:
+          this.lastPaidOut = 'yesterday'
+          break
+        default:
+          this.lastPaidOut = `${ days } days`
+          break
+      }
+      return
+    }
+
+    this.lastPaidOut = ''
+  }
+
+  calcValidatorReturn () {
+    const clientStore = useClientStore()
+    // const entitiesStore = useEntitiesStore()
+
+    if (!this.elected || (this.stakers && !('total' in this.stakers))) {
+      this.stakedReturn = 0
+      return
+    }
+
+    // Average of all stakes (bonds)
+    const avgStaked = BN(clientStore.erasTotalStaked).div(clientStore.counterForNominators)
+
+    if (avgStaked && !avgStaked.isZero()) {
+      const adjusted = avgStaked.multipliedBy(BN_HUNDRED).multipliedBy(this.inflation.stakedReturn).div(this.stakers.total)
+      // console.log('adjusted:', adjusted.toNumber())
+
+      const stakedReturn = (adjusted.gt(BN_MAX_INTEGER) ? BN_MAX_INTEGER : adjusted).div(BN_HUNDRED).toNumber()
+
+      // adjusted for mission
+      this.stakedReturn = (stakedReturn * (100 - parseFloat(this.preferences.commission)) / 100).toFixed(2)
+
+      // console.log('Validator Staked Return:', adjusted.toNumber(), stakedReturn, this.stakedReturn)
+    }
+  }
+
   async fetchStakingInfo () {
     const clientStore = useClientStore()
 
@@ -500,6 +577,8 @@ export class Entity {
           this.stakingInfo = stakingInfo
 
           // console.log('stakingInfo:', this.stakingInfo)
+
+          this.calcLastPaidOut()
         })
   }
 
