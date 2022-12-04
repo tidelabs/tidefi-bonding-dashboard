@@ -1,7 +1,7 @@
 {
   "name": "tidefi-staking-dashboard",
   "version": "0.0.1",
-  "description": "A Quasar Project",
+  "description": "TIDEFI on-chain live data to help you make better staking decisions",
   "productName": "TIDEFI Staking Dashboard",
   "author": "Jeff <jeff.galbraith@semantic-network.com>",
   "private": true,
