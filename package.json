@@ -2,7 +2,7 @@
   "name": "tidefi-staking-dashboard",
   "version": "0.0.1",
   "description": "A Quasar Project",
-  "productName": "validators",
+  "productName": "TIDEFI Staking Dashboard",
   "author": "Jeff <jeff.galbraith@semantic-network.com>",
   "private": true,
   "scripts": {
