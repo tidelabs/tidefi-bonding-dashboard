@@ -30,8 +30,8 @@ export default {
   name: 'CurrentBlock',
   setup () {
     const clientStore = useClientStore()
-    const maxBlockTime = 6000
-    const incrementTime = 250
+    const maxBlockTime = clientStore.expectedBlockTime || 6000
+    const incrementTime = 250 // update visuals 4 times a second
     const intervalTime = ref(0)
     let intervalId = null
 
@@ -39,6 +39,7 @@ export default {
       clearInterval(intervalId)
       intervalTime.value = 0
     }
+
     function setCountdown () {
       clearTimer()
       intervalId = setInterval(() => {
@@ -52,6 +53,17 @@ export default {
 
     watch(() => clientStore.currentHeader.number, () => {
       setCountdown()
+    })
+
+    watch(intervalTime, (val) => {
+      if (!clientStore.isLoading) {
+        const value = parseFloat(val)
+        if (value > (1000 * 60)) { // 1 minute
+          clientStore.client.reconnect()
+          // wait 1 more minute, if this one does not succeed
+          intervalTime.value = 0
+        }
+      }
     })
 
     return {

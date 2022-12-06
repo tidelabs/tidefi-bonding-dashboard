@@ -104,12 +104,12 @@ export class Client {
 
       this.testing()
 
-      this.unsubscribeNextElected = this.api.derive.staking.nextElected((elected) => {
+      this.unsubscribeNextElected = await this.api.derive.staking.nextElected((elected) => {
         // console.log('Next Elected:', elected)
         clientStore.nextElected = elected.map((elect) => elect.toHuman())
       })
 
-      this.unsubscribeNewHeads = api.derive.chain.subscribeNewHeads((header) => {
+      this.unsubscribeNewHeads = await api.derive.chain.subscribeNewHeads((header) => {
         // console.log(`#${ header.number }: ${ header.author }\n`)
         updateLastBlock(header.number.toNumber(), header.author.toString())
         // console.log(`(${ JSON.stringify(header.toJSON(), null, 2) })\n(${ JSON.stringify(header.toHuman(), null, 2) })\n`)
@@ -121,7 +121,7 @@ export class Client {
         this.fetchAuthoredBlocks()
       })
 
-      this.unsubscribeSession = api.derive.session.progress((session) => {
+      this.unsubscribeSession = await api.derive.session.progress((session) => {
         clientStore.session.eraLength = session.eraLength.toNumber()
         clientStore.session.eraProgress = session.eraProgress.toNumber()
         clientStore.session.sessionLength = session.sessionLength.toNumber()
@@ -141,7 +141,7 @@ export class Client {
         }
       })
 
-      this.unsubscribeSomeOffline = api.events.imOnline.SomeOffline.is((offline) => {
+      this.unsubscribeSomeOffline = await api.events.imOnline.SomeOffline.is((offline) => {
         console.log('---------- SOME OFFLINE ----------\n', offline.toJSON())
         // not sure this can be cleared when a Validator is back on line
         // clientStore.offline = offline.toJSON()
@@ -217,6 +217,8 @@ export class Client {
   }
 
   reconnect () {
+    const clientStore = useClientStore()
+    clientStore.loading = true
     this.disconnect()
     this.connect()
   }
