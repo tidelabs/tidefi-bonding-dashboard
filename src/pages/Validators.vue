@@ -569,7 +569,7 @@ export default {
       // personAddDisabledTwoTone,
       // identityTwoTone,
       // cash100,
-      // selfImprovementTwoTone,3
+      // selfImprovementTwoTone,
       infoIcon,
       displayFilterInfoModal,
       customSort,

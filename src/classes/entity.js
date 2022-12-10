@@ -554,6 +554,7 @@ export class Entity {
             const val = { id: assetId, ledger: balance.toJSON() }
             if (val.ledger !== null) {
               val.ledger.balance = normalizeValue(balanceHuman.balance)
+              val.ledger.reason = balanceHuman.reason
             }
             return val
           })

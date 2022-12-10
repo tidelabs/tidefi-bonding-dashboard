@@ -6,12 +6,12 @@ export const useChainsStore = defineStore('chain', {
       {
         name: 'Tidechain',
         rpc: 'wss://rpc.tidefi.io',
-        testnet: false
+        mainnet: true
       },
       {
         name: 'Lagoon',
         rpc: 'wss://rpc.lagoon.tidefi.io',
-        testnet: true
+        mainnet: false
       }
     ],
     // selected chain and index
