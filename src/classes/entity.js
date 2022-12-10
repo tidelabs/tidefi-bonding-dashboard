@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import { toSvg } from 'jdenticon'
 import {
   getControllerInfo
@@ -48,7 +48,26 @@ export class Entity {
     this.address = address
     //
     this.identicon = null
-    this.balances = {
+    this.ledger = null
+    // validator info
+    this.validator = validator
+    this.identity = reactive({})
+    this.belowAvgPoints = false // TODO:
+    this.slashed = false // TODO:
+    this.noGovernance = false // TODO:
+    this.elected = false // active
+    this.nextElected = false // next set
+    this.lastPaidOut = 'unknown'
+    this.bonded = 0
+    this.otherStaked = 0
+    this.ownStaked = 0
+    this.totalStaked = 0
+    this.currentRewardPoints = 0
+    this.payee = ''
+    this.lastBlock = ''
+    this.blockCount = 0
+
+    this.balances = reactive({
       freeBalance: 0,
       frozenFee: 0,
       frozenMisc: 0,
@@ -63,45 +82,22 @@ export class Entity {
       vesting: 0,
       vestingTotal: 0,
       namedReserves: []
-    }
-    this.ledger = null
-    this.tokenBalances = []
-    // unsubscribes
-    this.unsubscribeTokenBalances = null
-    this.unsubscribeBalances = null
-    this.unsubscribeStakingInfo = null
-    // this.unsubscribeRewardPoints = null
-    // validator info
-    this.validator = validator
-    this.identityType = 'identity_none' // identity_plus | identity_check | identity_verified
-    this.hasIdentity = false
-    this.hasVerifiedIdentity = false // TODO:
-    this.belowAvgPoints = false // TODO:
-    this.slashed = false // TODO:
-    this.noGovernance = false // TODO:
-    this.elected = false // active
-    this.nextElected = false // next set
-    this.stakers = {
+    })
+    this.tokenBalances = reactive([])
+    this.stakers = reactive({
       total: '0',
       own: '0',
       others: []
-    }
-    this.preferences = {
+    })
+    this.preferences = reactive({
       commission: 0,
       blocked: false
-    }
-    this.lastPaidOut = 'unknown'
-    this.bonded = 0
-    this.otherStaked = 0
-    this.ownStaked = 0
-    this.totalStaked = 0
-    this.currentRewardPoints = 0
-    this.erasRewardPoints = []
-    this.payee = ''
-    this.stakerRewards = []
-    this.nominations = []
+    })
+    this.erasRewardPoints = reactive([])
+    this.stakerRewards = reactive([])
+    this.nominations = reactive([])
     // Staking Info
-    this.stakingInfo = {
+    this.stakingInfo = reactive({
       controllerId: '',
       exposure: {
         own: 0,
@@ -133,10 +129,14 @@ export class Entity {
         stakedFraction: 0,
         stakedReturn: 0
       }
-    }
+    })
+    // unsubscribes
+    this.unsubscribeTokenBalances = null
+    this.unsubscribeBalances = null
+    this.unsubscribeStakingInfo = null
+    // this.unsubscribeRewardPoints = null
+
     // this.reputation = 0 // computed - future
-    this.lastBlock = ''
-    this.blockCount = 0
   }
 
   async connect () {
@@ -184,6 +184,7 @@ export class Entity {
     this.controller = controller.toHuman()
     // console.log('controller:', this.controller)
     // console.log('address   :', this.address)
+
     const payee = await await clientStore.client.api.query.staking.payee(this.address)
     this.payee = payee.toHuman()
     // console.log('payee:', this.address, this.payee)
