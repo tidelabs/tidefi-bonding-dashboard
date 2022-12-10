@@ -274,13 +274,10 @@ import { useClientStore } from 'stores/client'
 import { usePreferencesStore } from 'stores/preferences'
 import { infoIcon, mdiChevronRightCircle } from 'assets/icons'
 import { isVerifiedIdentity } from 'src/helpers/utils'
+import { solidCheckCircle } from 'src/assets/icons'
 
 import FilterInfo from 'components/FilterInfo.vue'
 
-const solidMinusCircle = 'M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z@@fill:currentColor;fill-rule:evenodd;clip-rule:evenodd;|0 0 20 20'
-const solidPlusCircle = 'M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z@@fill:currentColor;fill-rule:evenodd;clip-rule:evenodd;|0 0 20 20'
-const solidCheckCircle = 'M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z@@fill:currentColor;fill-rule:evenodd;clip-rule:evenodd;|0 0 20 20'
-const solidUserCircle = 'M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z@@fill:currentColor;fill-rule:evenodd;clip-rule:evenodd;|0 0 20 20'
 const solidLockClosed = 'M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z@@fill:currentColor;fill-rule:evenodd;clip-rule:evenodd;|0 0 20 20'
 const solidLockOpen = 'M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 015.905-.75 1 1 0 001.937-.5A5.002 5.002 0 0010 2z@@fill:currentColor;|0 0 20 20'
 
