@@ -22,7 +22,7 @@
         <q-select
           v-model="selectedValidator"
           :options="validatorsOption"
-          option-label="name"
+          :option-label="(val) => val.identity.name"
           use-input
           input-debounce="0"
           @filter="filterValidators"
@@ -137,6 +137,9 @@ export default {
             // console.log('StakerRewards:', stakerRewardsData.value)
           })
       }
+      else {
+        stakerRewardsData.value = []
+      }
     })
 
     function filterValidators (val, update) {
@@ -149,7 +152,9 @@ export default {
 
       update(() => {
         const needle = val.toLowerCase()
-        validatorsOption.value = validators.value.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
+        validatorsOption.value = validators.value.filter(v => {
+          return v.identity.name.toLowerCase().indexOf(needle) > -1
+        })
       })
     }
 
