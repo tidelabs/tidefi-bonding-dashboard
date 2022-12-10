@@ -7,11 +7,12 @@
         style="max-width: 100%;"
       />
     </q-card>
+    <q-resize-observer @resize="onResize" />
   </div>
 </template>
 
 <script>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { toBaseToken2 } from 'src/helpers/utils'
 import { useClientStore } from 'src/stores/client'
 import { useQuasar } from 'quasar'
@@ -29,6 +30,11 @@ export default {
   setup (props) {
     const clientStore = useClientStore()
     const $q = useQuasar()
+    const size = ref({ width: 200, height: 200 })
+
+    function onResize (sz) {
+      size.value = sz
+    }
 
     const chartOptions = computed(() => {
       const options = {
@@ -155,7 +161,7 @@ export default {
             lineColor: '#00FF00',
             lineWidth: 1,
             marker: {
-              enabled: true,
+              enabled: parseInt(size.value.width) > 700,
               // color: $q.dark.isActive ? 'yellow' : null,
               fillColor: '#FF00FF'
             }
@@ -190,7 +196,8 @@ export default {
     })
 
     return {
-      chartOptions
+      chartOptions,
+      onResize
     }
   }
 }
