@@ -73,9 +73,9 @@
               </div> -->
 
               <div style="min-width: 18px;">
-                <q-icon :name="getIdentityIcon(props.row)" size="18px" color="blue-grey-3">
+                <q-icon :name="props.row.identity.identityIcon" size="18px" color="blue-grey-3">
                   <q-tooltip>
-                    {{ getIdentityTooltip(props.row) }}
+                    {{ props.row.identity.identityTooltip }}
                   </q-tooltip>
                 </q-icon>
               </div>
@@ -92,7 +92,7 @@
           </q-td>
 
           <q-td key="name" :props="props">
-            <div class="row justify-start items-center">
+            <div class="row justify-start items-center no-wrap">
               <div class="col-shrink">
                 <div class="border-light identity-svg-wrapper" v-html="props.row.identicon" />
               </div>
@@ -100,7 +100,7 @@
                 :to="{ name: 'validator-lookup', params: { address: props.row.address } }"
                 class="entity-link"
               >
-                <div class="col q-ml-sm">{{ props.row.name }}</div>
+                <div class="col q-ml-sm">{{ props.row.identity.name }}</div>
               </router-link>
             </div>
           </q-td>
@@ -168,9 +168,9 @@
                   </div> -->
 
                   <div style="min-width: 18px;">
-                    <q-icon :name="getIdentityIcon(props.row)" size="18px" color="blue-grey-3">
+                    <q-icon :name="props.row.identity.identityIcon" size="18px" color="blue-grey-3">
                       <q-tooltip>
-                        {{ getIdentityTooltip(props.row) }}
+                        {{ props.row.identity.identityTooltip }}
                       </q-tooltip>
                     </q-icon>
                   </div>
@@ -190,7 +190,7 @@
             <tr>
               <td class="text-weight-bold">Name/Address</td>
               <td>
-                <div class="row justify-start items-center">
+                <div class="row justify-start items-center no-wrap">
                   <div class="col-shrink">
                     <div class="border-light identity-svg-wrapper" v-html="props.row.identicon" />
                   </div>
@@ -198,7 +198,7 @@
                     :to="{ name: 'validator-lookup', params: { address: props.row.address } }"
                     class="entity-link"
                   >
-                    <div class="col q-ml-sm">{{ props.row.name }}</div>
+                    <div class="col q-ml-sm">{{ props.row.identity.name }}</div>
                   </router-link>
                 </div>
               </td>
@@ -273,7 +273,6 @@ import { useEntitiesStore } from 'stores/entities'
 import { useClientStore } from 'stores/client'
 import { usePreferencesStore } from 'stores/preferences'
 import { infoIcon, mdiChevronRightCircle } from 'assets/icons'
-import { isVerifiedIdentity } from 'src/helpers/utils'
 import { solidCheckCircle } from 'src/assets/icons'
 
 import FilterInfo from 'components/FilterInfo.vue'
@@ -281,6 +280,7 @@ import FilterInfo from 'components/FilterInfo.vue'
 const solidLockClosed = 'M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z@@fill:currentColor;fill-rule:evenodd;clip-rule:evenodd;|0 0 20 20'
 const solidLockOpen = 'M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 015.905-.75 1 1 0 001.937-.5A5.002 5.002 0 0010 2z@@fill:currentColor;|0 0 20 20'
 
+// Icons for later
 // const scalesDuotone = 'M56,88l32,80c0,17.7-20,24-32,24s-32-6.3-32-24ZM200,56l-32,80c0,17.7,20,24,32,24s32-6.3,32-24Z@@opacity:0.2;&&M239.4,133l-32-80h0l-.5-.9h0l-.6-.8c-.1-.1-.1-.1-.1-.2l-.8-.8a.1.1,0,0,1-.1-.1,1.8,1.8,0,0,0-.7-.5l-.2-.2-.9-.5h-.2l-.8-.3h-.2l-1-.2h-3L136,62V40a8,8,0,0,0-16,0V65.6L54.3,80.2h-.7l-1,.4h-.2l-.8.4a.1.1,0,0,1-.1.1l-.9.7a.1.1,0,0,1-.1.1l-.6.7h-.1a2.4,2.4,0,0,0-.6.9l-.2.2-.4.9h-.1L16.6,165a8,8,0,0,0-.6,3c0,23.3,24.5,32,40,32s40-8.7,40-32a8,8,0,0,0-.6-3L66.9,93.8,120,82V208H104a8,8,0,0,0,0,16h48a8,8,0,0,0,0-16H136V78.4l50.9-11.3L160.6,133a8,8,0,0,0-.6,3c0,23.3,24.5,32,40,32s40-8.7,40-32A8,8,0,0,0,239.4,133ZM56,184c-7.5,0-22.8-3.6-23.9-14.6L56,109.5l23.9,59.9C78.8,180.4,63.5,184,56,184Zm144-32c-7.5,0-22.8-3.6-23.9-14.6L200,77.5l23.9,59.9C222.8,148.4,207.5,152,200,152Z|0 0 256 256'
 // const howToVoteTwoTone = 'M0 0h24v24H0V0z@@fill:none;&&M5 19h14v1H5z@@opacity:.3;&&M18 13h-.68l-2 2h1.91L19 17H5l1.78-2h2.05l-2-2H6l-3 3v4c0 1.1.89 2 1.99 2H19c1.1 0 2-.89 2-2v-4l-3-3zm1 7H5v-1h14v1z&&M12.048 12.905L8.505 9.362l4.95-4.95 3.543 3.543z@@opacity:.3;&&M19.11 7.25L14.16 2.3c-.38-.4-1.01-.4-1.4-.01L6.39 8.66c-.39.39-.39 1.02 0 1.41l4.95 4.95c.39.39 1.02.39 1.41 0l6.36-6.36c.39-.39.39-1.02 0-1.41zm-7.06 5.65L8.51 9.36l4.95-4.95L17 7.95l-4.95 4.95z'
 // const alarmClockOutline = 'M31.47,3.84a5.78,5.78,0,0,0-7.37-.63,16.08,16.08,0,0,1,8.2,7.65A5.73,5.73,0,0,0,31.47,3.84ZM11.42,3.43a5.77,5.77,0,0,0-7.64.41,5.72,5.72,0,0,0-.38,7.64A16.08,16.08,0,0,1,11.42,3.43ZM16.4,4.09A14,14,0,0,0,8.11,27.88L5.56,30.43A1,1,0,1,0,7,31.84l2.66-2.66a13.9,13.9,0,0,0,16.88-.08l2.74,2.74a1,1,0,0,0,1.41-1.41L28,27.78A14,14,0,0,0,16.4,4.09ZM19.58,29.9A12,12,0,1,1,29.92,19.56,12,12,0,0,1,19.58,29.9ZM24.92,20.34l-6.06-3V9.5a.9.9,0,0,0-1.8,0v9L24.12,22a.9.9,0,1,0,.79-1.62Z|0 0 36 36'
@@ -428,8 +428,8 @@ export default {
         if (retVal && preferencesStore.filters.highCommission && parseFloat(val.preferences.commission) > 10.00) retVal = false
         if (retVal && preferencesStore.filters.oversubscribed && isOversubscribed(val)) retVal = false
         if (retVal && preferencesStore.filters.blockedNominations && val.preferences.blocked === true) retVal = false
-        if (retVal && preferencesStore.filters.missingIdentity && !val.hasIdentity) retVal = false
-        if (retVal && preferencesStore.filters.noVerifiedIdentity && !val.hasVerifiedIdentity) retVal = false
+        if (retVal && preferencesStore.filters.missingIdentity && !val.identity.hasIdentity) retVal = false
+        if (retVal && preferencesStore.filters.noVerifiedIdentity && !val.identity.hasVerifiedIdentity) retVal = false
         if (retVal && preferencesStore.filters.notStaked && val.payee !== 'Staked') retVal = false
         if (retVal && preferencesStore.filters.selfController && val.selfController === val.address) retVal = false
         if (retVal && preferencesStore.filters.belowAvgPoints && val.belowAvgPoints) retVal = false
@@ -539,32 +539,6 @@ export default {
       return validator.nominatorCount.value > clientStore.consts.maxNominatorRewardedPerValidator
     }
 
-    function getIdentityTooltip (validator) {
-      if (isVerifiedIdentity(validator?.identity || validator?.parent?.identity)) {
-        return 'Identity verified'
-      }
-      else if (validator?.parent && validator?.parent?.identity?.info && validator?.super) {
-        return 'Super identity is set'
-      }
-      else if (validator?.identity && validator?.identity?.info) {
-        return 'Identity is set'
-      }
-      return 'identity is NOT set'
-    }
-
-    function getIdentityIcon (validator) {
-      if (isVerifiedIdentity(validator?.identity || validator?.parent?.identity)) {
-        return solidUserCircle
-      }
-      else if (validator?.parent && validator?.parent?.identity?.info && validator?.super) {
-        return solidPlusCircle
-      }
-      else if (validator?.identity && validator?.identity?.info) {
-        return solidCheckCircle
-      }
-      return solidMinusCircle
-    }
-
     function isInvulnerable (validator) {
       return clientStore.invulnerables.find(id => id === validator.address)
     }
@@ -586,10 +560,7 @@ export default {
       tokenName,
       solidLockClosed,
       solidLockOpen,
-      solidMinusCircle,
-      solidPlusCircle,
       solidCheckCircle,
-      solidUserCircle,
       mdiChevronRightCircle,
       // scalesDuotone,
       // howToVoteTwoTone,
@@ -602,8 +573,6 @@ export default {
       infoIcon,
       displayFilterInfoModal,
       customSort,
-      getIdentityIcon,
-      getIdentityTooltip,
       isInvulnerable,
       getProtectedIcon,
       filteredValidators,

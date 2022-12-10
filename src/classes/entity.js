@@ -1,12 +1,13 @@
 import { computed } from 'vue'
 import { toSvg } from 'jdenticon'
 import {
-  getControllerInfo,
-  getIdentityInfo,
-  getParentIdentity,
-  getSuperIdentity
+  getControllerInfo
 } from '../helpers/validators'
-import { trimHash, toBaseToken, normalizeValue, isVerifiedIdentity } from 'src/helpers/utils'
+import useIdentity from 'src/helpers/useIdentity'
+import {
+  toBaseToken,
+  normalizeValue
+} from 'src/helpers/utils'
 import BN from 'bignumber.js'
 import { useClientStore } from 'stores/client'
 import { useEntitiesStore } from 'stores/entities'
@@ -186,9 +187,48 @@ export class Entity {
     const payee = await await clientStore.client.api.query.staking.payee(this.address)
     this.payee = payee.toHuman()
     // console.log('payee:', this.address, this.payee)
-    await this.fetchIdentity()
-    await this.updateParentIdentity()
-    await this.updateSuperdentity()
+
+    const {
+      updateIdentity,
+      identityInfo,
+      parentInfo,
+      superInfo,
+      identityType,
+      hasIdentity,
+      hasVerifiedIdentity,
+      identityTooltip,
+      identityIcon,
+      name,
+      parentName,
+      superName,
+      email,
+      legal,
+      riot,
+      twitter,
+      web
+    } = useIdentity(this.address, clientStore.subIdentities, clientStore.client.api)
+    await updateIdentity()
+    // console.log(identityInfo.value, parentInfo.value, superInfo.value)
+
+    this.identity = {
+      identityInfo,
+      parentInfo,
+      superInfo,
+      identityType,
+      hasIdentity,
+      hasVerifiedIdentity,
+      identityTooltip,
+      identityIcon,
+      name,
+      parentName,
+      superName,
+      email,
+      legal,
+      riot,
+      twitter,
+      web
+    }
+
     await this.fetchBalances()
     await this.fetchLedger()
     await this.fetchTokenBalances()
@@ -237,47 +277,6 @@ export class Entity {
     // this.reputation = computed(() => {
     //   return 5
     // })
-
-    this.name = computed(() => {
-      if (this?.parent && this?.parent?.identity?.info) {
-        let parentName = this?.parent?.identity?.info?.display?.Raw
-        if (!this.super) {
-          return parentName
-        }
-        parentName += '/' + this?.super[ 1 ].Raw
-        return parentName
-      }
-
-      // must come second as you can still have identity
-      if (this?.identity && this?.identity?.info) {
-        return this?.identity?.info?.display?.Raw
-      }
-
-      if (this.address) {
-        return trimHash(this.address, 16)
-      }
-
-      return '<unknown>'
-    })
-
-    this.identityType = computed(() => {
-      if (isVerifiedIdentity(this.identity || (this.parent && this.parent.identity))) {
-        return 'identity_verified'
-      }
-      else if (this.identity && this.identity.info) {
-        return 'identity_check'
-      }
-      else if (this.parent && this.parent.identity.info && this.super) {
-        return 'identity_plus'
-      }
-      return 'identity_none'
-    })
-
-    this.hasIdentity = computed(() => {
-      const value = this.identityType !== 'identity_none'
-      // console.log(`IdentityType (${ this.name.value }): ${ this.identityType.value }`)
-      return value
-    })
 
     this.nominatorCount = computed(() => {
       if (this.stakers && this.stakers.others && this.stakers.others.length > 0) {
@@ -399,69 +398,6 @@ export class Entity {
         })
 
     // console.log('balances:', this.balances)
-  }
-
-  async fetchIdentity () {
-    const clientStore = useClientStore()
-
-    const identity = await getIdentityInfo(this.address, clientStore.client.api)
-    if (identity) {
-      const identityHuman = identity.toHuman()
-      if (identityHuman) {
-        if (identityHuman.info) {
-          this.identity = {}
-          this.identity.info = identityHuman.info
-        }
-        if (identityHuman.judgements) {
-          if (!this.identity) {
-            this.identity = {}
-          }
-          // TODO: judgements will need to be checked for verified identities
-          this.identity.judgements = identityHuman.judgements
-        }
-      }
-      const identityJSON = identity.toJSON()
-      if (identityJSON && 'deposit' in identityJSON) {
-        if (!this.identity) {
-          this.identity = {}
-        }
-        this.identity.deposit = identityJSON.deposit
-      }
-    }
-  }
-
-  async updateParentIdentity () {
-    const clientStore = useClientStore()
-
-    const parentIdentity = await getParentIdentity(this.address, clientStore.subIdentities, clientStore.client.api)
-    if (parentIdentity) {
-      const parentIdentityHuman = parentIdentity.toHuman()
-      if (parentIdentityHuman) {
-        if (parentIdentityHuman.info) {
-          this.parent = {}
-          this.parent.identity = {}
-          this.parent.identity.info = parentIdentityHuman.info
-        }
-        const parentIdentityJSON = parentIdentity.toJSON()
-        if (!this.parent) {
-          this.parent = {}
-          this.parent.identity = {}
-        }
-        if (parentIdentityHuman.judgements) {
-          this.parent.identity.judgements = parentIdentityJSON.judgements
-        }
-      }
-    }
-  }
-
-  async updateSuperdentity () {
-    const clientStore = useClientStore()
-
-    const superIdentity = await getSuperIdentity(this.address, clientStore.client.api)
-    const superIdentityHuman = superIdentity.toHuman()
-    if (superIdentityHuman) {
-      this.super = superIdentityHuman
-    }
   }
 
   async updateStakerInfo () {

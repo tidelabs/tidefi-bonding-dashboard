@@ -17,7 +17,7 @@
                     :to="{ name: 'validator-lookup', params: { address: validator.address } }"
                     class="entity-link full-width"
                   >
-                    {{ validator.name }}
+                    {{ validator.identity.name }}
                   </router-link>
                   <q-tooltip>{{ validator.address }}</q-tooltip>
                 </div>
@@ -33,9 +33,7 @@
 
 <script>
 import { computed } from 'vue'
-// import { useClientStore } from 'src/stores/client'
 import { useEntitiesStore } from 'src/stores/entities'
-import { trimHash } from 'src/helpers/utils'
 
 export default {
   name: 'Nominations',
@@ -49,7 +47,6 @@ export default {
   },
 
   setup (props) {
-    // const clientStore = useClientStore()
     const entitiesStore = useEntitiesStore()
 
     const nominations = computed(() => {
@@ -67,8 +64,7 @@ export default {
     })
 
     return {
-      nominations,
-      trimHash
+      nominations
     }
   }
 }

@@ -39,9 +39,9 @@ export const useEntitiesStore = defineStore('entities', {
     },
     getValidatorsSorted () {
       return this.getValidators.sort((a, b) => {
-        return a.name.toLowerCase() > b.name.toLowerCase()
+        return a.identity.name.toLowerCase() > b.identity.name.toLowerCase()
           ? 1
-          : a.name.toLowerCase() < b.name.toLowerCase()
+          : a.identity.name.toLowerCase() < b.identity.name.toLowerCase()
             ? -1 : 0
       })
     }

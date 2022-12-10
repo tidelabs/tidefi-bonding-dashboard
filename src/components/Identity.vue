@@ -1,5 +1,5 @@
 <template>
-  <q-card v-if="hasIdentity" class="info-table">
+  <q-card v-if="entity && entity.identity.hasIdentity" class="info-table">
     <table>
       <thead>
         <tr>
@@ -7,26 +7,29 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-if="parentName">
-          <td>Parent Name:</td><td>{{ parentName }}</td>
+        <tr v-if="entity.identity.name">
+          <td>Name:</td><td>{{ entity.identity.name }}</td>
         </tr>
-        <tr v-if="superName">
-          <td>Super Name:</td><td>{{ superName }}</td>
+        <tr v-if="entity.identity.parentName">
+          <td>Parent Name:</td><td>{{ entity.identity.parentName }}</td>
         </tr>
-        <tr v-if="email">
-          <td>Email:</td><td>{{ email }}</td>
+        <tr v-if="entity.identity.superName">
+          <td>Super Name:</td><td>{{ entity.identity.superName }}</td>
         </tr>
-        <tr v-if="legal">
-          <td>Legal:</td><td>{{ legal }}</td>
+        <tr v-if="entity.identity.email">
+          <td>Email:</td><td>{{ entity.identity.email }}</td>
         </tr>
-        <tr v-if="riot">
-          <td>Riot:</td><td>{{ riot }}</td>
+        <tr v-if="entity.identity.legal">
+          <td>Legal:</td><td>{{ entity.identity.legal }}</td>
         </tr>
-        <tr v-if="twitter">
-          <td>Twitter:</td><td>{{ twitter }}</td>
+        <tr v-if="entity.identity.riot">
+          <td>Riot:</td><td>{{ entity.identity.riot }}</td>
         </tr>
-        <tr v-if="web">
-          <td>Web:</td><td>{{ web }}</td>
+        <tr v-if="entity.identity.twitter">
+          <td>Twitter:</td><td>{{ entity.identity.twitter }}</td>
+        </tr>
+        <tr v-if="entity.identity.web">
+          <td>Web:</td><td>{{ entity.identity.web }}</td>
         </tr>
       </tbody>
     </table>
@@ -34,7 +37,6 @@
 </template>
 
 <script>
-import { computed } from 'vue'
 
 export default {
   name: 'Identity',
@@ -44,89 +46,6 @@ export default {
       type: Object,
       required: false,
       validator: (prop) => typeof prop === 'object' || prop === null
-    }
-  },
-
-  setup (props) {
-    const parentName = computed(() => {
-      if (props.entity && props.entity.parent && props.entity.parent.identity.info.display !== 'None') {
-        return props.entity.parent.identity.info.display.Raw
-      }
-      return ''
-    })
-
-    const superName = computed(() => {
-      if (props.entity && props.entity.super && props.entity.super.length > 0) {
-        return props.entity.super[ 1 ].Raw
-      }
-      return ''
-    })
-
-    const email = computed(() => {
-      if (props.entity && props.entity.parent && props.entity.parent.identity.info.email !== 'None') {
-        return props.entity.parent.identity.info.email.Raw
-      }
-      if (props.entity && props.entity.identity && props.entity.identity.info.email !== 'None') {
-        return props.entity.identity.info.email.Raw
-      }
-      return ''
-    })
-
-    const legal = computed(() => {
-      if (props.entity && props.entity.parent && props.entity.parent.identity.info.legal !== 'None') {
-        return props.entity.parent.identity.info.legal.Raw
-      }
-      if (props.entity && props.entity.identity && props.entity.identity.info.legal !== 'None') {
-        return props.entity.identity.info.legal.Raw
-      }
-      return ''
-    })
-
-    const riot = computed(() => {
-      if (props.entity && props.entity.parent && props.entity.parent.identity.info.riot !== 'None') {
-        return props.entity.parent.identity.info.riot.Raw
-      }
-      if (props.entity && props.entity.identity && props.entity.identity.info.riot !== 'None') {
-        return props.entity.identity.info.riot.Raw
-      }
-      return ''
-    })
-
-    const twitter = computed(() => {
-      if (props.entity && props.entity.parent && props.entity.parent.identity.info.twitter !== 'None') {
-        return props.entity.parent.identity.info.twitter.Raw
-      }
-      if (props.entity && props.entity.identity && props.entity.identity.info.twitter !== 'None') {
-        return props.entity.identity.info.twitter.Raw
-      }
-      return ''
-    })
-
-    const web = computed(() => {
-      if (props.entity && props.entity.parent && props.entity.parent.identity.info.web !== 'None') {
-        return props.entity.parent.identity.info.web.Raw
-      }
-      if (props.entity && props.entity.identity && props.entity.identity.info.web !== 'None') {
-        return props.entity.identity.info.web.Raw
-      }
-      return ''
-    })
-
-    const hasIdentity = computed(() => {
-      return !!(parentName.value || superName.value
-        || email.value || legal.value || riot.value
-        || twitter.value || web.value)
-    })
-
-    return {
-      parentName,
-      superName,
-      email,
-      legal,
-      riot,
-      twitter,
-      web,
-      hasIdentity
     }
   }
 }

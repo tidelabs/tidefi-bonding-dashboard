@@ -5,7 +5,7 @@
         <thead>
           <tr class="row justify-start items-center no-wrap">
             <div v-html="entity.identicon" class="border-light identity-svg-wrapper" style="margin-right: 12px;" />
-            <div class="entity-name">{{ entity.name }}</div>
+            <div class="entity-name">{{ entity.identity.name }}</div>
           </tr>
         </thead>
         <tbody>
