@@ -67,7 +67,7 @@ export default {
 
     const chartOptions = computed(() => {
       const options = {
-        colors: $q.dark.isActive ? [ '#8087E8', '#A3EDBA', '#F19E53', '#6699A1',
+        colors: $q.dark.isActive ? [ '#7dc1e8', '#48ad40', '#8087E8', '#A3EDBA', '#F19E53', '#6699A1',
           '#E1D369', '#87B4E7', '#DA6D85', '#BBBAC5' ] : [ '#8087E8', '#A3EDBA',
           '#F19E53', '#6699A1', '#E1D369', '#87B4E7', '#DA6D85', '#BBBAC5' ],
         chart: {
@@ -133,7 +133,7 @@ export default {
         },
         labels: {
           style: {
-            color: $q.dark.isActive ? '#707073' : '#46465C'
+            color: $q.dark.isActive ? '#707070' : '#46465C'
           }
         },
         credits: {
@@ -151,16 +151,16 @@ export default {
               color: $q.dark.isActive ? 'yelow' : 'black'
             }
           },
-          gridLineColor: $q.dark.isActive ? '#707073' : '#ccc',
+          gridLineColor: $q.dark.isActive ? '#707070' : '#ccc',
           labels: {
             style: {
               color: $q.dark.isActive ? '#fff' : '#46465C',
               fontSize: '12px'
             }
           },
-          lineColor: $q.dark.isActive ? '#707073' : '#ccc',
+          lineColor: $q.dark.isActive ? '#707070' : '#ccc',
           minorGridLineColor: $q.dark.isActive ? '#505053' : '#ebebeb',
-          tickColor: $q.dark.isActive ? '#707073' : '#ccc'
+          tickColor: $q.dark.isActive ? '#707070' : '#ccc'
         },
         yAxis: [
           {
@@ -172,7 +172,7 @@ export default {
                 fontWeight: '300'
               }
             },
-            gridLineColor: $q.dark.isActive ? '#707073' : '#ccc',
+            gridLineColor: $q.dark.isActive ? '#707070' : '#ccc',
             labels: {
               style: {
                 fontSize: '12px',
@@ -180,9 +180,9 @@ export default {
                 fontWeight: '300'
               }
             },
-            lineColor: $q.dark.isActive ? '#707073' : '#ccc',
+            lineColor: $q.dark.isActive ? '#707070' : '#ccc',
             minorGridLineColor: $q.dark.isActive ? '#505053' : '#ebebeb',
-            tickColor: $q.dark.isActive ? '#707073' : '#ccc',
+            tickColor: $q.dark.isActive ? '#707070' : '#ccc',
             tickWidth: 1
           },
           {
@@ -194,7 +194,7 @@ export default {
                 fontWeight: '300'
               }
             },
-            gridLineColor: $q.dark.isActive ? '#707073' : '#ccc',
+            gridLineColor: $q.dark.isActive ? '#707070' : '#ccc',
             labels: {
               style: {
                 fontSize: '12px',
@@ -202,9 +202,9 @@ export default {
                 fontWeight: '300'
               }
             },
-            lineColor: $q.dark.isActive ? '#707073' : '#ccc',
+            lineColor: $q.dark.isActive ? '#707070' : '#ccc',
             minorGridLineColor: $q.dark.isActive ? '#505053' : '#ebebeb',
-            tickColor: $q.dark.isActive ? '#707073' : '#ccc',
+            tickColor: $q.dark.isActive ? '#707070' : '#ccc',
             tickWidth: 1
           }
         ],

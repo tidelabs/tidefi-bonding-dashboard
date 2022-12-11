@@ -88,7 +88,7 @@ export default {
         },
         labels: {
           style: {
-            color: $q.dark.isActive ? '#707073' : '#46465C'
+            color: $q.dark.isActive ? '#707070' : '#46465C'
           }
         },
         credits: {
@@ -106,16 +106,16 @@ export default {
               color: $q.dark.isActive ? 'yellow' : 'black'
             }
           },
-          gridLineColor: $q.dark.isActive ? '#707073' : '#ccc',
+          gridLineColor: $q.dark.isActive ? '#707070' : '#ccc',
           labels: {
             style: {
               color: $q.dark.isActive ? '#fff' : '#46465C',
               fontSize: '12px'
             }
           },
-          lineColor: $q.dark.isActive ? '#707073' : '#ccc',
+          lineColor: $q.dark.isActive ? '#707070' : '#ccc',
           minorGridLineColor: $q.dark.isActive ? '#505053' : '#ebebeb',
-          tickColor: $q.dark.isActive ? '#707073' : '#ccc'
+          tickColor: $q.dark.isActive ? '#707070' : '#ccc'
         },
         yAxis: {
           // min: 0,
@@ -127,7 +127,7 @@ export default {
               fontWeight: '300'
             }
           },
-          gridLineColor: $q.dark.isActive ? '#707073' : '#ccc',
+          gridLineColor: $q.dark.isActive ? '#707070' : '#ccc',
           labels: {
             style: {
               fontSize: '12px',
@@ -135,9 +135,9 @@ export default {
               fontWeight: '300'
             }
           },
-          lineColor: $q.dark.isActive ? '#707073' : '#ccc',
+          lineColor: $q.dark.isActive ? '#707070' : '#ccc',
           minorGridLineColor: $q.dark.isActive ? '#505053' : '#ebebeb',
-          tickColor: $q.dark.isActive ? '#707073' : '#ccc',
+          tickColor: $q.dark.isActive ? '#707070' : '#ccc',
           tickWidth: 1
         },
         plotOptions: {
@@ -153,12 +153,12 @@ export default {
             }
           },
           spline: {
-            lineColor: '#00FF00',
+            lineColor: $q.dark.isActive ? '#7dc1e8' : '#00FF00',
             lineWidth: 1,
             marker: {
               enabled: parseInt(size.value.width) > 700,
               // color: $q.dark.isActive ? 'yellow' : null,
-              fillColor: '#FF00FF'
+              fillColor: $q.dark.isActive ? '#2897d7' : '#FF00FF'
             }
           },
           states: {
