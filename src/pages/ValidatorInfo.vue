@@ -48,13 +48,14 @@
       <div class="column full-width q-mt-md q-gutter-sm">
         <ErasRewardPoints v-if="validator && validator.erasRewardPoints.length" :erasRewardPoints="validator.erasRewardPoints" />
         <StakerRewards v-if="validator && validator.stakerRewards.length > 0" :rewards="validator.stakerRewards" :isValidator="true" />
+        <BondingHistory v-if="validator && validator.bondingHistory.length > 0" :bondingHistory="validator.bondingHistory" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useEntitiesStore } from 'src/stores/entities'
 import { useClientStore } from 'src/stores/client'
@@ -70,6 +71,7 @@ import ValidatorStats from 'src/components/ValidatorStats.vue'
 import Balances from 'src/components/Balances.vue'
 import StakerRewards from 'src/components/StakerRewards.vue'
 import Ledger from 'src/components/Ledger.vue'
+import BondingHistory from 'src/components/BondingHistory.vue'
 
 export default {
   name: 'ValidatorInfo',
@@ -82,7 +84,8 @@ export default {
     ErasRewardPoints,
     StakerRewards,
     Ledger,
-    EntityName
+    EntityName,
+    BondingHistory
   },
 
   setup () {
@@ -91,7 +94,7 @@ export default {
     const entitiesStore = useEntitiesStore()
     const clientStore = useClientStore()
     const selectedValidator = ref(null)
-    const stakerRewardsData = ref([])
+    const stakerRewardsData = reactive([])
     const validatorsOption = ref([])
 
     const loading = computed(() => {
@@ -130,15 +133,15 @@ export default {
     watch(validator, async (val) => {
       if (val) {
         selectedValidator.value = val
-        stakerRewardsData.value = []
+        stakerRewardsData.splice(0, stakerRewardsData.length)
         stakerRewards(clientStore.client.api, val.address, true)
           .then((result) => {
-            stakerRewardsData.value = result
-            // console.log('StakerRewards:', stakerRewardsData.value)
+            stakerRewardsData.splice(0, stakerRewardsData.length, ...result)
+            // console.log('StakerRewards:', stakerRewardsData)
           })
       }
       else {
-        stakerRewardsData.value = []
+        stakerRewardsData.splice(0, stakerRewardsData.length)
       }
     })
 

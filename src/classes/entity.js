@@ -1,4 +1,4 @@
-import { computed, reactive, watch } from 'vue'
+import { computed, ref, reactive, watch } from 'vue'
 import { toSvg } from 'jdenticon'
 import {
   getControllerInfo
@@ -57,7 +57,7 @@ export class Entity {
     this.noGovernance = false // TODO:
     this.elected = false // active
     this.nextElected = false // next set
-    this.lastPaidOut = 'unknown'
+    this.lastPaidOut = ref('unknown')
     this.bonded = 0
     this.otherStaked = 0
     this.ownStaked = 0
@@ -130,6 +130,7 @@ export class Entity {
         stakedReturn: 0
       }
     })
+    this.bondingHistory = reactive([])
     // unsubscribes
     this.unsubscribeTokenBalances = null
     this.unsubscribeBalances = null
@@ -242,12 +243,15 @@ export class Entity {
     if (this.validator) {
       await this.updateStakerInfo()
       await this.fetchStakingInfo()
+
+      // ones that will be done asynchronously
+      this.fetchBondingHistory()
     }
 
     // ones that will be done asynchronously
     stakerRewards(clientStore.client.api, this.address, true)
       .then((rewards) => {
-        this.stakerRewards = rewards
+        this.stakerRewards.splice(0, this.stakerRewards.length, ...rewards)
       })
 
     if (this.stakers && 'total' in this.stakers) {
@@ -426,7 +430,7 @@ export class Entity {
     const clientStore = useClientStore()
 
     if (!this.elected) {
-      this.lastPaidOut = ''
+      this.lastPaidOut.value = ''
       return
     }
 
@@ -434,26 +438,26 @@ export class Entity {
       const lastEraPaid = this.stakingInfo.stakingLedger.claimedRewards[ this.stakingInfo.stakingLedger.claimedRewards.length - 1 ]
 
       if (lastEraPaid === -1) {
-        this.lastPaidOut = 'never'
+        this.lastPaidOut.value = 'never'
         return
       }
 
       const days = clientStore.previousEra - lastEraPaid
       switch (days) {
         case 0:
-          this.lastPaidOut = 'recently'
+          this.lastPaidOut.value = 'recently'
           break
         case 1:
-          this.lastPaidOut = 'yesterday'
+          this.lastPaidOut.value = 'yesterday'
           break
         default:
-          this.lastPaidOut = `${ days } days`
+          this.lastPaidOut.value = `${ days } days`
           break
       }
       return
     }
 
-    this.lastPaidOut = ''
+    this.lastPaidOut.value = ''
   }
 
   calcValidatorReturn () {
@@ -536,6 +540,42 @@ export class Entity {
         this.ledger = ledger
       }
     }
+  }
+
+  async fetchBondingHistory () {
+    const clientStore = useClientStore()
+
+    const historyDepth = clientStore.consts.historyDepth
+    const currentEra = clientStore.currentEra
+    const depth = Math.min(historyDepth, currentEra)
+    const args = [...Array(depth)].map((_, i) => [
+      clientStore.currentEra - i,
+      this.address
+    ]) // .reverse()
+
+    const stakerEntries = await clientStore.client.api.query.staking.erasStakers.multi(args)
+    const se = stakerEntries.map((data, index) => {
+      const era = currentEra - index
+      const stakers = data.toHuman()
+      stakers.own = normalizeValue(stakers.own)
+      stakers.total = normalizeValue(stakers.total)
+      stakers.others = stakers.others.map((other) => {
+        return {
+          ...other,
+          value: normalizeValue(other.value)
+        }
+      })
+
+      return {
+        era,
+        own: stakers.own,
+        total: stakers.total,
+        others: stakers.others
+      }
+    }).sort((a, b) => a.era - b.era)
+    this.bondingHistory.splice(0, this.bondingHistory.length, ...se)
+
+    // console.log('Bonding History:', this.bondingHistory)
   }
 
   async fetchTokenBalances () {

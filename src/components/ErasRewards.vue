@@ -23,7 +23,8 @@ export default {
   props: {
     rewards: {
       type: Array,
-      required: true
+      required: false,
+      validator: (prop) => typeof prop === 'object' || prop === null
     }
   },
 

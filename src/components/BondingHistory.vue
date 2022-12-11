@@ -13,17 +13,20 @@
 <script>
 import { computed, ref } from 'vue'
 import { useQuasar } from 'quasar'
+import { toBaseToken2 } from 'src/helpers/utils'
+import { useClientStore } from 'src/stores/client'
 
 export default {
-  name: 'ErasRewardPoints',
+  name: 'BondingHistory',
   props: {
-    erasRewardPoints: {
+    bondingHistory: {
       type: Array,
       required: false,
       validator: (prop) => typeof prop === 'object' || prop === null
     }
   },
   setup (props) {
+    const clientStore = useClientStore()
     const $q = useQuasar()
     const size = ref({ width: 200, height: 200 })
 
@@ -48,7 +51,7 @@ export default {
           }
         },
         title: {
-          text: 'Eras Reward Points',
+          text: 'Bonding History',
           style: {
             fontSize: '18px',
             fontWeight: 'bold',
@@ -67,7 +70,7 @@ export default {
             color: $q.dark.isActive ? '#1d1d1d' : 'black',
             fontWeight: 'bold'
           },
-          valueSuffix: ' Pts.',
+          valueSuffix: ' TDFY',
           headerFormat: '<span style="font-size: 10px">Era: {point.key}</span><br><table>',
           pointFormat: '<tr><td style="padding:0;">{series.name}:</td><td style="text-align: right;"><strong>{point.y}</strong></td></tr>',
           footerFormat: '</table>',
@@ -95,8 +98,8 @@ export default {
           enabled: false
         },
         xAxis: {
-          categories: props.erasRewardPoints
-            ? props.erasRewardPoints.map((reward) => reward.era)
+          categories: props.bondingHistory
+            ? props.bondingHistory.map((bonding) => bonding.era)
             : [],
           crosshair: true,
           title: {
@@ -120,7 +123,7 @@ export default {
         yAxis: {
           // min: 0,
           title: {
-            text: 'Points',
+            text: 'TDFY',
             style: {
               fontSize: '12px',
               color: $q.dark.isActive ? 'yellow' : 'black',
@@ -180,8 +183,8 @@ export default {
         },
         series: [{
           name: 'Reward',
-          data: props.erasRewardPoints
-            ? props.erasRewardPoints.map((reward) => reward.amount)
+          data: props.bondingHistory
+            ? props.bondingHistory.map((bonding) => parseFloat(toBaseToken2(bonding.total, clientStore.decimals[ 0 ])))
             : []
         }]
       }
