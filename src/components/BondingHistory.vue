@@ -122,6 +122,7 @@ export default {
         },
         yAxis: {
           // min: 0,
+          // decimalsInFloat: 4,
           title: {
             text: 'TDFY',
             style: {
@@ -182,7 +183,7 @@ export default {
           ]
         },
         series: [{
-          name: 'Reward',
+          name: 'Total Bonded',
           data: props.bondingHistory
             ? props.bondingHistory.map((bonding) => parseFloat(toBaseToken2(bonding.total, clientStore.decimals[ 0 ])))
             : []
