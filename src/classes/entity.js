@@ -362,6 +362,10 @@ export class Entity {
       return false
     })
 
+    watch(() => this.stakerRewards, (val) => {
+      console.log('watch StakersRewards', val)
+    })
+
     // success
     return true
   }
