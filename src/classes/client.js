@@ -674,12 +674,44 @@ export class Client {
 
   async fetchUnappliedSlashes () {
     const clientStore = useClientStore()
-    // const slashes = []
 
-    const unappliedSlashes = await this.api.query.staking.unappliedSlashes(clientStore.previousEra)
+    const historyDepth = clientStore.consts.historyDepth
+    const currentEra = clientStore.currentEra
+    const depth = Math.min(historyDepth, currentEra)
+    const args = [...Array(depth)].map((_, i) => [
+      clientStore.currentEra - i
+    ])
 
-    // TODO: needs more work
-    clientStore.slashes = unappliedSlashes
+    const unappliedSlashesEntries = await this.api.query.staking.unappliedSlashes.multi(args)
+
+    const unappliedSlashes = unappliedSlashesEntries.reduce((arr, data, index) => {
+      const eraSlash = data.toHuman()
+      if (eraSlash.length === 0) {
+        return arr
+      }
+      // console.log('eraSlash:', eraSlash)
+
+      const era = currentEra - index
+      const slashes = eraSlash.map((slash) => {
+        return {
+          ...slash,
+          own: normalizeValue(slash.own),
+          payout: normalizeValue(slash.payout),
+          others: slash.others.map((other) => other.map((o) => normalizeValue(o)))
+        }
+      })
+
+      arr.push({
+        era,
+        slashes
+      })
+
+      return arr
+    }, [])
+      .sort((a, b) => a.era - b.era)
+
+    // console.log('unappliedSlashes:', unappliedSlashes)
+    clientStore.unappliedSlashes = unappliedSlashes
 
     return {
       unappliedSlashes

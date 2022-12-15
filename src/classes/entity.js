@@ -66,6 +66,9 @@ export class Entity {
     this.lastBlock = ''
     this.blockCount = 0
 
+    this.slashInEra = reactive({})
+    this.slashingSpans = ref(null)
+
     this.balances = reactive({
       freeBalance: 0,
       frozenFee: 0,
@@ -594,7 +597,8 @@ export class Entity {
         total: stakers.total,
         others: stakers.others
       }
-    }).sort((a, b) => a.era - b.era)
+    })
+      .sort((a, b) => a.era - b.era)
     this.bondingHistory.splice(0, this.bondingHistory.length, ...se)
 
     // console.log('Bonding History:', this.bondingHistory)

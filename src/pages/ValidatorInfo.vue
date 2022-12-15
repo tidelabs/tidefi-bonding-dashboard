@@ -42,9 +42,10 @@
         <ValidatorStats :validator="validator" />
         <Balances :entity="validator" />
         <Ledger :entity="validator" />
+        <PreviousEraSlashes :validator="validator" />
+        <UnappliedSlashes :validator="validator" />
       </div>
 
-      <!-- End of split page -->
       <div class="column full-width q-mt-md q-gutter-sm">
         <ErasRewardPoints v-if="validator && validator.erasRewardPoints.length" :erasRewardPoints="validator.erasRewardPoints" />
         <StakerRewards v-if="validator && validator.stakerRewards.length > 0" :rewards="validator.stakerRewards" :isValidator="true" />
@@ -72,6 +73,8 @@ import Balances from 'src/components/Balances.vue'
 import StakerRewards from 'src/components/StakerRewards.vue'
 import Ledger from 'src/components/Ledger.vue'
 import BondingHistory from 'src/components/BondingHistory.vue'
+import PreviousEraSlashes from 'src/components/PreviousEraSlashes.vue'
+import UnappliedSlashes from 'src/components/UnappliedSlashes.vue'
 
 export default {
   name: 'ValidatorInfo',
@@ -85,7 +88,9 @@ export default {
     StakerRewards,
     Ledger,
     EntityName,
-    BondingHistory
+    BondingHistory,
+    PreviousEraSlashes,
+    UnappliedSlashes
   },
 
   setup () {
