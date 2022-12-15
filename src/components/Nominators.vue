@@ -4,32 +4,34 @@
       <table>
         <thead>
           <tr>
-            <th colspan="3">Nominators ({{ validator.nominatorCount }})</th>
+            <th colspan="3">Nominators ({{ validator.nominatorCount }}/{{ maxNominatorRewardedPerValidator }})</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="{address, hashAddress, formattedValue, identicon, value} in nominators" :key="address">
-            <td>
-              <div class="row justify-start items-center">
-                <div class="border-light identity-svg-wrapper" v-html="identicon" />
-                <div>
-                  <router-link
-                    :to="{ name: 'address-lookup', params: { address: address } }"
-                    class="entity-link"
-                  >
-                    {{ hashAddress }}
-                  </router-link>
-                  <q-tooltip>{{ address }}</q-tooltip>
+          <template v-for="({address, hashAddress, formattedValue, identicon, value}, index) in nominators" :key="address">
+            <tr :class="{ 'oversubscribed-highlight': index >= maxNominatorRewardedPerValidator }">
+              <td>
+                <div class="row justify-start items-center">
+                  <div class="border-light identity-svg-wrapper" v-html="identicon" />
+                  <div>
+                    <router-link
+                      :to="{ name: 'address-lookup', params: { address: address } }"
+                      class="entity-link"
+                    >
+                      {{ hashAddress }}
+                    </router-link>
+                    <q-tooltip>{{ address }}</q-tooltip>
+                  </div>
                 </div>
-              </div>
-            </td>
-            <td class="text-right">
-              {{ formattedValue }}
-            </td>
-            <td class="text-right">
-              {{ calcPercentage(value) }}%
-            </td>
-          </tr>
+              </td>
+              <td class="text-right">
+                {{ formattedValue }}
+              </td>
+              <td class="text-right">
+                {{ calcPercentage(value) }}%
+              </td>
+            </tr>
+          </template>
         </tbody>
       </table>
     </q-scroll-area>
@@ -54,6 +56,8 @@ export default {
   },
 
   setup (props) {
+    const clientStore = useClientStore()
+
     const nominators = computed(() => {
       const nominators = props.validator?.stakers?.others.map(({ who, value }) => {
         return {
@@ -72,6 +76,7 @@ export default {
     })
 
     const total = computed(() => nominators.value.reduce((sum, nominator) => sum + parseInt(nominator.value), 0))
+    const maxNominatorRewardedPerValidator = computed(() => clientStore.consts.maxNominatorRewardedPerValidator)
 
     function calcPercentage (value) {
       return (value * 100 / total.value).toFixed(2)
@@ -85,7 +90,8 @@ export default {
 
     return {
       nominators,
-      calcPercentage
+      calcPercentage,
+      maxNominatorRewardedPerValidator
     }
   }
 }
@@ -94,5 +100,8 @@ export default {
 <style lang="scss" scoped>
 .info-table {
   max-width: 400px;
+}
+.oversubscribed-highlight {
+  color: red;
 }
 </style>
