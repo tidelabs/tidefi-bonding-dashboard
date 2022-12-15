@@ -57,7 +57,6 @@ export class Entity {
     this.noGovernance = false // TODO:
     this.elected = false // active
     this.nextElected = false // next set
-    this.lastPaidOut = ref('unknown')
     this.bonded = 0
     this.otherStaked = 0
     this.ownStaked = 0
@@ -374,6 +373,34 @@ export class Entity {
       return false
     })
 
+    this.lastPaidOut = computed(() => {
+      const clientStore = useClientStore()
+
+      if (!this.elected) {
+        return ''
+      }
+
+      if (this.stakingInfo && this.stakingInfo.stakingLedger && this.stakingInfo.stakingLedger.claimedRewards && this.stakingInfo.stakingLedger.claimedRewards.length > 0) {
+        const lastEraPaid = this.stakingInfo.stakingLedger.claimedRewards[ this.stakingInfo.stakingLedger.claimedRewards.length - 1 ]
+
+        if (lastEraPaid === -1) {
+          return 'never'
+        }
+
+        const days = clientStore.previousEra - lastEraPaid
+        switch (days) {
+          case 0:
+            return 'recently'
+          case 1:
+            return 'yesterday'
+          default:
+            return `${ days } days`
+        }
+      }
+
+      return ''
+    })
+
     watch(() => this.stakerRewards, (val) => {
       console.log('watch StakersRewards', val)
     })
@@ -457,40 +484,6 @@ export class Entity {
     }
   }
 
-  calcLastPaidOut () {
-    const clientStore = useClientStore()
-
-    if (!this.elected) {
-      this.lastPaidOut.value = ''
-      return
-    }
-
-    if (this.stakingInfo && this.stakingInfo.stakingLedger && this.stakingInfo.stakingLedger.claimedRewards && this.stakingInfo.stakingLedger.claimedRewards.length > 0) {
-      const lastEraPaid = this.stakingInfo.stakingLedger.claimedRewards[ this.stakingInfo.stakingLedger.claimedRewards.length - 1 ]
-
-      if (lastEraPaid === -1) {
-        this.lastPaidOut.value = 'never'
-        return
-      }
-
-      const days = clientStore.previousEra - lastEraPaid
-      switch (days) {
-        case 0:
-          this.lastPaidOut.value = 'recently'
-          break
-        case 1:
-          this.lastPaidOut.value = 'yesterday'
-          break
-        default:
-          this.lastPaidOut.value = `${ days } days`
-          break
-      }
-      return
-    }
-
-    this.lastPaidOut.value = ''
-  }
-
   calcValidatorReturn () {
     const clientStore = useClientStore()
     // const entitiesStore = useEntitiesStore()
@@ -549,8 +542,6 @@ export class Entity {
           this.stakingInfo = stakingInfo
 
           // console.log('stakingInfo:', this.stakingInfo)
-
-          this.calcLastPaidOut()
         })
   }
 
@@ -582,7 +573,7 @@ export class Entity {
     const args = [...Array(depth)].map((_, i) => [
       clientStore.currentEra - i,
       this.address
-    ]) // .reverse()
+    ])
 
     const stakerEntries = await clientStore.client.api.query.staking.erasStakers.multi(args)
     const se = stakerEntries.map((data, index) => {
