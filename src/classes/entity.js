@@ -276,6 +276,18 @@ export class Entity {
       this.calcValidatorReturn()
     }
 
+    const slashingSpans = (await clientStore.client.api.query.staking.slashingSpans(this.address)).toJSON()
+    // console.log('slashingSpans:', slashingSpans)
+    this.slashingSpans.value = slashingSpans
+
+    const validatorSlashInEra = (await clientStore.client.api.query.staking.validatorSlashInEra(clientStore.previousEra, this.address)).toHuman()
+    if (validatorSlashInEra) {
+      // console.log('validatorSlashInEra:', validatorSlashInEra)
+
+      this.slashInEra.percent = validatorSlashInEra[ 0 ]
+      this.slashInEra.amount = normalizeValue(validatorSlashInEra[ 1 ])
+    }
+
     // loading data done
     entitiesStore.decLoading()
 
@@ -368,6 +380,21 @@ export class Entity {
 
     // success
     return true
+  }
+
+  async disconnect () {
+    if (this.unsubscribeTokenBalances) {
+      await this.unsubscribeTokenBalances()
+      this.unsubscribeTokenBalances = null
+    }
+    if (this.unsubscribeBalances) {
+      await this.unsubscribeBalances()
+      this.unsubscribeBalances = null
+    }
+    if (this.unsubscribeStakingInfo) {
+      await this.unsubscribeStakingInfo()
+      this.unsubscribeStakingInfo = null
+    }
   }
 
   formatTokenValue (val) {

@@ -57,7 +57,7 @@ export class Client {
       this.refetchAll()
 
       const [
-        bondedEras,
+        // bondedEras,
         canceledSlashPayout,
         chillThreshold,
         currentPlannedSession,
@@ -71,7 +71,7 @@ export class Client {
         // accounts,
         // electedInfo
       ] = await Promise.all([
-        this.api.query.staking.bondedEras(),
+        // this.api.query.staking.bondedEras(),
         this.api.query.staking.canceledSlashPayout(),
         this.api.query.staking.chillThreshold(),
         this.api.query.staking.currentPlannedSession(),
@@ -87,7 +87,7 @@ export class Client {
       ])
 
       console.log(
-        'bondedEras:', bondedEras.toJSON(), '\n',
+        // 'bondedEras:', bondedEras.toJSON(), '\n',
         'canceledSlashPayout:', canceledSlashPayout.toJSON(), '\n',
         'chillThreshold:', chillThreshold.toJSON(), '\n',
         'currentPlannedSession:', currentPlannedSession.toJSON(), '\n',
@@ -212,15 +212,25 @@ export class Client {
         this.unsubscribeNextElected = null
       }
 
-      this.api.disconnect()
+      await this.api.disconnect()
+      delete this.api
+      this.api = null
+
+      if (withCleanup) {
+        const clientStore = useClientStore()
+        const entitiesStore = useEntitiesStore()
+        clientStore.api = null
+        clientStore.client = null
+        await entitiesStore.resetEntities()
+      }
     }
   }
 
-  reconnect () {
+  async reconnect () {
     const clientStore = useClientStore()
     clientStore.loading = true
-    this.disconnect()
-    this.connect()
+    await this.disconnect()
+    await this.connect()
   }
 
   // updates previous data asynchronously

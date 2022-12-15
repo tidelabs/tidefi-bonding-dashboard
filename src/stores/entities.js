@@ -25,8 +25,12 @@ export const useEntitiesStore = defineStore('entities', {
   },
 
   actions: {
-    resetEntities () {
-      this.entities = []
+    async resetEntities () {
+      for (const entity of this.entities) {
+        await entity.disconnect()
+      }
+      this.entities.splice(0, this.entities.length)
+      this.loadingCount = 0
     },
     incLoading () {
       this.loadingCount++

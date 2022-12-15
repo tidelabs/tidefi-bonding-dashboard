@@ -55,13 +55,15 @@ export default {
       setCountdown()
     })
 
-    watch(intervalTime, (val) => {
+    watch(intervalTime, async (val) => {
       if (!clientStore.isLoading) {
         const value = parseFloat(val)
         if (value > (1000 * 60)) { // 1 minute
-          clientStore.client.reconnect()
           // wait 1 more minute, if this one does not succeed
           intervalTime.value = 0
+
+          // try to reconnect
+          await clientStore.client.reconnect()
         }
       }
     })
