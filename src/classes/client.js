@@ -192,7 +192,7 @@ export class Client {
     console.log('values:', data)
   }
 
-  disconnect () {
+  async disconnect (withCleanup = false) {
     // TODO: needs more handling
     if (this.api) {
       if (this.unsubscribeNewHeads) {

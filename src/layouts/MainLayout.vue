@@ -54,6 +54,17 @@
       bordered
     >
       <q-list>
+        <q-select
+          v-model="selectedNetwork"
+          :options="chains"
+          option-label="name"
+          map-options
+          outlines
+          :disable="isLoading"
+          color="purple-13"
+          label="Selected network"
+          input-class="q-mx-sm"
+        />
         <q-item-label
           header
         >
@@ -93,7 +104,7 @@ import InternalLink from 'src/components/InternalLink.vue'
 import ExternalLink from 'src/components/ExternalLink.vue'
 import { useQuasar } from 'quasar'
 import { useChainsStore } from 'stores/chain'
-// import { useEntitiesStore } from 'src/stores/entities'
+import { useEntitiesStore } from 'src/stores/entities'
 import { Client } from '../classes/client'
 // import { Entity } from '../classes/entity'
 import { useClientStore } from 'src/stores/client'
@@ -184,8 +195,10 @@ export default defineComponent({
     const $q = useQuasar() || vm.proxy.$q || vm.ctx.$q
     const chainsStore = useChainsStore()
     const clientStore = useClientStore()
+    const entitiesStore = useEntitiesStore()
     const preferencesStore = usePreferencesStore()
     const theme = ref(null)
+    const selectedNetwork = ref(null)
 
     onBeforeMount(() => {
       let val = $q.localStorage.getItem('chainName')
@@ -229,6 +242,14 @@ export default defineComponent({
     // ----------------------------------------------------
     // chain name
     const chainName = computed(() => chainsStore.chainName)
+    const chains = computed(() => chainsStore.chains)
+
+    const isLoading = computed(() => {
+      if (clientStore.isLoading) {
+        return true
+      }
+      return entitiesStore.isLoading
+    })
 
     watch(chainName, async () => {
       const chain = chainsStore.chains.find((chain, index) => {
@@ -248,6 +269,8 @@ export default defineComponent({
       $q.localStorage.set('chainName', chainsStore.chains[ chainsStore.chainIndex ].name)
       console.log(`chain specs changed to: ${ chainsStore.chains[ chainsStore.chainIndex ].name } (${ chainsStore.chains[ chainsStore.chainIndex ].rpc })`)
 
+      selectedNetwork.value = chain
+
       await initializeClient()
       // await initializeEntities()
     })
@@ -259,9 +282,23 @@ export default defineComponent({
     }
 
     async function initializeClient () {
+      if (chainsStore.client) {
+        await chainsStore.client.disconnect(true)
+        delete chainsStore.client
+      }
       chainsStore.client = new Client(chainsStore.chains[ chainsStore.chainIndex ])
       await chainsStore.client.connect()
     }
+
+    watch(selectedNetwork, (val) => {
+      // console.log('selectedNetwork changed:', selectedNetwork.value)
+      // verify different network
+      if (chainsStore.chainName === val.name) {
+        return
+      }
+
+      chainsStore.chainName = val.name
+    })
 
     // async function initializeEntities () {
     //   // clear any existing entities
@@ -300,7 +337,10 @@ export default defineComponent({
       },
       clientStore,
       matBrightness2,
-      matBrightness5
+      matBrightness5,
+      chains,
+      selectedNetwork,
+      isLoading
     }
   }
 })
