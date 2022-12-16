@@ -73,6 +73,14 @@
               </div> -->
 
               <div style="min-width: 18px;">
+                <q-icon v-if="props.row.isSlashed" :name="fasLocationCrosshairs" size="18px" color="red-6">
+                  <q-tooltip>
+                    This validator has been previously slashed
+                  </q-tooltip>
+                </q-icon>
+              </div>
+
+              <div style="min-width: 18px;">
                 <q-icon :name="props.row.identity.identityIcon" size="18px" color="blue-grey-3">
                   <q-tooltip>
                     {{ props.row.identity.identityTooltip }}
@@ -272,7 +280,7 @@ import { useChainsStore } from 'stores/chain'
 import { useEntitiesStore } from 'stores/entities'
 import { useClientStore } from 'stores/client'
 import { usePreferencesStore } from 'stores/preferences'
-import { infoIcon, mdiChevronRightCircle } from 'assets/icons'
+import { infoIcon, mdiChevronRightCircle, fasLocationCrosshairs } from 'assets/icons'
 import { solidCheckCircle } from 'src/assets/icons'
 
 import FilterInfo from 'components/FilterInfo.vue'
@@ -562,6 +570,7 @@ export default {
       solidLockOpen,
       solidCheckCircle,
       mdiChevronRightCircle,
+      fasLocationCrosshairs,
       // scalesDuotone,
       // howToVoteTwoTone,
       // alarmClockOutline,

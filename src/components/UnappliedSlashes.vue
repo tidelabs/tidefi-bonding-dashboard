@@ -21,7 +21,7 @@
             <td class="text-right">{{ formatTokenValue(slash.payout) }}</td>
           </tr>
           <tr v-if="slash.others && slash.others.length > 0">
-            <td colspan="2" style="font-weight: 700;">Others</td>
+            <td colspan="2" style="font-weight: 700;">Others ({{ slash.others.length }})</td>
           </tr>
           <tr v-if="slash.others && slash.others.length > 0">
             <td colspan="2">
@@ -47,7 +47,7 @@ import { useClientStore } from 'src/stores/client'
 import { toBaseToken, trimHash } from 'src/helpers/utils'
 
 export default {
-  name: 'PreviousEraSlashes',
+  name: 'UnappliedSlashes',
 
   props: {
     validator: {

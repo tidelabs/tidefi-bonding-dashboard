@@ -42,7 +42,7 @@
         <ValidatorStats :validator="validator" />
         <Balances :entity="validator" />
         <Ledger :entity="validator" />
-        <PreviousEraSlashes :validator="validator" />
+        <PreviousErasSlashes :validator="validator" />
         <UnappliedSlashes :validator="validator" />
       </div>
 
@@ -73,7 +73,7 @@ import Balances from 'src/components/Balances.vue'
 import StakerRewards from 'src/components/StakerRewards.vue'
 import Ledger from 'src/components/Ledger.vue'
 import BondingHistory from 'src/components/BondingHistory.vue'
-import PreviousEraSlashes from 'src/components/PreviousEraSlashes.vue'
+import PreviousErasSlashes from 'src/components/PreviousErasSlashes.vue'
 import UnappliedSlashes from 'src/components/UnappliedSlashes.vue'
 
 export default {
@@ -89,7 +89,7 @@ export default {
     Ledger,
     EntityName,
     BondingHistory,
-    PreviousEraSlashes,
+    PreviousErasSlashes,
     UnappliedSlashes
   },
 

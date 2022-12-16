@@ -1,7 +1,7 @@
 <template>
   <q-card class="panel col q-ma-sm q-pa-sm">
     <div class="fit column items-center justify-center">
-      <div class="col-shrink row items-center justify-end">Total Staked</div>
+      <div class="col-shrink row items-center justify-end">Total Bonded</div>
       <div class="col row items-center justify-end"><span class="panel-title">{{ erasTotalStaked }}</span><span class="text-weight-thin token">&nbsp;{{ tokenName }}</span></div>
       <div class="col row items-center justify-end">{{ stakedPercent }}</div>
     </div>

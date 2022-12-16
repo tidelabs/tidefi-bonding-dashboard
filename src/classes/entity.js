@@ -53,7 +53,6 @@ export class Entity {
     this.validator = validator
     this.identity = reactive({})
     this.belowAvgPoints = false // TODO:
-    this.slashed = false // TODO:
     this.noGovernance = false // TODO:
     this.elected = false // active
     this.nextElected = false // next set
@@ -66,7 +65,7 @@ export class Entity {
     this.lastBlock = ''
     this.blockCount = 0
 
-    this.slashInEra = reactive({})
+    this.slashesInEras = reactive([])
     this.slashingSpans = ref(null)
 
     this.balances = reactive({
@@ -98,7 +97,7 @@ export class Entity {
     this.erasRewardPoints = reactive([])
     this.stakerRewards = reactive([])
     this.nominations = reactive([])
-    // Staking Info
+    // start of "Staking Info"
     this.stakingInfo = reactive({
       controllerId: '',
       exposure: {
@@ -124,6 +123,7 @@ export class Entity {
         commission: 10000000,
         blocked: false
       },
+      // end of "Staking Info"
       inflation: {
         idealInterest: 0,
         idealStake: 0,
@@ -276,18 +276,40 @@ export class Entity {
       // console.log('Validator Inflation:', this.inflation)
 
       this.calcValidatorReturn()
-    }
 
-    const slashingSpans = (await clientStore.client.api.query.staking.slashingSpans(this.address)).toJSON()
-    // console.log('slashingSpans:', slashingSpans)
-    this.slashingSpans.value = slashingSpans
+      const slashingSpans = (await clientStore.client.api.query.staking.slashingSpans(this.address)).toJSON()
+      console.log('slashingSpans:', slashingSpans)
+      this.slashingSpans.value = slashingSpans
 
-    const validatorSlashInEra = (await clientStore.client.api.query.staking.validatorSlashInEra(clientStore.previousEra, this.address)).toHuman()
-    if (validatorSlashInEra) {
-      // console.log('validatorSlashInEra:', validatorSlashInEra)
+      const historyDepth = clientStore.consts.historyDepth
+      const currentEra = clientStore.currentEra
+      const depth = Math.min(historyDepth, currentEra)
+      const args = [...Array(depth)].map((_, i) => [
+        clientStore.currentEra - i,
+        this.address
+      ])
 
-      this.slashInEra.percent = validatorSlashInEra[ 0 ]
-      this.slashInEra.amount = normalizeValue(validatorSlashInEra[ 1 ])
+      const validatorSlashInEra = (await clientStore.client.api.query.staking.validatorSlashInEra.multi(args))
+      if (validatorSlashInEra) {
+        const slashesInEras = validatorSlashInEra.reduce((acc, val, index) => {
+          if (val.isEmpty) return acc
+
+          const era = currentEra - index
+          const valHuman = val.toHuman()
+          acc.push({
+            era,
+            percent: valHuman[ 0 ],
+            amount: normalizeValue(valHuman[ 1 ])
+          })
+
+          return acc
+        }, [])
+          .sort((a, b) => a.era - b.era)
+
+        this.slashesInEras.splice(0, this.slashesInEras.length, ...slashesInEras)
+
+        // console.log('slashesInEras:', slashesInEras)
+      }
     }
 
     // loading data done
@@ -296,6 +318,9 @@ export class Entity {
     // this.reputation = computed(() => {
     //   return 5
     // })
+
+    this.isSlashed = computed(() => this.slashesInEras.length)
+    // console.log('isSlashed:', this.isSlashed.value)
 
     this.nominatorCount = computed(() => {
       if (this.stakers && this.stakers.others && this.stakers.others.length > 0) {
@@ -500,7 +525,7 @@ export class Entity {
     const avgStaked = BN(clientStore.erasTotalStaked).div(clientStore.counterForNominators)
 
     if (avgStaked && !avgStaked.isZero()) {
-      const adjusted = avgStaked.multipliedBy(BN_HUNDRED).multipliedBy(this.inflation.stakedReturn).div(this.stakers.total)
+      const adjusted = avgStaked.multipliedBy(BN_HUNDRED).multipliedBy(this.inflation.stakedReturn).div(Math.max(1, this.stakers.total))
       // console.log('adjusted:', adjusted.toNumber())
 
       const stakedReturn = (adjusted.gt(BN_MAX_INTEGER) ? BN_MAX_INTEGER : adjusted).div(BN_HUNDRED).toNumber()
@@ -508,7 +533,7 @@ export class Entity {
       // adjusted for mission
       this.stakedReturn = (stakedReturn * (100 - parseFloat(this.preferences.commission)) / 100).toFixed(2)
 
-      // console.log('Validator Staked Return:', adjusted.toNumber(), stakedReturn, this.stakedReturn)
+      // console.log('Validator Bonded Return:', adjusted.toNumber(), stakedReturn, this.stakedReturn)
     }
   }
 
