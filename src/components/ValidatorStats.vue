@@ -8,7 +8,7 @@
       </thead>
       <tbody>
         <tr v-if="validator.stakedReturn">
-          <td>Staked Return</td>
+          <td>Bonded Return</td>
           <td class="text-right">{{ validator.stakedReturn }}%</td>
         </tr>
         <tr v-if="validator.nominatorCount">
@@ -16,15 +16,15 @@
           <td class="text-right">{{ validator.nominatorCount }}</td>
         </tr>
         <tr v-if="validator.otherStaked">
-          <td>Other Staked</td>
+          <td>Other Bonded</td>
           <td class="text-right">{{ validator.otherStaked }}</td>
         </tr>
         <tr v-if="validator.ownStaked">
-          <td>Own Staked</td>
+          <td>Own Bonded</td>
           <td class="text-right">{{ validator.ownStaked }}</td>
         </tr>
         <tr v-if="validator.totalStaked">
-          <td>Total Staked</td>
+          <td>Total Bonded</td>
           <td class="text-right">{{ validator.totalStaked }}</td>
         </tr>
         <tr>

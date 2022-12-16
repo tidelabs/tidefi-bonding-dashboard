@@ -233,7 +233,7 @@
             </tr>
 
             <tr>
-              <td class="text-weight-bold">Other Staked</td>
+              <td class="text-weight-bold">Other Bonded</td>
               <td>{{ props.row.otherStaked || ''}}<span v-if="props.row.otherStaked" class="text-weight-thin token">&nbsp;{{ tokenName }}</span></td>
             </tr>
 
@@ -243,17 +243,17 @@
             </tr>
 
             <tr>
-              <td class="text-weight-bold">Own Staked</td>
+              <td class="text-weight-bold">Own Bonded</td>
               <td>{{ props.row.ownStaked || '' }}<span v-if="props.row.ownStaked" class="text-weight-thin token">&nbsp;{{ tokenName }}</span></td>
             </tr>
 
             <tr>
-              <td class="text-weight-bold">Total Staked</td>
+              <td class="text-weight-bold">Total Bonded</td>
               <td>{{ props.row.totalStaked }}<span class="text-weight-thin token">&nbsp;{{ tokenName }}</span></td>
             </tr>
 
             <tr>
-              <td class="text-weight-bold">Staked Return</td>
+              <td class="text-weight-bold">Bonded Return</td>
               <td>{{ props.row.stakedReturn || '' }}<span v-if="props.row.totalStaked">%</span></td>
             </tr>
 
@@ -357,7 +357,7 @@ export default {
         // style: 'width: 160px'
       },
       {
-        label: 'Other Staked',
+        label: 'Other Bonded',
         name: 'other_staked',
         required: false,
         align: 'right',
@@ -373,21 +373,21 @@ export default {
         style: 'width: 40px'
       },
       {
-        label: 'Own Staked',
+        label: 'Own Bonded',
         name: 'own_staked',
         required: false,
         align: 'right',
         sortable: true
       },
       {
-        label: 'Total Staked',
+        label: 'Total Bonded',
         name: 'total_staked',
         required: false,
         align: 'right',
         sortable: true
       },
       {
-        label: 'Staked Return',
+        label: 'Bonded Return',
         name: 'staked_return',
         required: false,
         align: 'right',

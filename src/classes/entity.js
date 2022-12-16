@@ -278,7 +278,7 @@ export class Entity {
       this.calcValidatorReturn()
 
       const slashingSpans = (await clientStore.client.api.query.staking.slashingSpans(this.address)).toJSON()
-      console.log('slashingSpans:', slashingSpans)
+      // console.log('slashingSpans:', slashingSpans)
       this.slashingSpans.value = slashingSpans
 
       const historyDepth = clientStore.consts.historyDepth

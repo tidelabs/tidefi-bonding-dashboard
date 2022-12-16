@@ -189,7 +189,7 @@ export class Client {
       // this.api.derive.staking.waitingInfo()
     ])
 
-    console.log('values:', data)
+    // const dummyArray = []
   }
 
   async disconnect (withCleanup = false) {

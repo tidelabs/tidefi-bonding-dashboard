@@ -1,9 +1,9 @@
 {
-  "name": "tidefi-staking-dashboard",
+  "name": "tidefi-bonding-dashboard",
   "version": "0.0.1",
-  "description": "TIDEFI on-chain live data to help you make better staking decisions",
-  "productName": "TIDEFI Staking Dashboard",
-  "author": "Jeff <jeff.galbraith@semantic-network.com>",
+  "description": "TIDEFI on-chain live data to help you make better bonding decisions",
+  "productName": "TIDEFI Bonding Dashboard",
+  "author": "Jeff Galbraith <jeff.galbraith@semantic-network.com>",
   "private": true,
   "scripts": {
     "dev": "quasar dev",

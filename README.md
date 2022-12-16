@@ -1,8 +1,8 @@
-# TIDEFI Staking Dashboard
+# TIDEFI Bonding Dashboard
 
 A tool to help potential Stakers make informative decisions about validators.
 
-![tidefi-staking-dashboard](https://user-images.githubusercontent.com/10262924/204810078-9f7f0105-5244-484f-9217-9273411302d9.png)
+![tidefi-bonding-dashboard](https://user-images.githubusercontent.com/10262924/204810078-9f7f0105-5244-484f-9217-9273411302d9.png)
 
 ## Install the dependencies
 ```bash
