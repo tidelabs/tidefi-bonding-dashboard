@@ -63,7 +63,7 @@
           </q-td>
 
           <q-td key="flags" :props="props">
-            <div class="row justify-evenly items-center no-wrap">
+            <div class="row justify-end items-center no-wrap">
               <!-- <div style="min-width: 18px;">
                 <q-icon :name="isInvulnerable(props.row) ? solidLockClosed : solidLockOpen" size="18px" color="blue-grey-3">
                   <q-tooltip>
@@ -72,10 +72,18 @@
                 </q-icon>
               </div> -->
 
-              <div style="min-width: 18px;">
-                <q-icon v-if="props.row.isSlashed" :name="fasLocationCrosshairs" size="18px" color="red-6">
+              <div v-if="props.row.isSlashed"  style="min-width: 18px;">
+                <q-icon :name="fasLocationCrosshairs" size="18px" color="red-6">
                   <q-tooltip>
                     This validator has been previously slashed
+                  </q-tooltip>
+                </q-icon>
+              </div>
+
+              <div v-if="props.row.isOversubscribed" style="min-width: 18px;">
+                <q-icon :name="mdiScaleUnbalanced" size="18px" color="red-6">
+                  <q-tooltip>
+                    Nominators over the {{ maxNominatorRewardedPerValidator }} limit will not share in the validator rewards
                   </q-tooltip>
                 </q-icon>
               </div>
@@ -174,6 +182,22 @@
                       </q-tooltip>
                     </q-icon>
                   </div> -->
+
+                  <div v-if="props.row.isSlashed"  style="min-width: 18px;">
+                    <q-icon :name="fasLocationCrosshairs" size="18px" color="red-6">
+                      <q-tooltip>
+                        This validator has been previously slashed
+                      </q-tooltip>
+                    </q-icon>
+                  </div>
+
+                  <div v-if="props.row.isOversubscribed" style="min-width: 18px;">
+                    <q-icon :name="mdiScaleUnbalanced" size="18px" color="red-6">
+                      <q-tooltip>
+                        Nominators over the {{ maxNominatorRewardedPerValidator }} limit will not share in the validator rewards
+                      </q-tooltip>
+                    </q-icon>
+                  </div>
 
                   <div style="min-width: 18px;">
                     <q-icon :name="props.row.identity.identityIcon" size="18px" color="blue-grey-3">
@@ -280,7 +304,12 @@ import { useChainsStore } from 'stores/chain'
 import { useEntitiesStore } from 'stores/entities'
 import { useClientStore } from 'stores/client'
 import { usePreferencesStore } from 'stores/preferences'
-import { infoIcon, mdiChevronRightCircle, fasLocationCrosshairs } from 'assets/icons'
+import {
+  infoIcon,
+  mdiChevronRightCircle,
+  fasLocationCrosshairs,
+  mdiScaleUnbalanced
+} from 'assets/icons'
 import { solidCheckCircle } from 'src/assets/icons'
 
 import FilterInfo from 'components/FilterInfo.vue'
@@ -325,7 +354,7 @@ export default {
         required: true,
         align: 'right',
         sortable: false,
-        style: 'width: 50px; padding-left: 0; padding-right: 0;'
+        style: 'padding-left: 0; padding-right: 0;'
       },
       {
         label: 'Name/Address',
@@ -434,7 +463,7 @@ export default {
         if (retVal && preferencesStore.filters.inactive && val.elected === false) retVal = false
         if (retVal && preferencesStore.filters.nextSet && val.nextElected === false) retVal = false
         if (retVal && preferencesStore.filters.highCommission && parseFloat(val.preferences.commission) > 10.00) retVal = false
-        if (retVal && preferencesStore.filters.oversubscribed && isOversubscribed(val)) retVal = false
+        if (retVal && preferencesStore.filters.oversubscribed && val.isOversubscribed) retVal = false
         if (retVal && preferencesStore.filters.blockedNominations && val.preferences.blocked === true) retVal = false
         if (retVal && preferencesStore.filters.missingIdentity && !val.identity.hasIdentity) retVal = false
         if (retVal && preferencesStore.filters.noVerifiedIdentity && !val.identity.hasVerifiedIdentity) retVal = false
@@ -543,10 +572,6 @@ export default {
       return data
     }
 
-    function isOversubscribed (validator) {
-      return validator.nominatorCount.value > clientStore.consts.maxNominatorRewardedPerValidator
-    }
-
     function isInvulnerable (validator) {
       return clientStore.invulnerables.find(id => id === validator.address)
     }
@@ -571,6 +596,8 @@ export default {
       solidCheckCircle,
       mdiChevronRightCircle,
       fasLocationCrosshairs,
+      mdiScaleUnbalanced,
+      maxNominatorRewardedPerValidator: clientStore.consts.maxNominatorRewardedPerValidator,
       // scalesDuotone,
       // howToVoteTwoTone,
       // alarmClockOutline,

@@ -320,8 +320,13 @@ export class Entity {
     //   return 5
     // })
 
-    this.isSlashed = computed(() => this.slashesInEras.length)
-    // console.log('isSlashed:', this.isSlashed.value)
+    this.isOversubscribed = computed(() => {
+      const clientStore = useClientStore()
+      return this.nominatorCount.value > clientStore.consts.maxNominatorRewardedPerValidator
+    })
+
+    this.isSlashed = computed(() => !!this.slashesInEras.length)
+    // console.log('isSlashed:', this.identity.name.value, this.isSlashed.value)
 
     this.nominatorCount = computed(() => {
       if (this.stakers && this.stakers.others && this.stakers.others.length > 0) {
