@@ -235,6 +235,7 @@ export class Entity {
 
     await this.fetchBalances()
     await this.fetchLedger()
+    await this.fetchValidatorInfo()
     await this.fetchTokenBalances()
 
     const nominations = await clientStore.client.api.query.staking.nominators(this.address)
@@ -246,39 +247,8 @@ export class Entity {
       await this.updateStakerInfo()
       await this.fetchStakingInfo()
 
-      // ones that will be done asynchronously
-      this.fetchBondingHistory()
-    }
-
-    // ones that will be done asynchronously
-    stakerRewards(clientStore.client.api, this.address, true)
-      .then((rewards) => {
-        this.stakerRewards.splice(0, this.stakerRewards.length, ...rewards)
-      })
-
-    if (this.stakers && 'total' in this.stakers) {
-      const {
-        idealInterest,
-        idealStake,
-        inflation,
-        stakedFraction,
-        stakedReturn
-      } = calcInflation(this.stakers.total)
-
-      this.inflation = {
-        idealInterest,
-        idealStake,
-        inflation,
-        stakedFraction,
-        stakedReturn
-      }
-
-      // console.log('Validator Inflation:', this.inflation)
-
-      this.calcValidatorReturn()
-
       const slashingSpans = (await clientStore.client.api.query.staking.slashingSpans(this.address)).toJSON()
-      // console.log('slashingSpans:', slashingSpans)
+      // console.log('slashingSpans:', this.slashingSpans, slashingSpans)
       this.slashingSpans.value = slashingSpans
 
       const historyDepth = clientStore.consts.historyDepth
@@ -310,6 +280,37 @@ export class Entity {
 
         // console.log('slashesInEras:', slashesInEras)
       }
+
+      // ones that will be done asynchronously
+      this.fetchBondingHistory()
+    }
+
+    // ones that will be done asynchronously
+    stakerRewards(clientStore.client.api, this.address, true)
+      .then((rewards) => {
+        this.stakerRewards.splice(0, this.stakerRewards.length, ...rewards)
+      })
+
+    if (this.stakers && 'total' in this.stakers) {
+      const {
+        idealInterest,
+        idealStake,
+        inflation,
+        stakedFraction,
+        stakedReturn
+      } = calcInflation(this.stakers.total)
+
+      this.inflation = {
+        idealInterest,
+        idealStake,
+        inflation,
+        stakedFraction,
+        stakedReturn
+      }
+
+      // console.log('Validator Inflation:', this.inflation)
+
+      this.calcValidatorReturn()
     }
 
     // loading data done
@@ -627,6 +628,13 @@ export class Entity {
     this.bondingHistory.splice(0, this.bondingHistory.length, ...se)
 
     // console.log('Bonding History:', this.bondingHistory)
+  }
+
+  async fetchValidatorInfo () {
+    // const clientStore = useClientStore()
+
+    // const validatorInfo = await clientStore.client.api.query.staking.validators(this.address)
+    // console.log('Validator Info:', validatorInfo)
   }
 
   async fetchTokenBalances () {
