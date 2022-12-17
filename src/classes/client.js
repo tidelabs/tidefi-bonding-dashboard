@@ -102,7 +102,7 @@ export class Client {
         // 'electedInfo:', electedInfo.toJSON(), '\n'
       )
 
-      this.testing()
+      // this.playground()
 
       this.unsubscribeNextElected = await this.api.derive.staking.nextElected((elected) => {
         // console.log('Next Elected:', elected)
@@ -111,6 +111,7 @@ export class Client {
 
       this.unsubscribeNewHeads = await api.derive.chain.subscribeNewHeads((header) => {
         // console.log(`#${ header.number }: ${ header.author }\n`)
+        // console.log('header:', header)
         updateLastBlock(header.number.toNumber(), header.author.toString())
         // console.log(`(${ JSON.stringify(header.toJSON(), null, 2) })\n(${ JSON.stringify(header.toHuman(), null, 2) })\n`)
         const currentHeader = header.toHuman()
@@ -151,45 +152,101 @@ export class Client {
     }
   }
 
-  async testing () {
-    const data = await Promise.all([
-      // this.api.derive.staking.account(),
-      // this.api.derive.staking.accounts(),
-      this.api.derive.staking.currentPoints()
-      // this.api.derive.staking.electedInfo(),
-      // this.api.derive.staking.eraExposure(),
-      // this.api.derive.staking.eraPrefs(),
-      // this.api.derive.staking.eraSlashes(),
-      // this.api.derive.staking.erasExposure(),
-      // this.api.derive.staking.erasHistoric(),
-      // this.api.derive.staking.erasPoints(),
-      // this.api.derive.staking.erasPrefs(),
-      // this.api.derive.staking.erasRewards(),
-      // this.api.derive.staking.erasSlashes(),
-      // this.api.derive.staking.keys() // requires 1 arg
-      // this.api.derive.staking.keysMulti(),
-      // this.api.derive.staking.nextElected() // done
-      // this.api.derive.staking.overview(),
-      // this.api.derive.staking.ownExposure(),
-      // this.api.derive.staking.ownExposures(),
-      // this.api.derive.staking.ownSlash(),
-      // this.api.derive.staking.ownSlashes(),
-      // this.api.derive.staking.query(),
-      // this.api.derive.staking.queryMulti(),
-      // this.api.derive.staking.stakerExposure(),
-      // this.api.derive.staking.stakerExposures(),
-      // this.api.derive.staking.stakerPoints(),
-      // this.api.derive.staking.stakerPrefs(),
-      // this.api.derive.staking.stakerRewards(),
-      // this.api.derive.staking.stakerRewardsMulti(),
-      // this.api.derive.staking.stakerRewardsMultiEras(),
-      // this.api.derive.staking.stakerSlashes(),
-      // this.api.derive.staking.stashes(),
-      // this.api.derive.staking.validators(),
-      // this.api.derive.staking.waitingInfo()
-    ])
+  async playground () {
+    // const returnedData = await Promise.all([
+    // this.api.query.tidefiStaking.accountStakes.entries()
+    // this.api.query.tidefiStaking.accountStakes(id)
+    // this.api.query.nominationPools.rewardPools()
+    // this.api.derive.staking.account(),
+    // this.api.derive.staking.accounts(),
+    // this.api.derive.staking.currentPoints() // the current points for each validator
+    // this.api.derive.staking.electedInfo()
+    // this.api.derive.staking.eraExposure() // not in docs
+    // this.api.derive.staking.eraPrefs() // not in docs
+    // this.api.query.staking.nominatorSlashInEra()
+    // this.api.derive.staking.eraSlashes()
+    // this.api.derive.staking.erasExposure(),
+    // this.api.derive.staking.erasHistoric(),
+    // this.api.derive.staking.erasPoints(),
+    // this.api.derive.staking.erasPrefs(),
+    // this.api.derive.staking.erasRewards(), // in a module
+    // this.api.derive.staking.erasSlashes(),
+    // this.api.derive.staking.keys() // requires 1 arg
+    // this.api.derive.staking.keysMulti(),
+    // this.api.derive.staking.nextElected() // done
+    // this.api.derive.staking.overview()
+    // this.api.derive.staking.ownExposure()
+    // this.api.derive.staking.ownExposures(),
+    // this.api.derive.staking.ownSlash(),
+    // this.api.derive.staking.ownSlashes(),
+    // this.api.derive.staking.query(),
+    // this.api.derive.staking.queryMulti(),
+    // this.api.derive.staking.stakerExposure(),
+    // this.api.derive.staking.stakerExposures(),
+    // era, total era points, validator points
+    // this.api.derive.staking.stakerPoints('fhDv5Y24oRqFo2YG7eUoSBpg5MFY6U9J24VbqmCNKJyn7NmeW', true)
+    // history of validator prefs
+    // this.api.derive.staking.stakerPrefs('fhDv5Y24oRqFo2YG7eUoSBpg5MFY6U9J24VbqmCNKJyn7NmeW', true)
+    // this.api.derive.staking.stakerRewards('fhDv5Y24oRqFo2YG7eUoSBpg5MFY6U9J24VbqmCNKJyn7NmeW', true)
+    // this.api.derive.staking.stakerRewardsMulti(),
+    // this.api.derive.staking.stakerRewardsMultiEras()
+    // this.api.derive.staking.stakerSlashes() // could be useful
+    // this.api.derive.staking.stashes(),
+    // this.api.derive.staking.validators(),
+    // this.api.derive.staking.waitingInfo() // how useful is this?
+    // ])
 
     // const dummyArray = []
+
+    // console.log('RAW values:', returnedData)
+    // const modifiedData = returnedData.map((data) => {
+    //   return data.map((data2) => {
+    //     data2.era = data2.era.toJSON()
+    //     data2.eraReward = normalizeValue(data2.eraReward.toHuman())
+    //     const keys = Object.keys(data2.validators)
+    //     if (keys.length > 0) {
+    //       const validators2 = {}
+    //       keys.forEach((key) => {
+    //         validators2[ key ] = {
+    //           total: data2.validators[ key ].total.toJSON(),
+    //           value: data2.validators[ key ].value.toJSON()
+    //         }
+    //       })
+    //       data2.validators = validators2
+    //     }
+    //     // console.log(data2)
+    //     return data2
+    //   })
+    // })
+    // console.log('modified data:', modifiedData)
+    // console.log('RAW values(extended):', returnedData.map((x) => x))
+    // console.log('RAW values[0]:', returnedData[ 0 ].info.map((i) => i.stakingLedger.toJSON()))
+
+    // returnedData.forEach((data) => {
+    //   data.forEach(([ key, other ], idx) => {
+    //     console.log(key.toHuman(), other.toHuman())
+    //     // const storageKey = key[ 0 ].toHuman()
+    //     // const id2 = data[ 0 ].toHuman()
+    //     // const other = data[ 1 ].toHuman()
+
+    //     // Object.keys(oth).forEach((key) => {
+    //     //   if (typeof oth[ key ] === 'string' || oth[ key ] instanceof String) {
+    //     //     if (oth[ key ].includes(',')) {
+    //     //       oth[ key ] = normalizeValue(oth[ key ])
+    //     //     }
+    //     //   }
+    //     // })
+    //   })
+    //   // dummyArray.push({
+    //   //   storageKey,
+    //   //   id2,
+    //   //   other
+    //   // })
+    // })
+    // console.log('values:', dummyArray)
+    // // data.forEach((datum) => {
+    // //   console.log(datum.toJSON())
+    // // })
   }
 
   async disconnect (withCleanup = false) {
@@ -379,6 +436,8 @@ export class Client {
     clientStore.activeEra = activeEra.toJSON()
     clientStore.currentEra = currentEra.toJSON()
     clientStore.sessionIndex = sessionIndex.toJSON()
+
+    // console.log('sessionIndex:', clientStore.sessionIndex)
 
     return {
       activeEra,
@@ -724,6 +783,7 @@ export class Client {
     const authoredBlocks = []
 
     const authoredBlocksEntries = await clientStore.client.api.query.imOnline.authoredBlocks.entries() // (clientStore.activeEra.index - 1, this.address)
+    // console.log('authoredBlocksEntries:', authoredBlocksEntries)
     authoredBlocksEntries.forEach(([ key, blocks ]) => {
       const address = key.args[ 1 ].toJSON()
       authoredBlocks.push({
