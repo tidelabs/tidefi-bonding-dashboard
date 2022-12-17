@@ -133,7 +133,7 @@ export default function (address, subIdentities, api) {
     else if (parentInfo.value && parentInfo.value.identity?.info && superInfo.value) {
       return 'Super identity is set'
     }
-    else if (identityInfo.value && identityInfo.value?.info) {
+    else if (identityInfo.value && identityInfo.value.info) {
       return 'Identity is set'
     }
     return 'identity is NOT set'
@@ -146,7 +146,7 @@ export default function (address, subIdentities, api) {
     else if (parentInfo.value && parentInfo.value.identity?.info && superInfo.value) {
       return solidPlusCircle
     }
-    else if (identityInfo.value && identityInfo.value?.identity?.info) {
+    else if (identityInfo.value && identityInfo.value.info) {
       return solidCheckCircle
     }
     return solidMinusCircle
