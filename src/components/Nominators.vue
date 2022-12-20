@@ -106,7 +106,4 @@ export default {
 .info-table {
   max-width: 400px;
 }
-.oversubscribed-highlight {
-  color: red;
-}
 </style>

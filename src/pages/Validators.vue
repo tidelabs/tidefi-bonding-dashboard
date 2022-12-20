@@ -138,7 +138,7 @@
             {{ props.row.otherStaked || ''}}<span v-if="props.row.otherStaked" class="text-weight-thin token">&nbsp;{{ tokenName }}</span>
           </q-td>
 
-          <q-td key="nominator_count" :props="props">
+          <q-td key="nominator_count" :props="props" :class="{ 'oversubscribed-highlight': props.row.nominatorCount >= maxNominatorRewardedPerValidator }">
             {{ props.row.nominatorCount }}
           </q-td>
 
@@ -263,7 +263,7 @@
 
             <tr>
               <td class="text-weight-bold">Nominators</td>
-              <td>{{ props.row.nominatorCount || ''}}</td>
+              <td :class="{ 'oversubscribed-highlight': props.row.nominatorCount >= maxNominatorRewardedPerValidator }">{{ props.row.nominatorCount || ''}}</td>
             </tr>
 
             <tr>
