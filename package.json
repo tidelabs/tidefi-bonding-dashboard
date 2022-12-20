@@ -12,29 +12,29 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
-    "@polkadot/api": "^9.6.2",
-    "@quasar/extras": "^1.0.0",
-    "bignumber.js": "^9.1.0",
-    "core-js": "^3.6.5",
-    "highcharts": "^10.3.1",
+    "@polkadot/api": "^9.10.3",
+    "@quasar/extras": "^1.15.8",
+    "bignumber.js": "^9.1.1",
+    "core-js": "^3.26.1",
+    "highcharts": "^10.3.2",
     "highcharts-vue": "^1.4.0",
     "jdenticon": "^3.2.0",
     "mitt": "^3.0.0",
-    "pinia": "^2.0.23",
-    "quasar": "^2.6.0",
-    "vue": "^3.0.0",
-    "vue-router": "^4.0.0"
+    "pinia": "^2.0.28",
+    "quasar": "^2.11.1",
+    "vue": "^3.2.45",
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.13.14",
-    "@quasar/app-webpack": "^3.0.0",
-    "eslint": "^8.10.0",
+    "@babel/eslint-parser": "^7.19.1",
+    "@quasar/app-webpack": "^3.6.2",
+    "eslint": "^8.30.0",
     "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.19.1",
-    "eslint-plugin-n": "^15.0.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-vue": "^9.0.0",
-    "eslint-webpack-plugin": "^3.1.1"
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.6.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-vue": "^9.8.0",
+    "eslint-webpack-plugin": "^3.2.0"
   },
   "browserslist": [
     "last 10 Chrome versions",
