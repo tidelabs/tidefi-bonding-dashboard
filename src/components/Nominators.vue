@@ -5,8 +5,8 @@
         <thead>
           <tr>
             <th colspan="3">
-              Nominators (
-              <span :class="{ 'oversubscribed-highlight': validator.nominatorCount >= maxNominatorRewardedPerValidator}">
+              Nominators (<span
+                :class="{ 'oversubscribed-highlight': validator.nominatorCount >= maxNominatorRewardedPerValidator}">
                 {{ validator.nominatorCount }}
               </span>/{{ maxNominatorRewardedPerValidator }})
             </th>
