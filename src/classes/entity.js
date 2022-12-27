@@ -122,16 +122,17 @@ export class Entity {
       validatorPrefs: {
         commission: 10000000,
         blocked: false
-      },
-      // end of "Staking Info"
-      inflation: {
-        idealInterest: 0,
-        idealStake: 0,
-        inflation: 0,
-        stakedFraction: 0,
-        stakedReturn: 0
       }
     })
+    // end of "Staking Info"
+    this.inflation = reactive({
+      idealInterest: 0,
+      idealStake: 0,
+      inflation: 0,
+      stakedFraction: 0,
+      stakedReturn: 0
+    })
+
     this.bondingHistory = reactive([])
     // unsubscribes
     this.unsubscribeTokenBalances = null
