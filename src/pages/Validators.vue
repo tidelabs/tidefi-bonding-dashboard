@@ -509,9 +509,9 @@ export default {
 
           if (sortBy === 'name') {
             // string sort
-            return x[ sortBy ].toLowerCase() > y[ sortBy ].toLowerCase()
+            return x.identity[ sortBy ].toLowerCase() > y.identity[ sortBy ].toLowerCase()
               ? 1
-              : x[ sortBy ].toLowerCase() < y[ sortBy ].toLowerCase()
+              : x.identity[ sortBy ].toLowerCase() < y.identity[ sortBy ].toLowerCase()
                 ? -1 : 0
           }
           else if (sortBy === 'payee') {
