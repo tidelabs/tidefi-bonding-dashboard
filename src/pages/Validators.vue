@@ -150,7 +150,7 @@
             {{ props.row.totalStaked || ''}}<span v-if="props.row.totalStaked" class="text-weight-thin token">&nbsp;{{ tokenName }}</span>
           </q-td>
 
-          <q-td key="staked_return" :props="props">
+          <q-td key="bonded_return" :props="props">
             {{ props.row.stakedReturn || '' }}<span v-if="props.row.stakedReturn">%</span>
           </q-td>
 
@@ -417,7 +417,7 @@ export default {
       },
       {
         label: 'Bonded Return',
-        name: 'staked_return',
+        name: 'bonded_return',
         required: false,
         align: 'right',
         sortable: true
@@ -555,7 +555,7 @@ export default {
               x1 = x.totalStaked === 'unknown' ? 0 : x.totalStaked
               y1 = y.totalStaked === 'unknown' ? 0 : y.totalStaked
             }
-            else if (sortBy === 'staked_return') {
+            else if (sortBy === 'bonded_return') {
               x1 = x.stakedReturn || 0
               y1 = y.stakedReturn || 0
             }
