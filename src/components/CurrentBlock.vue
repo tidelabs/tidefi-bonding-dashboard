@@ -25,6 +25,7 @@
 <script>
 import { computed, watch, ref } from 'vue'
 import { useClientStore } from 'src/stores/client'
+import { initializeClient } from 'src/helpers/utils'
 
 export default {
   name: 'CurrentBlock',
@@ -62,8 +63,8 @@ export default {
           // wait 1 more minute, if this one does not succeed
           intervalTime.value = 0
 
-          // try to reconnect
-          await clientStore.client.reconnect()
+          // try to reset conection
+          initializeClient()
         }
       }
     })

@@ -1,6 +1,8 @@
 import BN from 'bignumber.js'
 import { decodeAddress, encodeAddress } from '@polkadot/keyring'
 import { hexToU8a, isHex } from '@polkadot/util'
+import { useChainsStore } from 'stores/chain'
+import { Client } from '../classes/client'
 
 export async function getAccountBalances (api, addr) {
   return await api.query.balances.account(addr)
@@ -55,7 +57,7 @@ export function toHuman (decimals, value) {
 }
 
 // takes a string number like "51,723,497,607,334,758"
-// and removes all the commas
+// and removes all the commas, returns "51723497607334758"
 export function normalizeValue (val) {
   return val.replace(/,/g, '')
 }
@@ -85,4 +87,16 @@ export const isValidAddress = (address) => {
   catch (error) {
     return false
   }
+}
+
+export async function initializeClient () {
+  const chainsStore = useChainsStore()
+
+  if (chainsStore.client) {
+    await chainsStore.client.disconnect(true)
+    delete chainsStore.client
+  }
+
+  chainsStore.client = new Client(chainsStore.chains[ chainsStore.chainIndex ])
+  return await chainsStore.client.connect()
 }

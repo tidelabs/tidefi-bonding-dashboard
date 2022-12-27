@@ -105,8 +105,6 @@ import ExternalLink from 'src/components/ExternalLink.vue'
 import { useQuasar } from 'quasar'
 import { useChainsStore } from 'stores/chain'
 import { useEntitiesStore } from 'src/stores/entities'
-import { Client } from '../classes/client'
-// import { Entity } from '../classes/entity'
 import { useClientStore } from 'src/stores/client'
 import { usePreferencesStore } from 'src/stores/preferences'
 import {
@@ -117,6 +115,7 @@ import {
   fasHome,
   remNodeTree
 } from 'assets/icons'
+import { initializeClient } from 'src/helpers/utils'
 
 const matBrightness2 = 'M0 0h24v24H0z@@fill:none;&&M10 2c-1.82 0-3.53.5-5 1.35C7.99 5.08 10 8.3 10 12s-2.01 6.92-5 8.65C6.47 21.5 8.18 22 10 22c5.52 0 10-4.48 10-10S15.52 2 10 2z'
 const matBrightness5 = 'M0 0h24v24H0z@@fill:none;&&M20 15.31L23.31 12 20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69zM12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z'
@@ -279,15 +278,6 @@ export default defineComponent({
       chainsStore.chainName = chainsStore.chains[ 0 ].name
       chainsStore.chainIndex = 0
       chainsStore.client = null
-    }
-
-    async function initializeClient () {
-      if (chainsStore.client) {
-        await chainsStore.client.disconnect(true)
-        delete chainsStore.client
-      }
-      chainsStore.client = new Client(chainsStore.chains[ chainsStore.chainIndex ])
-      await chainsStore.client.connect()
     }
 
     watch(selectedNetwork, (val) => {
