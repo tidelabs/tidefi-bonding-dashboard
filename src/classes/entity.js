@@ -250,7 +250,7 @@ export class Entity {
 
       const slashingSpans = (await clientStore.client.api.query.staking.slashingSpans(this.address)).toJSON()
       // console.log('slashingSpans:', this.slashingSpans, slashingSpans)
-      this.slashingSpans.value = slashingSpans
+      this.slashingSpans = ref(slashingSpans)
 
       const historyDepth = clientStore.consts.historyDepth
       const currentEra = clientStore.currentEra
