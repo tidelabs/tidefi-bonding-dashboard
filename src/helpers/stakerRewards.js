@@ -6,8 +6,8 @@ export async function stakerRewards (api, address, withActivity = true) {
   const rewards = rewardsContainer.map((data) => {
     const validators = Object.keys(data.validators).map((key) => {
       const validator = data.validators[ key ]
-      const pool = validator.total.toJSON()
-      const reward = validator.value.toJSON()
+      const pool = validator.total.toNumber()
+      const reward = validator.value.toNumber()
       // console.log(
       //   key,
       //   total,
