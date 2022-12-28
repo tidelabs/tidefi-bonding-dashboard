@@ -12,7 +12,7 @@
 
 <script>
 import { computed } from 'vue'
-import { toBaseToken2 } from 'src/helpers/utils'
+import { toNormalizeBaseToken } from 'src/helpers/utils'
 import { useClientStore } from 'src/stores/client'
 import { useQuasar } from 'quasar'
 
@@ -47,7 +47,7 @@ export default {
       let totalPool = 0
       if (eraReward.validators.length > 0) {
         totalPool = eraReward.validators.reduce((sum, validator) => {
-          return sum + parseFloat(toBaseToken2(validator.pool, clientStore.decimals[ 0 ]))
+          return sum + parseFloat(toNormalizeBaseToken(validator.pool, clientStore.decimals[ 0 ]))
         }, 0)
       }
       // console.log(`era: ${ eraReward.era }, reward: ${ totalPool }`)
@@ -58,7 +58,7 @@ export default {
       let totalReward = 0
       if (eraReward.validators.length > 0) {
         totalReward = eraReward.validators.reduce((sum, validator) => {
-          return sum + parseFloat(toBaseToken2(validator.reward, clientStore.decimals[ 0 ]))
+          return sum + parseFloat(toNormalizeBaseToken(validator.reward, clientStore.decimals[ 0 ]))
         }, 0)
       }
       // console.log(`era: ${ eraReward.era }, reward: ${ totalReward }`)

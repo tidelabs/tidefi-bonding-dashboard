@@ -13,7 +13,7 @@
 <script>
 import { computed, ref } from 'vue'
 import { useQuasar } from 'quasar'
-import { toBaseToken2 } from 'src/helpers/utils'
+import { toNormalizeBaseToken } from 'src/helpers/utils'
 import { useClientStore } from 'src/stores/client'
 
 export default {
@@ -185,7 +185,7 @@ export default {
         series: [{
           name: 'Total Bonded',
           data: props.bondingHistory
-            ? props.bondingHistory.map((bonding) => parseFloat(toBaseToken2(bonding.total, clientStore.decimals[ 0 ])))
+            ? props.bondingHistory.map((bonding) => parseFloat(toNormalizeBaseToken(bonding.total, clientStore.decimals[ 0 ])))
             : []
         }]
       }

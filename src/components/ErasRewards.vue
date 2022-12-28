@@ -13,7 +13,7 @@
 
 <script>
 import { computed, ref } from 'vue'
-import { toBaseToken2 } from 'src/helpers/utils'
+import { toNormalizeBaseToken } from 'src/helpers/utils'
 import { useClientStore } from 'src/stores/client'
 import { useQuasar } from 'quasar'
 
@@ -188,7 +188,7 @@ export default {
           name: 'Reward',
           data: props.rewards
             ? props.rewards.map((eraReward) => {
-              return parseFloat(toBaseToken2(eraReward.rewards, clientStore.decimals[ 0 ]))
+              return parseFloat(toNormalizeBaseToken(eraReward.rewards, clientStore.decimals[ 0 ]))
             }) : []
         }]
       }

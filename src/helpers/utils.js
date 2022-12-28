@@ -23,7 +23,7 @@ export function toBaseToken (val, exp, precision = 4) {
   return value
 }
 
-export function toBaseToken2 (val, exp, precision = 4) {
+export function toNormalizeBaseToken (val, exp, precision = 4) {
   const value = normalizeValue(toBaseToken(val, exp, precision))
   return value
 }
