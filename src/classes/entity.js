@@ -56,6 +56,7 @@ export class Entity {
     this.noGovernance = false // TODO:
     this.elected = false // active
     this.nextElected = false // next set
+    this.stakedReturn = ref(0)
     this.bonded = 0
     this.otherStaked = 0
     this.ownStaked = 0
@@ -524,7 +525,7 @@ export class Entity {
     // const entitiesStore = useEntitiesStore()
 
     if (!this.elected || (this.stakers && !('total' in this.stakers))) {
-      this.stakedReturn = 0
+      this.stakedReturn.value = 0
       return
     }
 
@@ -538,7 +539,7 @@ export class Entity {
       const stakedReturn = (adjusted.gt(BN_MAX_INTEGER) ? BN_MAX_INTEGER : adjusted).div(BN_HUNDRED).toNumber()
 
       // adjusted for mission
-      this.stakedReturn = (stakedReturn * (100 - parseFloat(this.preferences.commission)) / 100).toFixed(2)
+      this.stakedReturn.value = (stakedReturn * (100 - parseFloat(this.preferences.commission)) / 100).toFixed(2)
 
       // console.log('Validator Bonded Return:', adjusted.toNumber(), stakedReturn, this.stakedReturn)
     }
