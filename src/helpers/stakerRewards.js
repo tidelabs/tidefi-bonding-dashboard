@@ -6,12 +6,20 @@ export async function stakerRewards (api, address, withActivity = true) {
   const rewards = rewardsContainer.map((data) => {
     const validators = Object.keys(data.validators).map((key) => {
       const validator = data.validators[ key ]
-      const pool = validator.total.toNumber()
-      const reward = validator.value.toNumber()
+      // console.log('Validator rewards:', JSON.stringify(validator, null, 2))
+      let pool = 0, reward = 0
+      try {
+        // using toNumber causes issue with BN can't handle values of 53 bits
+        pool = validator.total.toJSON()
+        reward = validator.value.toJSON()
+      }
+      catch (e) {
+        console.error('Validator rewards:', e)
+      }
       // console.log(
       //   key,
-      //   total,
-      //   value
+      //   pool,
+      //   reward
       // )
       return {
         key, // validator address
