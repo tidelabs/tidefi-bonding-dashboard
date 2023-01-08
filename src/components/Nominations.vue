@@ -8,21 +8,23 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="validator in nominations" :key="validator.address">
+          <tr v-for="nominator in nominations" :key="nominator.validator.address">
             <td>
               <div class="row justify-start items-center full-width">
-                <div class="border-light identity-svg-wrapper" v-html="validator.identicon" />
+                <div class="border-light identity-svg-wrapper" v-html="nominator.validator.identicon" />
                 <div class="q-ml-sm">
                   <router-link
-                    :to="{ name: 'validator-lookup', params: { address: validator.address } }"
+                    :to="{ name: 'validator-lookup', params: { address: nominator.validator.address } }"
                     class="entity-link full-width"
                   >
-                    {{ validator.identity.name }}
+                    {{ nominator.validator.identity.name }}
                   </router-link>
-                  <q-tooltip>{{ validator.address }}</q-tooltip>
+                  <q-tooltip>{{ nominator.validator.address }}</q-tooltip>
                 </div>
               </div>
-
+            </td>
+            <td class="text-right">
+              {{ nominator.formattedValue }}
             </td>
           </tr>
         </tbody>
@@ -34,6 +36,8 @@
 <script>
 import { computed } from 'vue'
 import { useEntitiesStore } from 'src/stores/entities'
+import { toBaseToken } from 'src/helpers/utils'
+import { useClientStore } from 'src/stores/client'
 
 export default {
   name: 'Nominations',
@@ -55,13 +59,32 @@ export default {
         props.entity.nominations.targets.forEach((target) => {
           const entity = entitiesStore.getValidatorByAddess(target)
           if (entity) {
-            nominations.push(entity)
+            let other = null
+            if (entity?.stakers?.others) {
+              other = entity.stakers.others.find((other) => other.who === props.entity.address)
+              // console.log('Other:', other)
+              if (other) {
+                nominations.push({
+                  validator: entity,
+                  value: other ? other.value : '0',
+                  formattedValue: other ? formatTokenValue(other.value) : '0'
+                })
+              }
+            }
           }
         })
       }
 
+      // console.log('Nominations:', nominations, props.entity)
+
       return nominations
     })
+
+    function formatTokenValue (val) {
+      const clientStore = useClientStore()
+
+      return clientStore.decimals.length > 0 ? toBaseToken(val, clientStore.decimals[ 0 ]) : 0
+    }
 
     return {
       nominations
