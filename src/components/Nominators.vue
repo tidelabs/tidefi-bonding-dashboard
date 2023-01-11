@@ -13,7 +13,7 @@
           </tr>
         </thead>
         <tbody>
-          <template v-for="({address, hashAddress, formattedValue, identicon, value}, index) in nominators" :key="address">
+          <template v-for="({address, hashAddress, formattedValue, identicon, value, percentage}, index) in nominators" :key="address">
             <tr :class="{ 'oversubscribed-highlight': index >= maxNominatorRewardedPerValidator }">
               <td>
                 <div class="row justify-start items-center">
@@ -31,9 +31,10 @@
               </td>
               <td class="text-right">
                 {{ formattedValue }}
+                <q-tooltip v-if="value !== 0">{{ value }}</q-tooltip>
               </td>
               <td class="text-right">
-                {{ calcPercentage(value) }}%
+                {{ percentage }}%
               </td>
             </tr>
           </template>
@@ -46,7 +47,7 @@
 <script>
 import { computed } from 'vue'
 import { toSvg } from 'jdenticon'
-import { trimHash, toBaseToken } from 'src/helpers/utils'
+import { trimHash, toBaseToken, normalizeValue, toNormalizeBaseToken } from 'src/helpers/utils'
 import { useClientStore } from 'src/stores/client'
 
 export default {
@@ -65,27 +66,25 @@ export default {
 
     const nominators = computed(() => {
       const nominators = props.validator?.stakers?.others.map(({ who, value }) => {
+        const percentage = (toNormalizeBaseToken(value, clientStore.decimals[ 0 ], clientStore.decimals[ 0 ]) * 100 / normalizeValue(props.validator.otherStaked)).toFixed(2)
         return {
           address: who,
           hashAddress: trimHash(who, 16),
-          value,
+          value: toBaseToken(value, clientStore.decimals[ 0 ], clientStore.decimals[ 0 ]),
           formattedValue: formatTokenValue(value),
-          identicon: toSvg(who, 24)
+          identicon: toSvg(who, 24),
+          percentage
         }
       })
 
       // highest first
-      nominators.sort((a, b) => parseFloat(b.value) - parseFloat(a.value))
+      nominators.sort((a, b) => parseFloat(normalizeValue(b.value)) - parseFloat(normalizeValue(a.value)))
 
+      console.log('Nominators:', nominators)
       return nominators
     })
 
-    const total = computed(() => nominators.value.reduce((sum, nominator) => sum + parseInt(nominator.value), 0))
     const maxNominatorRewardedPerValidator = computed(() => clientStore.consts.maxNominatorRewardedPerValidator)
-
-    function calcPercentage (value) {
-      return (value * 100 / total.value).toFixed(2)
-    }
 
     function formatTokenValue (val) {
       const clientStore = useClientStore()
@@ -95,7 +94,6 @@ export default {
 
     return {
       nominators,
-      calcPercentage,
       maxNominatorRewardedPerValidator
     }
   }
