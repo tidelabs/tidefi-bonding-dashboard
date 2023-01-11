@@ -80,7 +80,7 @@
                 </q-icon>
               </div>
 
-              <div v-if="props.row.isOversubscribed" style="min-width: 18px;">
+              <div v-if="props.row.nominatorCount >= maxNominatorRewardedPerValidator" style="min-width: 18px;">
                 <q-icon :name="mdiScaleUnbalanced" size="18px" color="red-6">
                   <q-tooltip>
                     Nominators over the {{ maxNominatorRewardedPerValidator }} limit will not share in the validator rewards
@@ -191,7 +191,7 @@
                     </q-icon>
                   </div>
 
-                  <div v-if="props.row.isOversubscribed" style="min-width: 18px;">
+                  <div v-if="props.row.nominatorCount >= maxNominatorRewardedPerValidator" style="min-width: 18px;">
                     <q-icon :name="mdiScaleUnbalanced" size="18px" color="red-6">
                       <q-tooltip>
                         Nominators over the {{ maxNominatorRewardedPerValidator }} limit will not share in the validator rewards

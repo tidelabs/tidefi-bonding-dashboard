@@ -59,18 +59,13 @@ export default {
         props.entity.nominations.targets.forEach((target) => {
           const entity = entitiesStore.getValidatorByAddess(target)
           if (entity) {
-            let other = null
-            if (entity?.stakers?.others) {
-              other = entity.stakers.others.find((other) => other.who === props.entity.address)
-              // console.log('Other:', other)
-              if (other) {
-                nominations.push({
-                  validator: entity,
-                  value: other ? other.value : '0',
-                  formattedValue: other ? formatTokenValue(other.value) : '0'
-                })
-              }
-            }
+            const other = entity.stakers.others.find((other) => other.who === props.entity.address)
+            // console.log('Other:', other)
+            nominations.push({
+              validator: entity,
+              value: other ? other.value : '0',
+              formattedValue: other ? formatTokenValue(other.value) : 'inactive'
+            })
           }
         })
       }
