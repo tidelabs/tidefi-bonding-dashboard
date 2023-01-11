@@ -25,6 +25,7 @@
             </td>
             <td class="text-right">
               {{ nominator.formattedValue }}
+              <q-tooltip v-if="nominator.value !== 0">{{ nominator.value }}</q-tooltip>
             </td>
           </tr>
         </tbody>
@@ -52,6 +53,7 @@ export default {
 
   setup (props) {
     const entitiesStore = useEntitiesStore()
+    const clientStore = useClientStore()
 
     const nominations = computed(() => {
       const nominations = []
@@ -63,7 +65,7 @@ export default {
             // console.log('Other:', other)
             nominations.push({
               validator: entity,
-              value: other ? other.value : '0',
+              value: other ? toBaseToken(other.value, clientStore.decimals[ 0 ], clientStore.decimals[ 0 ]) : 0,
               formattedValue: other ? formatTokenValue(other.value) : 'inactive'
             })
           }
