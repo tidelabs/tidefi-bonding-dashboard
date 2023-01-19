@@ -6,8 +6,8 @@
   "author": "Jeff Galbraith <jeff.galbraith@semantic-network.com>",
   "private": true,
   "scripts": {
-    "dev": "quasar dev",
-    "build": "quasar build",
+    "dev": "yarn quasar dev",
+    "build": "yarn quasar build",
     "lint": "eslint --ext .js,.vue ./",
     "test": "echo \"No test specified\" && exit 0"
   },
