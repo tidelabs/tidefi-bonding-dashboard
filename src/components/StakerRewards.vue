@@ -83,7 +83,7 @@ export default {
           }
         },
         title: {
-          text: props.isValidator ? 'Validator Rewards per Era' : 'Stakers Rewards per Era',
+          text: props.isValidator ? 'Validator Rewards per Era' : 'Nominator Rewards per Era',
           style: {
             fontSize: '18px',
             fontWeight: 'bold',
@@ -187,7 +187,7 @@ export default {
           },
           {
             title: {
-              text: props.isValidator ? 'Validator Self-staked Reward' : 'This Nominator Reward',
+              text: props.isValidator ? 'Validator Self-bonded Reward' : 'This Nominator Reward',
               style: {
                 fontSize: '12px',
                 color: $q.dark.isActive ? 'yellow' : 'black',

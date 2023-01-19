@@ -38,7 +38,7 @@
                   <q-toggle dense color="purple-13" v-model="preferencesStore.filters.blockedNominations" label="Blocked Nominations" />
                   <q-toggle dense color="purple-13" v-model="preferencesStore.filters.missingIdentity" label="Missing Identity" />
                   <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.noVerifiedIdentity" label="No Verified Identity" /> -->
-                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.notStaked" label="Not Staked" />
+                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.notStaked" label="Payee Not Staked" />
                   <q-toggle dense color="purple-13" v-model="preferencesStore.filters.selfController" label="Self Controller" />
                   <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.belowAvgPoints" label="Below Average Era Points" /> -->
                   <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.slashed" label="Slashed" /> -->

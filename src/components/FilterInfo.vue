@@ -54,7 +54,7 @@
               </td>
             </tr>
             <tr>
-              <td class="info-subtitle">Not Staked</td>
+              <td class="info-subtitle">Payee Not Staked</td>
               <td class="vertical-top">
                 A validator can specify where their own rewards go when a payout is done.
                 It could be Staked, Stash, Controller, or even another address. However,
