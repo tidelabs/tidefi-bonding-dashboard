@@ -25,6 +25,7 @@ export class Client {
     clientStore.loading = true
 
     // initialise the provider to connect to the specified end-point
+    console.log('WsProvider:', this.chain.rpc)
     const provider = new WsProvider(this.chain.rpc)
 
     // create the API and wait until ready
@@ -53,6 +54,9 @@ export class Client {
       // save to clientStore
       clientStore.api = api
       clientStore.client = this
+
+      const node = await api.rpc.system.health()
+      console.log('node health:', node.toJSON())
 
       this.refetchAll()
 
