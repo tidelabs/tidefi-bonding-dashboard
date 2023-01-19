@@ -1,6 +1,6 @@
 {
   "name": "tidefi-bonding-dashboard",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "TIDEFI on-chain live data to help you make better bonding decisions",
   "productName": "TIDEFI Bonding Dashboard",
   "author": "Jeff Galbraith <jeff.galbraith@semantic-network.com>",
