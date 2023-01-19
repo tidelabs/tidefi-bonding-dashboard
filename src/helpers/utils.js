@@ -59,7 +59,7 @@ export function toHuman (decimals, value) {
 // takes a string number like "51,723,497,607,334,758"
 // and removes all the commas, returns "51723497607334758"
 export function normalizeValue (val) {
-  return val.replace(/,/g, '')
+  return String(val).replace(/,/g, '')
 }
 
 // options = { d: h, m, s } : set to true/false for visible
