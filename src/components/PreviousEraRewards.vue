@@ -2,7 +2,10 @@
   <q-card class="panel col q-ma-sm q-pa-sm">
     <div class="fit column items-center justify-center">
       <div class="col-shrink row items-center justify-end">Previous Era Rewards</div>
-      <div class="col row items-center justify-end"><span class="panel-title">{{ previousEraRewards }}</span><span class="text-weight-thin token">&nbsp;{{ tokenName }}</span></div>
+      <div class="col row items-center justify-center">
+        <span class="panel-title">{{ previousEraRewards }}</span>
+        <span class="text-weight-thin token">&nbsp;{{ tokenName }}</span>
+      </div>
     </div>
   </q-card>
 </template>
