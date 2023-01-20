@@ -65,8 +65,8 @@ export default {
             // console.log('Other:', other)
             nominations.push({
               validator: entity,
-              value: other ? toBaseToken(other.value, clientStore.decimals[ 0 ], clientStore.decimals[ 0 ]) : 0,
-              formattedValue: other ? formatTokenValue(other.value) : 'inactive'
+              value: other !== undefined ? toBaseToken(other.value, clientStore.decimals[ 0 ], clientStore.decimals[ 0 ]) : 0,
+              formattedValue: other !== undefined ? formatTokenValue(other.value) : 'inactive'
             })
           }
         })
