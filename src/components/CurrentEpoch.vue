@@ -45,11 +45,13 @@ export default {
       return convertSecondsToTime((clientStore.session.sessionLength - clientStore.session.sessionProgress) * 6, { d: false, h: true, m: true, s: true })
     })
 
+    const sessionIndex = computed(() => clientStore.sessionIndex)
+
     return {
       progressValue,
       baseTime,
       remainingTime,
-      sessionIndex: clientStore.sessionIndex
+      sessionIndex
     }
   }
 }
