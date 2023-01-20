@@ -39,7 +39,7 @@ export const useEntitiesStore = defineStore('entities', {
       this.loadingCount--
     },
     getValidatorByAddess (address) {
-      return this.entities.find((entity) => entity.address === address)
+      return this.getValidators.find((entity) => entity.validator && entity.address === address)
     },
     getValidatorsSorted () {
       return this.getValidators.sort((a, b) => {
