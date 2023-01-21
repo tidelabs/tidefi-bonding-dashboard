@@ -111,6 +111,7 @@ import {
   fabTwitter,
   fabGithub,
   fabDiscord,
+  fabYoutube,
   mdiHomeCircleOutline,
   fasHome,
   remNodeTree
@@ -177,6 +178,12 @@ const externalList = [
     caption: 'chat.tidefi.com',
     icon: fabDiscord,
     link: 'https://chat.tidefi.com'
+  },
+  {
+    title: 'YouTube',
+    caption: 'Tidefi TV',
+    icon: fabYoutube,
+    link: 'https://youtube.com/@tidefi'
   }
 ]
 
