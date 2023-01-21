@@ -2,12 +2,13 @@
   <div class="q-ma-sm">
     <FilterInfo v-model="displayFilterInfoModal" />
     <q-table
+      id="validator-data"
       title="Validators"
       dense
       :rows="filteredValidators"
       :columns="columns"
       :loading="tableLoading"
-      :pagination="pagination"
+      v-model:pagination="pagination"
       :grid="$q.screen.xs"
       row-key="name"
       :sort-method="customSort"
@@ -299,7 +300,7 @@
 </template>
 
 <script>
-import { computed, watch, reactive, ref } from 'vue'
+import { computed, watch, ref } from 'vue'
 import { useChainsStore } from 'stores/chain'
 import { useEntitiesStore } from 'stores/entities'
 import { useClientStore } from 'stores/client'
@@ -438,8 +439,9 @@ export default {
         sortable: false
       }
     ]
-    const pagination = reactive({
-      rowsPerPage: 15
+    const pagination = ref({
+      rowsPerPage: 15,
+      page: 1
     })
     const displayFilterInfoModal = ref(false)
 
@@ -498,6 +500,17 @@ export default {
 
     watch(displayFilterInfoModal, (val) => {
       // console.log('displayFilterInfoModal:', displayFilterInfoModal.value)
+    })
+
+    watch(pagination, (newValue, oldValue) => {
+      if (newValue.page !== oldValue.page) {
+        const elem = document.getElementById('validator-data')
+        if (elem) {
+          elem.scrollIntoView({
+            behavior: 'smooth'
+          })
+        }
+      }
     })
 
     function customSort (rows, sortBy, descending) {
