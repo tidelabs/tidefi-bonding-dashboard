@@ -2,7 +2,9 @@ import BN from 'bignumber.js'
 import { decodeAddress, encodeAddress } from '@polkadot/keyring'
 import { hexToU8a, isHex } from '@polkadot/util'
 import { useChainsStore } from 'stores/chain'
+import { useClientStore } from 'src/stores/client'
 import { Client } from '../classes/client'
+import { format, subDays } from 'date-fns'
 
 export async function getAccountBalances (api, addr) {
   return await api.query.balances.account(addr)
@@ -99,4 +101,13 @@ export async function initializeClient () {
 
   chainsStore.client = new Client(chainsStore.chains[ chainsStore.chainIndex ])
   return await chainsStore.client.connect()
+}
+
+export function eraToDate (era) {
+  const clientStore = useClientStore()
+  const currentEra = clientStore.currentEra
+  if (era <= currentEra) {
+    return format(subDays(new Date(), currentEra - era), 'MMM.dd')
+  }
+  return 'unknown'
 }
