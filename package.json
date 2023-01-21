@@ -16,6 +16,7 @@
     "@quasar/extras": "^1.15.9",
     "bignumber.js": "^9.1.1",
     "core-js": "^3.27.2",
+    "date-fns": "^2.29.3",
     "highcharts": "^10.3.2",
     "highcharts-vue": "^1.4.0",
     "jdenticon": "^3.2.0",
