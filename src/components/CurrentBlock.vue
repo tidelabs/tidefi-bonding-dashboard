@@ -1,7 +1,7 @@
 <template>
   <q-card class="panel col q-ma-sm q-pa-sm">
     <div class="column justify-start items-center">
-      <div class="col column items-center justify-end">Current Block</div>
+      <div class="col column items-center justify-center no-wrap">Current Block</div>
       <div class="full-width row justify-start items-center">
         <q-circular-progress
           :value="progressValue"
@@ -10,7 +10,7 @@
           :track-color="$q.dark.isActive ? 'grey-8' : 'grey-4'"
           center-color="transparent"
           size="50px"
-          class="col justify-end q-ma-sm"
+          class="col justify-center no-wrap q-ma-sm"
         >
           {{ (maxBlockTime * progressValue / 100 / 1000).toFixed(1) }}s
         </q-circular-progress>

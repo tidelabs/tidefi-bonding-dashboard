@@ -1,8 +1,8 @@
 <template>
   <q-card class="panel col q-ma-sm q-pa-sm">
-    <div class="fit column items-center justify-center">
-      <div class="col-shrink row items-center justify-end">Total Issuance</div>
-      <div class="col row items-center justify-end"><span class="panel-title">{{ totalIssuance }}</span><span class="text-weight-thin token">&nbsp;{{ tokenName }}</span></div>
+    <div class="fit column items-center justify-center no-wrap">
+      <div class="col-shrink row items-center justify-center">Total Issuance</div>
+      <div class="col row items-center justify-center"><span class="panel-title">{{ totalIssuance }}</span><span class="text-weight-thin token">&nbsp;{{ tokenName }}</span></div>
     </div>
   </q-card>
 </template>

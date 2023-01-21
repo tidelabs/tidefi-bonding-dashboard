@@ -1,7 +1,7 @@
 <template>
   <q-card class="panel col q-ma-sm q-pa-sm">
     <div class="column justify-start items-center">
-      <div class="col column items-center justify-end">Current Epoch ({{ sessionIndex }})</div>
+      <div class="col column items-center justify-center no-wrap">Current Epoch ({{ sessionIndex }})</div>
       <div class="full-width row justify-start items-center">
         <q-circular-progress
           :value="progressValue"
@@ -15,8 +15,8 @@
           {{ progressValue }}%
         </q-circular-progress>
         <div class="col column">
-          <div class="col row items-center justify-start">{{ baseTime }}<q-tooltip>Duration</q-tooltip></div>
-          <div class="col row items-center justify-start">{{ remainingTime }}<q-tooltip>Remaining</q-tooltip></div>
+          <div class="col row items-center justify-start no-wrap">{{ baseTime }}<q-tooltip>Duration</q-tooltip></div>
+          <div class="col row items-center justify-start no-wrap">{{ remainingTime }}<q-tooltip>Remaining</q-tooltip></div>
         </div>
       </div>
     </div>
