@@ -143,11 +143,11 @@
           </q-td>
 
           <q-td key="own_staked" :props="props">
-            {{ props.row.ownStaked || '' }}<span v-if="props.row.ownStaked" class="text-weight-thin token">&nbsp;{{ tokenName }}</span>
+            {{ props.row.ownStaked || formatTokenValue(normalizeValue(props.row.bonded)) }}<span v-if="props.row.ownStaked || props.row.bonded" class="text-weight-thin token">&nbsp;{{ tokenName }}</span>
           </q-td>
 
           <q-td key="total_staked" :props="props">
-            {{ props.row.totalStaked || ''}}<span v-if="props.row.totalStaked" class="text-weight-thin token">&nbsp;{{ tokenName }}</span>
+            {{ props.row.totalStaked || formatTokenValue(normalizeValue(props.row.bonded))}}<span v-if="props.row.totalStaked || props.row.bonded" class="text-weight-thin token">&nbsp;{{ tokenName }}</span>
           </q-td>
 
           <q-td key="bonded_return" :props="props">
@@ -220,7 +220,7 @@
             </tr>
 
             <tr>
-              <td class="text-weight-bold">Name/Address</td>
+              <td class="left-column text-weight-bold">Name/Address</td>
               <td>
                 <div class="row justify-start items-center no-wrap">
                   <div class="col-shrink">
@@ -237,12 +237,12 @@
             </tr>
 
             <tr>
-              <td class="text-weight-bold">Commission</td>
+              <td class="left-column text-weight-bold">Commission</td>
               <td>{{ props.row.preferences.commission }}</td>
             </tr>
 
             <tr>
-              <td class="text-weight-bold">Payee</td>
+              <td class="left-column text-weight-bold">Payee</td>
               <td>
                 <div v-if="props.row.payee.Account">Account<q-tooltip>{{ props.row.payee.Account }}</q-tooltip></div>
                 <div v-else>{{ props.row.payee }}</div>
@@ -250,44 +250,44 @@
             </tr>
 
             <tr>
-              <td class="text-weight-bold">Payout</td>
+              <td class="left-column text-weight-bold">Payout</td>
               <td>
                 {{ props.row.lastPaidOut }}
               </td>
             </tr>
 
             <tr>
-              <td class="text-weight-bold">Other Bonded</td>
+              <td class="left-column text-weight-bold">Other Bonded</td>
               <td>{{ props.row.otherStaked || ''}}<span v-if="props.row.otherStaked" class="text-weight-thin token">&nbsp;{{ tokenName }}</span></td>
             </tr>
 
             <tr>
-              <td class="text-weight-bold">Nominators</td>
+              <td class="left-column text-weight-bold">Nominators</td>
               <td :class="{ 'oversubscribed-highlight': props.row.nominatorCount >= maxNominatorRewardedPerValidator }">{{ props.row.nominatorCount || ''}}</td>
             </tr>
 
             <tr>
-              <td class="text-weight-bold">Own Bonded</td>
-              <td>{{ props.row.ownStaked || '' }}<span v-if="props.row.ownStaked" class="text-weight-thin token">&nbsp;{{ tokenName }}</span></td>
+              <td class="left-column text-weight-bold">Own Bonded</td>
+              <td>{{ props.row.ownStaked || formatTokenValue(normalizeValue(props.row.bonded)) }}<span v-if="props.row.ownStaked || props.row.bonded" class="text-weight-thin token">&nbsp;{{ tokenName }}</span></td>
             </tr>
 
             <tr>
-              <td class="text-weight-bold">Total Bonded</td>
-              <td>{{ props.row.totalStaked }}<span class="text-weight-thin token">&nbsp;{{ tokenName }}</span></td>
+              <td class="left-column text-weight-bold">Total Bonded</td>
+              <td>{{ props.row.totalStaked || formatTokenValue(normalizeValue(props.row.bonded))}}<span class="text-weight-thin token">&nbsp;{{ tokenName }}</span></td>
             </tr>
 
             <tr>
-              <td class="text-weight-bold">Bonded Return</td>
+              <td class="left-column text-weight-bold">Bonded Return</td>
               <td>{{ props.row.stakedReturn || '' }}<span v-if="props.row.totalStaked">%</span></td>
             </tr>
 
             <tr>
-              <td class="text-weight-bold">Reward Points</td>
+              <td class="left-column text-weight-bold">Reward Points</td>
               <td>{{ props.row.currentRewardPoints || ' '}}</td>
             </tr>
 
             <tr>
-              <td class="text-weight-bold">Last Block #</td>
+              <td class="left-column text-weight-bold">Last Block #</td>
               <td>{{ props.row.lastBlock }}</td>
             </tr>
           </tbody>
@@ -308,9 +308,10 @@ import {
   infoIcon,
   mdiChevronRightCircle,
   fasLocationCrosshairs,
-  mdiScaleUnbalanced
+  mdiScaleUnbalanced,
+  solidCheckCircle
 } from 'assets/icons'
-import { solidCheckCircle } from 'src/assets/icons'
+import { toBaseToken, normalizeValue } from 'src/helpers/utils'
 
 import FilterInfo from 'components/FilterInfo.vue'
 
@@ -584,6 +585,12 @@ export default {
       return solidLockOpen
     }
 
+    function formatTokenValue (val) {
+      const clientStore = useClientStore()
+
+      return clientStore.decimals.length > 0 ? toBaseToken(val, clientStore.decimals[ 0 ]) : 0
+    }
+
     return {
       validators,
       columns,
@@ -612,7 +619,9 @@ export default {
       isInvulnerable,
       getProtectedIcon,
       filteredValidators,
-      hasFilter
+      hasFilter,
+      normalizeValue,
+      formatTokenValue
     }
   }
 }
@@ -629,5 +638,9 @@ export default {
 
   .token {
     font-size: 11px;
+  }
+
+  .left-column {
+    width: 136px;
   }
 </style>
