@@ -13,6 +13,7 @@
 <script>
 import { computed, ref } from 'vue'
 import { useQuasar } from 'quasar'
+import { eraToDate } from 'src/helpers/utils'
 
 export default {
   name: 'ErasRewardPoints',
@@ -68,7 +69,7 @@ export default {
             fontWeight: 'bold'
           },
           valueSuffix: ' Pts.',
-          headerFormat: '<span style="font-size: 10px">Era: {point.key}</span><br><table>',
+          headerFormat: '<span style="font-size: 10px">Date (Era): {point.key}</span><br><table>',
           pointFormat: '<tr><td style="padding:0;">{series.name}:</td><td style="text-align: right;"><strong>{point.y}</strong></td></tr>',
           footerFormat: '</table>',
           useHTML: true
@@ -96,7 +97,7 @@ export default {
         },
         xAxis: {
           categories: props.erasRewardPoints
-            ? props.erasRewardPoints.map((reward) => reward.era)
+            ? props.erasRewardPoints.map((reward) => eraToDate(reward.era) + ` (${ reward.era })`)
             : [],
           crosshair: true,
           title: {

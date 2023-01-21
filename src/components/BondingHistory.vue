@@ -13,7 +13,7 @@
 <script>
 import { computed, ref } from 'vue'
 import { useQuasar } from 'quasar'
-import { toNormalizeBaseToken } from 'src/helpers/utils'
+import { toNormalizeBaseToken, eraToDate } from 'src/helpers/utils'
 import { useClientStore } from 'src/stores/client'
 
 export default {
@@ -71,7 +71,7 @@ export default {
             fontWeight: 'bold'
           },
           valueSuffix: ' TDFY',
-          headerFormat: '<span style="font-size: 10px">Era: {point.key}</span><br><table>',
+          headerFormat: '<span style="font-size: 10px">Date (Era): {point.key}</span><br><table>',
           pointFormat: '<tr><td style="padding:0;">{series.name}:</td><td style="text-align: right;"><strong>{point.y}</strong></td></tr>',
           footerFormat: '</table>',
           useHTML: true
@@ -99,7 +99,7 @@ export default {
         },
         xAxis: {
           categories: props.bondingHistory
-            ? props.bondingHistory.map((bonding) => bonding.era)
+            ? props.bondingHistory.map((bonding) => eraToDate(bonding.era) + ` (${ bonding.era })`)
             : [],
           crosshair: true,
           title: {

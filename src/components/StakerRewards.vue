@@ -12,7 +12,7 @@
 
 <script>
 import { computed } from 'vue'
-import { toNormalizeBaseToken } from 'src/helpers/utils'
+import { toNormalizeBaseToken, eraToDate } from 'src/helpers/utils'
 import { useClientStore } from 'src/stores/client'
 import { useQuasar } from 'quasar'
 
@@ -111,7 +111,7 @@ export default {
             fontWeight: 'bold'
           },
           valueSuffix: ' TDFY',
-          headerFormat: '<span style="font-size: 10px">Era: {point.key}</span><br><table>',
+          headerFormat: '<span style="font-size: 10px">Date (Era): {point.key}</span><br><table>',
           pointFormat: '<tr><td style="padding:0;">{series.name}:</td><td style="text-align: right;"><strong>{point.y:.4f}</strong></td></tr>',
           footerFormat: '</table>',
           // footerFormat: '<tr><td>Percentage</td><td></td></tr></table>',
@@ -141,7 +141,7 @@ export default {
         },
         xAxis: {
           categories: props.rewards
-            ? props.rewards.map((eraReward) => eraReward.era)
+            ? props.rewards.map((eraReward) => eraToDate(eraReward.era) + ` (${ eraReward.era })`)
             : [],
           crosshair: true,
           title: {
