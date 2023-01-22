@@ -80,7 +80,7 @@ export default {
       // highest first
       nominators.sort((a, b) => parseFloat(normalizeValue(b.value)) - parseFloat(normalizeValue(a.value)))
 
-      console.log('Nominators:', nominators)
+      // console.log('Nominators:', nominators)
       return nominators
     })
 
