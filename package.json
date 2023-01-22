@@ -12,12 +12,12 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
-    "@polkadot/api": "^9.11.3",
-    "@quasar/extras": "^1.15.9",
+    "@polkadot/api": "^9.12.1",
+    "@quasar/extras": "^1.15.10",
     "bignumber.js": "^9.1.1",
     "core-js": "^3.27.2",
     "date-fns": "^2.29.3",
-    "highcharts": "^10.3.2",
+    "highcharts": "^10.3.3",
     "highcharts-vue": "^1.4.0",
     "jdenticon": "^3.2.0",
     "mitt": "^3.0.0",
