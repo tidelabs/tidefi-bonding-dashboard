@@ -313,6 +313,7 @@ export class Client {
     this.fetchAuthoredBlocks() // must come after validators
     this.fetchErasValidatorReward()
     this.fetchUnappliedSlashes()
+    this.fetchNominatorSlashInEra()
   }
 
   async fetchChainInfo () {
@@ -779,6 +780,16 @@ export class Client {
     return {
       unappliedSlashes
     }
+  }
+
+  // in console, for now
+  async fetchNominatorSlashInEra () {
+    const clientStore = useClientStore()
+
+    const allEntries = await clientStore.client.api.query.staking.nominatorSlashInEra.entries()
+    allEntries.forEach(([ { args: [ era, nominatorId ] }, value ]) => {
+      console.log(`${ era }: ${ nominatorId } slashed ${ value.toHuman() }`)
+    })
   }
 
   async fetchAuthoredBlocks () {
