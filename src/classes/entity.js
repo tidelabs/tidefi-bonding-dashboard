@@ -15,8 +15,8 @@ import { stakerRewards } from 'src/helpers/stakerRewards'
 // import useErasTime from 'src/helpers/erasTime'
 import { calcInflation } from 'src/helpers/calcInflation'
 
-const BN_HUNDRED = BN(100)
-const BN_MAX_INTEGER = BN(Number.MAX_SAFE_INTEGER)
+// const BN_HUNDRED = BN(100)
+// const BN_MAX_INTEGER = BN(Number.MAX_SAFE_INTEGER)
 
 export async function addOrUpdateEntity (address, validator = false) {
   const entitiesStore = useEntitiesStore()
@@ -309,7 +309,7 @@ export class Entity {
         idealStake,
         inflation,
         stakedFraction,
-        stakedReturn
+        stakedReturn: stakedReturn / 20
       }
 
       // console.log('Validator Inflation:', this.inflation)
@@ -523,7 +523,7 @@ export class Entity {
   }
 
   calcValidatorReturn () {
-    const clientStore = useClientStore()
+    // const clientStore = useClientStore()
     // const entitiesStore = useEntitiesStore()
 
     if (!this.elected || (this.stakers && !('total' in this.stakers))) {
@@ -532,16 +532,18 @@ export class Entity {
     }
 
     // Average of all stakes (bonds)
-    const avgStaked = BN(clientStore.erasTotalStaked).div(clientStore.counterForNominators)
+    // const avgStaked = BN(clientStore.erasTotalStaked).div(clientStore.counterForNominators)
+    const avgStaked = BN(this.stakers.total).div(this.stakers.others.length)
 
     if (avgStaked && !avgStaked.isZero()) {
-      const adjusted = avgStaked.multipliedBy(BN_HUNDRED).multipliedBy(this.inflation.stakedReturn).div(Math.max(1, this.stakers.total))
+      // const adjusted = avgStaked.multipliedBy(BN_HUNDRED).multipliedBy(this.inflation.stakedReturn).div(Math.max(1, parseInt(this.stakers.total)))
       // console.log('adjusted:', adjusted.toNumber())
 
-      const stakedReturn = (adjusted.gt(BN_MAX_INTEGER) ? BN_MAX_INTEGER : adjusted).div(BN_HUNDRED).toNumber()
+      // const stakedReturn = (adjusted.gt(BN_MAX_INTEGER) ? BN_MAX_INTEGER : adjusted).div(BN_HUNDRED).toNumber()
 
-      // adjusted for mission
-      this.stakedReturn = ref((stakedReturn * (100 - parseFloat(this.preferences.commission)) / 100).toFixed(2))
+      // adjusted for commission
+      // console.log('stakedReturn:', this.address, stakedReturn, this.preferences.commission)
+      this.stakedReturn = ref((this.inflation.stakedReturn * (100 - parseFloat(this.preferences.commission)) / 100).toFixed(2))
 
       // console.log('Validator Bonded Return:', adjusted.toNumber(), stakedReturn, this.stakedReturn)
     }
