@@ -50,6 +50,7 @@
         <ErasRewardPoints v-if="validator && validator.erasRewardPoints.length" :erasRewardPoints="validator.erasRewardPoints" />
         <StakerRewards v-if="validator && validator.stakerRewards.length > 0" :rewards="validator.stakerRewards" :isValidator="true" />
         <BondingHistory v-if="validator && validator.bondingHistory.length > 0" :bondingHistory="validator.bondingHistory" />
+        <CommissionHistory v-if="validator && validator.commissionHistory.length > 0" :commissionHistory="validator.commissionHistory" />
       </div>
     </div>
   </div>
@@ -73,6 +74,7 @@ import Balances from 'src/components/Balances.vue'
 import StakerRewards from 'src/components/StakerRewards.vue'
 import Ledger from 'src/components/Ledger.vue'
 import BondingHistory from 'src/components/BondingHistory.vue'
+import CommissionHistory from 'src/components/CommissionHistory.vue'
 import PreviousErasSlashes from 'src/components/PreviousErasSlashes.vue'
 import UnappliedSlashes from 'src/components/UnappliedSlashes.vue'
 
@@ -89,6 +91,7 @@ export default {
     Ledger,
     EntityName,
     BondingHistory,
+    CommissionHistory,
     PreviousErasSlashes,
     UnappliedSlashes
   },

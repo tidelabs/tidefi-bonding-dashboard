@@ -135,6 +135,7 @@ export class Entity {
     })
 
     this.bondingHistory = reactive([])
+    this.commissionHistory = reactive([])
     // unsubscribes
     this.unsubscribeTokenBalances = null
     this.unsubscribeBalances = null
@@ -239,6 +240,7 @@ export class Entity {
     await this.fetchLedger()
     await this.fetchValidatorInfo()
     await this.fetchTokenBalances()
+    await this.fetchValidatorPrefs()
 
     const nominations = await clientStore.client.api.query.staking.nominators(this.address)
     this.nominations = nominations.toJSON()
@@ -666,5 +668,36 @@ export class Entity {
             return val
           })
         })
+  }
+
+  async fetchValidatorPrefs () {
+    const clientStore = useClientStore()
+
+    const historyDepth = clientStore.consts.historyDepth
+    const currentEra = clientStore.currentEra
+    const depth = Math.min(historyDepth, currentEra)
+    const args = [...Array(depth)].map((_, i) => [
+      clientStore.currentEra - i,
+      this.address
+    ])
+
+    const validatorPrefsHistory = (await clientStore.client.api.query.staking.erasValidatorPrefs.multi(args))
+    // console.log('validatorPrefsHistory:', validatorPrefsHistory)
+    const commissionHistory = validatorPrefsHistory.reduce((acc, preferences, index) => {
+      if (!preferences || preferences.isEmpty) return acc
+
+      const data = preferences.toJSON()
+      const era = currentEra - index
+      acc.push({
+        era,
+        commission: data.commission / 10000000
+      })
+
+      return acc
+    }, [])
+      .sort((a, b) => a.era - b.era)
+
+    // console.log('erasValidatorPrefs:', erasValidatorPrefs)
+    this.commissionHistory.splice(0, this.commissionHistory.length, ...commissionHistory)
   }
 }
