@@ -574,7 +574,13 @@ export class Entity {
           stakingInfo.stakingLedger.total = normalizeValue(stakingLedgerHuman.total)
 
           stakingInfo.stashId = si.stashId.toHuman()
-          stakingInfo.unlocking = si.unlocking ?? false
+          stakingInfo.unlocking = si.unlocking ? si.unlocking.map((value) => {
+            return {
+              remainingEras: value.remainingEras.toNumber(),
+              value: value.value.toString()
+            }
+          }) : []
+          // console.log('unlocking:', stakingInfo.unlocking)
           stakingInfo.validatorPrefs = si.validatorPrefs.toJSON()
 
           this.stakingInfo = stakingInfo
