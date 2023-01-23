@@ -109,6 +109,7 @@ import { useClientStore } from 'src/stores/client'
 import { usePreferencesStore } from 'src/stores/preferences'
 import {
   fabTwitter,
+  fabFacebook,
   fabGithub,
   fabDiscord,
   fabYoutube,
@@ -172,6 +173,12 @@ const externalList = [
     caption: '@Tidefi_DEX',
     icon: fabTwitter,
     link: 'https://twitter.com/Tidefi_DEX'
+  },
+  {
+    title: 'Facebook',
+    caption: '@Tidefidex',
+    icon: fabFacebook,
+    link: 'https://facebook.com/tidefidex'
   },
   {
     title: 'Discord Chat',
