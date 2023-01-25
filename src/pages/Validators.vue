@@ -554,20 +554,20 @@ export default {
               y1 = parseFloat(y.preferences.commission)
             }
             else if (sortBy === 'other_staked') {
-              x1 = x.otherStaked === 'unknown' ? 0 : x.otherStaked
-              y1 = y.otherStaked === 'unknown' ? 0 : y.otherStaked
+              x1 = x.otherStaked === 'unknown' ? 0 : normalizeValue(x.otherStaked)
+              y1 = y.otherStaked === 'unknown' ? 0 : normalizeValue(y.otherStaked)
             }
             else if (sortBy === 'nominator_count') {
               x1 = x.nominatorCount
               y1 = y.nominatorCount
             }
             else if (sortBy === 'own_staked') {
-              x1 = x.ownStaked
-              y1 = y.ownStaked
+              x1 = normalizeValue(x.ownStaked)
+              y1 = normalizeValue(y.ownStaked)
             }
             else if (sortBy === 'total_staked') {
-              x1 = x.totalStaked === 'unknown' ? 0 : x.totalStaked
-              y1 = y.totalStaked === 'unknown' ? 0 : y.totalStaked
+              x1 = x.totalStaked === 'unknown' ? 0 : normalizeValue(x.totalStaked)
+              y1 = y.totalStaked === 'unknown' ? 0 : normalizeValue(y.totalStaked)
             }
             else if (sortBy === 'bonded_return') {
               x1 = x.stakedReturn || 0
