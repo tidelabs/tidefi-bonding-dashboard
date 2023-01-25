@@ -113,6 +113,7 @@ import {
   fabGithub,
   fabDiscord,
   fabYoutube,
+  fabMedium,
   mdiHomeCircleOutline,
   fasHome,
   remNodeTree
@@ -191,6 +192,12 @@ const externalList = [
     caption: 'Tidefi TV',
     icon: fabYoutube,
     link: 'https://youtube.com/@tidefi'
+  },
+  {
+    title: 'Blog',
+    caption: 'Medium',
+    icon: fabMedium,
+    link: 'https://tidefi-official.medium.com/'
   }
 ]
 
