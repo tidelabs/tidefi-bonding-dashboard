@@ -562,12 +562,14 @@ export default {
               y1 = y.nominatorCount
             }
             else if (sortBy === 'own_staked') {
-              x1 = normalizeValue(x.ownStaked)
-              y1 = normalizeValue(y.ownStaked)
+              // if not elected to the current set, then we use the bonded amount
+              x1 = x.elected ? normalizeValue(x.ownStaked) : normalizeValue(formatTokenValue(normalizeValue(x.bonded)))
+              y1 = y.elected ? normalizeValue(y.ownStaked) : normalizeValue(formatTokenValue(normalizeValue(y.bonded)))
             }
             else if (sortBy === 'total_staked') {
-              x1 = x.totalStaked === 'unknown' ? 0 : normalizeValue(x.totalStaked)
-              y1 = y.totalStaked === 'unknown' ? 0 : normalizeValue(y.totalStaked)
+              // if not elected to the current set, then we use the bonded amount
+              x1 = x.elected ? normalizeValue(x.totalStaked) : normalizeValue(formatTokenValue(normalizeValue(x.bonded)))
+              y1 = y.elected ? normalizeValue(y.totalStaked) : normalizeValue(formatTokenValue(normalizeValue(y.bonded)))
             }
             else if (sortBy === 'bonded_return') {
               x1 = x.stakedReturn || 0
@@ -578,6 +580,7 @@ export default {
               y1 = y.currentRewardPoints || 0
             }
 
+            // console.log(x.identity.name, x1, y.identity.name, y1)
             return parseFloat(x1) - parseFloat(y1)
           }
         })
