@@ -136,10 +136,12 @@ export class Entity {
 
     this.bondingHistory = reactive([])
     this.commissionHistory = reactive([])
+    this.stakersRewards = reactive([])
     // unsubscribes
     this.unsubscribeTokenBalances = null
     this.unsubscribeBalances = null
     this.unsubscribeStakingInfo = null
+    this.unsubscribeStakerRewards = null
     // this.unsubscribeRewardPoints = null
 
     // this.reputation = 0 // computed - future
@@ -161,6 +163,10 @@ export class Entity {
     if (this.unsubscribeStakingInfo) {
       this.unsubscribeStakingInfo()
       this.unsubscribeStakingInfo = null
+    }
+    if (this.unsubscribeStakerRewards) {
+      this.unsubscribeStakerRewards()
+      this.unsubscribeStakerRewards = null
     }
     // if (this.unsubscribeRewardPoints) {
     //   this.unsubscribeRewardPoints()
@@ -241,6 +247,7 @@ export class Entity {
     await this.fetchValidatorInfo()
     await this.fetchTokenBalances()
     await this.fetchValidatorPrefs()
+    await this.fetchStakerRewards()
 
     const nominations = await clientStore.client.api.query.staking.nominators(this.address)
     this.nominations = nominations.toJSON()
@@ -459,6 +466,10 @@ export class Entity {
     if (this.unsubscribeStakingInfo) {
       await this.unsubscribeStakingInfo()
       this.unsubscribeStakingInfo = null
+    }
+    if (this.unsubscribeStakerRewards) {
+      await this.unsubscribeStakerRewards()
+      this.unsubscribeStakerRewards = null
     }
   }
 
@@ -707,5 +718,36 @@ export class Entity {
 
     // console.log('erasValidatorPrefs:', erasValidatorPrefs)
     this.commissionHistory.splice(0, this.commissionHistory.length, ...commissionHistory)
+  }
+
+  async fetchStakerRewards () {
+    const clientStore = useClientStore()
+
+    this.unsubscribeStakerRewards = await clientStore.client.api.derive.staking.stakerRewards(this.address, (data) => {
+      const stakersRewards = data.map((d) => {
+        const data = {
+          era: d.era.toJSON(),
+          eraReward: normalizeValue(d.eraReward.toHuman()),
+          isEmpty: d.isEmpty,
+          isValidator: d.isValidator,
+          nominating: d.nominating,
+          nominators: d.nominators,
+          validators: []
+        }
+        Object.keys(d.validators).forEach((key) => {
+          data.validators[ key ] = {
+            total: d.validators[ key ].total.toString(),
+            value: d.validators[ key ].value.toString()
+          }
+        })
+
+        return data
+      })
+
+      this.stakersRewards.splice(0, this.stakersRewards.length, ...stakersRewards)
+
+      // console.log('nominatorInfo:', data)
+      // console.log('nominatorInfo:', this.stakersRewards)
+    })
   }
 }

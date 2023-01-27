@@ -508,6 +508,8 @@ export class Client {
       stakedReturn
     }
 
+    console.log('inflation:', clientStore.inflation)
+
     return {
       counterForNominators,
       counterForValidators,
