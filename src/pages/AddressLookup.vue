@@ -4,16 +4,38 @@
       <q-spinner-facebook size="lg" />
     </div>
     <div v-else class="column justify-start items-start full-width">
-      <div class="row justify-center items-center full-width q-mb-lg">
+      <div class="row justify-center items-start full-width q-mb-lg q-gutter-lg">
         <q-input
-            v-model="selectedAddress"
-            label="Input an Address"
-            outlined
-            debounce="500"
-            color="purple-13"
-            :rules="[val => (isValidAddress(val) ? true : (entity = null && false)) || 'Invalid address']"
-            style="min-width: 300px;"
-          />
+          v-if="aliases.length === 0"
+          v-model="selectedAddress"
+          label="Input an Address2"
+          outlined
+          color="purple-13"
+          :rules="[val => (isValidAddress(val) ? true : (entity = null && false)) || 'Invalid address']"
+          style="min-width: 300px; max-height: 56px;"
+        />
+        <q-select
+          v-else
+          v-model="selectedAddress"
+          :options="entitiesOption"
+          use-input
+          input-debounce="0"
+          @filter="filterEntities"
+          outlined
+          debounce="500"
+          map-options
+          color="purple-13"
+          label="Input an Address"
+          :rules="[val => (isValidAddress(val) ? true : (entity = null && false)) || 'Invalid address']"
+          style="min-width: 300px; max-height: 56px;"
+        />
+        <q-btn
+          id="alias-button"
+          label="Alias"
+          outline
+          no-caps
+          style="height: 56px;"
+        />
       </div>
       <div class="row full-width">
         <EntityName :entity="entity" />
@@ -40,6 +62,7 @@ import { isValidAddress } from '../helpers/utils'
 import { Entity } from '../classes/entity'
 import { useEntitiesStore } from 'src/stores/entities'
 import { useClientStore } from 'src/stores/client'
+import { usePreferencesStore } from 'src/stores/preferences'
 import mitt from 'mitt'
 
 import EntityName from 'src/components/EntityName.vue'
@@ -67,8 +90,10 @@ export default {
     const emitter = mitt()
     const entitiesStore = useEntitiesStore()
     const clientStore = useClientStore()
+    const preferencesStore = usePreferencesStore()
     const selectedAddress = ref(null)
     const entity = ref(null)
+    const entitiesOption = ref([])
 
     emitter.on('session-ended', () => {
       // is there an entity loaded up?
@@ -95,6 +120,8 @@ export default {
       }
       return entitiesStore.isLoading
     })
+
+    const aliases = computed(() => preferencesStore.aliases)
 
     watch(selectedAddress, async (addr) => {
       if (isValidAddress(addr)) {
@@ -130,12 +157,56 @@ export default {
       }
     })
 
+    function filterEntities (val, update) {
+      if (val === '' || preferencesStore.aliases.isEmpty) {
+        update(() => {
+          entitiesOption.value = []
+        })
+        return
+      }
+
+      update(() => {
+        const needle = val.toLowerCase()
+        entitiesOption.value = preferencesStore.aliases.filter((v) => {
+          return v.name.toLowerCase().indexOf(needle) > -1
+        })
+      })
+    }
+
     return {
       loading,
       selectedAddress,
       isValidAddress,
-      entity
+      entity,
+      filterEntities,
+      entitiesOption,
+      aliases
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+#alias-button.q-btn--rectangle {
+  border-radius: 5px;
+}
+
+#alias-button.q-btn--outline:before {
+  border-color: rgba(0, 0, 0, 0.2);
+  transition: border-color 0.36s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#alias-button.q-btn--outline:hover:before {
+  border-color: rgba(0, 0, 0, 0.6);
+}
+
+body.body--dark {
+  #alias-button.q-btn--outline:before {
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  #alias-button.q-btn--outline:hover:before {
+    border-color: rgb(255, 255, 255);
+  }
+}
+</style>

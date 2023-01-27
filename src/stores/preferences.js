@@ -17,7 +17,9 @@ export const usePreferencesStore = defineStore('preferences', {
       belowAvgPoints: false,
       slashed: false,
       noGovernance: false
-    }
+    },
+    // array: { address: xxx, name: xxx }
+    aliases: []
   }),
 
   // getters: {
@@ -30,6 +32,14 @@ export const usePreferencesStore = defineStore('preferences', {
     restoreFilters () {
       if (LocalStorage.has('filters')) {
         this.filters = LocalStorage.getItem('filters')
+      }
+    },
+    saveAliases () {
+      LocalStorage.set('aliases', this.aliases)
+    },
+    restoreAliases () {
+      if (LocalStorage.has('aliases')) {
+        this.aliases = LocalStorage.getItem('aliases')
       }
     }
   }

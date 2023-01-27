@@ -231,6 +231,7 @@ export default defineComponent({
       }
 
       preferencesStore.restoreFilters()
+      preferencesStore.restoreAliases()
     })
 
     // ----------------------------------------------------
