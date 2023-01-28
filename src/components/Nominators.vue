@@ -13,7 +13,7 @@
           </tr>
         </thead>
         <tbody>
-          <template v-for="({address, hashAddress, formattedValue, identicon, value, percentage}, index) in nominators" :key="address">
+          <template v-for="({address, hashAddress, alias, formattedValue, identicon, value, percentage}, index) in nominators" :key="address">
             <tr :class="{ 'oversubscribed-highlight': index >= maxNominatorRewardedPerValidator }">
               <td>
                 <div class="row justify-start items-center">
@@ -23,7 +23,7 @@
                       :to="{ name: 'address-lookup', params: { address: address } }"
                       class="entity-link"
                     >
-                      {{ hashAddress }}
+                      {{ alias ? alias.name : hashAddress }}
                     </router-link>
                     <q-tooltip>{{ address }}</q-tooltip>
                   </div>
@@ -49,6 +49,7 @@ import { computed } from 'vue'
 import { toSvg } from 'jdenticon'
 import { trimHash, toBaseToken, normalizeValue, toNormalizeBaseToken } from 'src/helpers/utils'
 import { useClientStore } from 'src/stores/client'
+import { usePreferencesStore } from 'src/stores/preferences'
 
 export default {
   name: 'Nominators',
@@ -63,6 +64,7 @@ export default {
 
   setup (props) {
     const clientStore = useClientStore()
+    const preferencesStore = usePreferencesStore()
 
     const nominators = computed(() => {
       const nominators = props.validator?.stakers?.others.map(({ who, value }) => {
@@ -70,6 +72,7 @@ export default {
         return {
           address: who,
           hashAddress: trimHash(who, 16),
+          alias: preferencesStore.getAlias(who),
           value: toBaseToken(value, clientStore.decimals[ 0 ], clientStore.decimals[ 0 ]),
           formattedValue: formatTokenValue(value),
           identicon: toSvg(who, 24),
