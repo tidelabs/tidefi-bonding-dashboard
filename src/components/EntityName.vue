@@ -5,7 +5,7 @@
         <thead>
           <tr class="row justify-start items-center no-wrap">
             <div v-html="entity.identicon" class="border-light identity-svg-wrapper" style="margin-right: 12px;" />
-            <div class="entity-name">{{ entity.identity.name }}</div>
+            <div class="entity-name">{{ name }}</div>
           </tr>
         </thead>
         <tbody>
@@ -21,6 +21,9 @@
 </template>
 
 <script>
+import { computed } from 'vue'
+import { usePreferencesStore } from 'src/stores/preferences'
+
 export default {
   name: 'EntityName',
 
@@ -32,8 +35,17 @@ export default {
     }
   },
 
-  setup () {
-    return {}
+  setup (props) {
+    const preferencesStore = usePreferencesStore()
+
+    const name = computed(() => {
+      const alias = preferencesStore.getAlias(props.entity.address)
+      return alias ? alias.name : props.entity.identity.name
+    })
+
+    return {
+      name
+    }
   }
 }
 </script>
