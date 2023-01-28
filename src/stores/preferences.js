@@ -41,6 +41,22 @@ export const usePreferencesStore = defineStore('preferences', {
       if (LocalStorage.has('aliases')) {
         this.aliases = LocalStorage.getItem('aliases')
       }
+    },
+    getAlias (address) {
+      return this.aliases.find((alias) => address === alias.address)
+    },
+    addAlias (address, name) {
+      this.aliases.push({
+        address,
+        name
+      })
+      this.saveAliases()
+    },
+    removeAlias (address) {
+      this.aliases.splice(
+        this.aliases.findIndex((alias) => address === alias.address)
+        , 1)
+      this.saveAliases()
     }
   }
 })
