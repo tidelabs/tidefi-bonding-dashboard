@@ -7,8 +7,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-if="entity.identity.name">
-          <td>Name:</td><td>{{ entity.identity.name }}</td>
+        <tr v-if="name">
+          <td>Name:</td><td>{{ name }}</td>
         </tr>
         <tr v-if="entity.identity.parentName">
           <td>Parent Name:</td><td>{{ entity.identity.parentName }}</td>
@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import { computed } from 'vue'
+import { usePreferencesStore } from 'src/stores/preferences'
 
 export default {
   name: 'Identity',
@@ -46,6 +48,19 @@ export default {
       type: Object,
       required: false,
       validator: (prop) => typeof prop === 'object' || prop === null
+    }
+  },
+
+  setup (props) {
+    const preferencesStore = usePreferencesStore()
+
+    const name = computed(() => {
+      const alias = preferencesStore.getAlias(props.entity.address)
+      return alias ? alias.name : props.entity.identity.name
+    })
+
+    return {
+      name
     }
   }
 }

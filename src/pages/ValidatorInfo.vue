@@ -163,7 +163,7 @@ export default {
 
       update(() => {
         const needle = val.toLowerCase()
-        validatorsOption.value = validators.value.filter(v => {
+        validatorsOption.value = validators.value.filter((v) => {
           return v.identity.name.toLowerCase().indexOf(needle) > -1
         })
       })

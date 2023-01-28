@@ -117,7 +117,7 @@
                 :to="{ name: 'validator-lookup', params: { address: props.row.address } }"
                 class="entity-link"
               >
-                <div class="col q-ml-sm">{{ props.row.identity.name }}</div>
+                <div class="col q-ml-sm">{{ getName(props.row) }}<q-tooltip>{{ props.row.address }}</q-tooltip></div>
               </router-link>
             </div>
           </q-td>
@@ -523,9 +523,9 @@ export default {
 
           if (sortBy === 'name') {
             // string sort
-            return x.identity[ sortBy ].toLowerCase() > y.identity[ sortBy ].toLowerCase()
+            return getName(x).toLowerCase() > getName(y).toLowerCase()
               ? 1
-              : x.identity[ sortBy ].toLowerCase() < y.identity[ sortBy ].toLowerCase()
+              : getName(x).toLowerCase() < getName(y).toLowerCase()
                 ? -1 : 0
           }
           else if (sortBy === 'payee') {
@@ -607,6 +607,11 @@ export default {
       return clientStore.decimals.length > 0 ? toBaseToken(val, clientStore.decimals[ 0 ]) : 0
     }
 
+    function getName (validator) {
+      const alias = preferencesStore.getAlias(validator.address)
+      return alias ? alias.name : validator.identity.name
+    }
+
     return {
       validators,
       columns,
@@ -637,7 +642,8 @@ export default {
       filteredValidators,
       hasFilter,
       normalizeValue,
-      formatTokenValue
+      formatTokenValue,
+      getName
     }
   }
 }
