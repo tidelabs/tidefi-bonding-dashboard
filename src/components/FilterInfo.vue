@@ -36,7 +36,13 @@
               <td class="info-subtitle">Oversubscribed</td>
               <td class="vertical-top">
                 There is a maximum {{ maxNominatorRewardedPerValidator }} nominators allowed per validator
-                that can share era rewards. Any nominators over this count, based on their bonded amounts, are oversubscribed and will not share in the era rewads.
+                that can share era rewards. Any nominators over this count, based on their bonded amounts, are oversubscribed and will not share in the era rewards.
+              </td>
+            </tr>
+            <tr>
+              <td class="info-subtitle">Recent Payouts</td>
+              <td class="vertical-top">
+                If the validator has paid out rewards in 3 days or less.
               </td>
             </tr>
             <tr>

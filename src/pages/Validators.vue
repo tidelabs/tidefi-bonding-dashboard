@@ -35,6 +35,7 @@
                   <q-toggle dense color="purple-13" v-model="preferencesStore.filters.inactive" label="Inactive Validators" />
                   <q-toggle dense color="purple-13" v-model="preferencesStore.filters.nextSet" label="Not Elected Next Set" />
                   <q-toggle dense color="purple-13" v-model="preferencesStore.filters.highCommission" label="High Commission (>10%)" />
+                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.recentPayouts" label="Recent Payouts (3 days or less)" />
                   <q-toggle dense color="purple-13" v-model="preferencesStore.filters.oversubscribed" label="Oversubscribed" />
                   <q-toggle dense color="purple-13" v-model="preferencesStore.filters.blockedNominations" label="Blocked Nominations" />
                   <q-toggle dense color="purple-13" v-model="preferencesStore.filters.missingIdentity" label="Missing Identity" />
@@ -467,6 +468,8 @@ export default {
         if (retVal && preferencesStore.filters.nextSet && val.nextElected === false) retVal = false
         if (retVal && preferencesStore.filters.highCommission && parseFloat(val.preferences.commission) > 10.00) retVal = false
         if (retVal && preferencesStore.filters.oversubscribed && val.isOversubscribed) retVal = false
+        // a validator has to be elected to do payouts, so we filter non-elected here as well
+        if (retVal && preferencesStore.filters.recentPayouts && (!val.elected || (val.lastPaidOut !== 'recently' && parseInt(val.lastPaidOut) > 3))) retVal = false
         if (retVal && preferencesStore.filters.blockedNominations && val.preferences.blocked === true) retVal = false
         if (retVal && preferencesStore.filters.missingIdentity && !val.identity.hasIdentity) retVal = false
         if (retVal && preferencesStore.filters.noVerifiedIdentity && !val.identity.hasVerifiedIdentity) retVal = false
