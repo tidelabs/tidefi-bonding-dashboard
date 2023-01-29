@@ -9,6 +9,7 @@ export const usePreferencesStore = defineStore('preferences', {
       nextSet: false,
       highCommission: false,
       oversubscribed: false,
+      recentPayouts: false,
       blockedNominations: false,
       missingIdentity: false,
       noVerifiedIdentity: false,
@@ -31,7 +32,10 @@ export const usePreferencesStore = defineStore('preferences', {
     },
     restoreFilters () {
       if (LocalStorage.has('filters')) {
-        this.filters = LocalStorage.getItem('filters')
+        this.filters = {
+          ...this.filters, // keeps any new defaults added
+          ...LocalStorage.getItem('filters')
+        }
       }
     },
     saveAliases () {
