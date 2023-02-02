@@ -71,6 +71,7 @@
           label="Alias"
           outline
           no-caps
+          :disable="!(isValidAddress(selectedAddress))"
           style="height: 56px;"
           @click="showAliasDialog = !showAliasDialog"
         />
