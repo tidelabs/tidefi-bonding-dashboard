@@ -60,7 +60,7 @@ export default {
       if (props.entity && props.entity.nominations && props.entity.nominations.targets.length > 0) {
         props.entity.nominations.targets.forEach((target) => {
           const entity = entitiesStore.getValidatorByAddess(target)
-          if (entity) {
+          if (entity && entity.stakers.others && entity.stakers.others.length > 0) {
             const other = entity.stakers.others.find((other) => other.who === props.entity.address)
             // console.log('Other:', other)
             nominations.push({
