@@ -10,7 +10,12 @@
       <q-card style="min-width: 300px;">
         <q-card-section v-if="!hasAlias(entity.address)">
           <div class="text-h6">Add alias for: {{ entity.identity.name }}</div>
-          <q-input outlined v-model="aliasName" label="Name" />
+          <q-input
+            outlined
+            v-model="aliasName"
+            label="Name"
+            color="purple-13"
+          />
         </q-card-section>
         <q-card-section v-else>
           <div class="text-h6">Remove alias for: {{ getAlias(entity.address).name }}</div>
