@@ -1,5 +1,4 @@
 import { computed, ref, reactive, watch } from 'vue'
-import { toSvg } from 'jdenticon'
 import {
   getControllerInfo
 } from '../helpers/validators'
@@ -47,7 +46,6 @@ export class Entity {
   constructor (address, validator = false) {
     this.address = address
     //
-    this.identicon = null
     this.ledger = null
     // validator info
     this.validator = validator
@@ -181,10 +179,6 @@ export class Entity {
     }
 
     // console.log('Account:', entryHash, entrySize)
-
-    if (!this.identicon) {
-      this.identicon = toSvg(this.address, 24)
-    }
 
     const controller = await getControllerInfo(this.address, clientStore.client.api)
     this.controller = controller.toHuman()

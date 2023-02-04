@@ -42,11 +42,6 @@
   font-size: 1.0rem;
 }
 
-.border-light {
-  border: solid 1px lightgray;
-  border-radius: 2px;
-}
-
 .identity-svg-wrapper {
   max-width: 25px;
   max-height: 25px;
@@ -85,6 +80,11 @@
   font-weight: bold;
 }
 
+.border-light {
+  border: solid 1px rgba(0,0,0,0.2);
+  border-radius: 2px;
+}
+
 .q-dark div,
 .body--dark div {
   .info-table thead {
@@ -96,6 +96,10 @@
   }
   .q-item.q-router-link--active, .q-item--active {
     color: #FFFF00;
+  }
+  .border-light {
+    border: solid 1px rgba(255,255,255,0.2);
+    border-radius: 2px;
   }
 }
 

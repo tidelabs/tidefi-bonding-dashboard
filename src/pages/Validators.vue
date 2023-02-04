@@ -112,7 +112,7 @@
           <q-td key="name" :props="props">
             <div class="row justify-start items-center no-wrap">
               <div class="col-shrink">
-                <div class="border-light identity-svg-wrapper" v-html="props.row.identicon" />
+                <Identicon :address="props.row.address" />
               </div>
               <router-link
                 :to="{ name: 'validator-lookup', params: { address: props.row.address } }"
@@ -226,7 +226,7 @@
               <td>
                 <div class="row justify-start items-center no-wrap">
                   <div class="col-shrink">
-                    <div class="border-light identity-svg-wrapper" v-html="props.row.identicon" />
+                    <Identicon :address="props.row.address" />
                   </div>
                   <router-link
                     :to="{ name: 'validator-lookup', params: { address: props.row.address } }"
@@ -316,6 +316,7 @@ import {
 import { toBaseToken, normalizeValue } from 'src/helpers/utils'
 
 import FilterInfo from 'components/FilterInfo.vue'
+import Identicon from 'src/components/Identicon.vue'
 
 const solidLockClosed = 'M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z@@fill:currentColor;fill-rule:evenodd;clip-rule:evenodd;|0 0 20 20'
 const solidLockOpen = 'M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 015.905-.75 1 1 0 001.937-.5A5.002 5.002 0 0010 2z@@fill:currentColor;|0 0 20 20'
@@ -334,7 +335,8 @@ export default {
   name: 'Validators',
 
   components: {
-    FilterInfo
+    FilterInfo,
+    Identicon
   },
 
   setup () {

@@ -95,7 +95,7 @@
       >
         <q-item v-for="alias in filteredAliases" :key="alias.address" style="min-height: 60px;">
           <q-item-section top>
-            <q-item-label>{{ alias.name }}</q-item-label>
+            <q-item-label><Identicon :address="alias.address" />{{ alias.name }}</q-item-label>
             <q-item-label caption style="font-size: 11px;" class="ellipsis">
               <router-link
                 :to="{ name: 'address-lookup', params: { address: alias.address } }"
@@ -122,8 +122,14 @@ import { ref, computed } from 'vue'
 import { usePreferencesStore } from 'src/stores/preferences'
 import { isValidAddress } from 'src/helpers/utils'
 
+import Identicon from 'src/components/Identicon.vue'
+
 export default {
   name: 'Address Book',
+
+  components: {
+    Identicon
+  },
 
   setup () {
     const filteredAlias = ref('')
