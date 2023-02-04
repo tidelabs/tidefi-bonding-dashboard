@@ -4,7 +4,7 @@
       <table>
         <thead>
           <tr class="row justify-start items-center no-wrap">
-            <div v-html="entity.identicon" class="border-light identity-svg-wrapper" style="margin-right: 12px;" />
+            <Identicon :address="entity.address" />
             <div class="entity-name">{{ name }}</div>
           </tr>
         </thead>
@@ -24,8 +24,14 @@
 import { computed } from 'vue'
 import { usePreferencesStore } from 'src/stores/preferences'
 
+import Identicon from 'src/components/Identicon.vue'
+
 export default {
   name: 'EntityName',
+
+  components: {
+    Identicon
+  },
 
   props: {
     entity: {
