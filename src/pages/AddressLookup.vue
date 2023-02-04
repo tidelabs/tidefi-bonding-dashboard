@@ -50,6 +50,7 @@
           color="purple-13"
           :rules="[val => (isValidAddress(val) ? true : (entity = null && false)) || 'Invalid address']"
           style="min-width: 300px; max-height: 56px;"
+          class="ellipsis"
         />
         <q-select
           v-else
@@ -70,6 +71,7 @@
           label="Input an Address"
           :rules="[val => (isValidAddress(val) ? true : (entity = null && false)) || 'Invalid address']"
           style="min-width: 300px; max-height: 56px;"
+          class="ellipsis"
         />
         <q-btn
           id="alias-button"

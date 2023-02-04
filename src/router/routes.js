@@ -32,6 +32,11 @@ const routes = [
             name: 'address-lookup',
             path: 'address/:address?',
             component: () => import('pages/AddressLookup.vue')
+          },
+          {
+            name: 'address-book',
+            path: 'address-book',
+            component: () => import('pages/AddressBook.vue')
           }
         ]
       }
