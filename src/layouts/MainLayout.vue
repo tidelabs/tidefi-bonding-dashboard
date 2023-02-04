@@ -116,7 +116,8 @@ import {
   fabMedium,
   mdiHomeCircleOutline,
   fasHome,
-  remNodeTree
+  remNodeTree,
+  fasAddressBook
 } from 'assets/icons'
 import { initializeClient } from 'src/helpers/utils'
 
@@ -148,6 +149,12 @@ const internalList = [
     caption: 'Look yourself up!',
     icon: icoInputSearch,
     to: { name: 'address-lookup' }
+  },
+  {
+    title: 'Address Book',
+    caption: 'Manage your aliases',
+    icon: fasAddressBook,
+    to: { name: 'address-book' }
   }
 ]
 const externalList = [
