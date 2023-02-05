@@ -29,8 +29,6 @@ export default {
   setup (props) {
     const $q = useQuasar()
 
-    console.log('props.address:', props.address)
-
     const identicon = computed(() => toSvg(props.address, 24))
 
     function copyAddress () {
