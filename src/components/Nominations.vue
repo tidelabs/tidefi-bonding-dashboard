@@ -11,7 +11,7 @@
           <tr v-for="nominator in nominations" :key="nominator.validator.address">
             <td>
               <div class="row justify-start items-center full-width">
-                <div class="border-light identity-svg-wrapper" v-html="nominator.validator.identicon" />
+                <Identicon :address="nominator.validator.address" />
                 <div class="q-ml-sm">
                   <router-link
                     :to="{ name: 'validator-lookup', params: { address: nominator.validator.address } }"
@@ -40,8 +40,14 @@ import { useEntitiesStore } from 'src/stores/entities'
 import { toBaseToken } from 'src/helpers/utils'
 import { useClientStore } from 'src/stores/client'
 
+import Identicon from 'src/components/Identicon.vue'
+
 export default {
   name: 'Nominations',
+
+  components: {
+    Identicon
+  },
 
   props: {
     entity: {

@@ -10,7 +10,12 @@
       <q-card style="min-width: 300px;">
         <q-card-section v-if="!hasAlias(entity.address)">
           <div class="text-h6">Add alias for: {{ entity.identity.name }}</div>
-          <q-input outlined v-model="aliasName" label="Name" />
+          <q-input
+            outlined
+            v-model="aliasName"
+            label="Name"
+            color="purple-13"
+          />
         </q-card-section>
         <q-card-section v-else>
           <div class="text-h6">Remove alias for: {{ getAlias(entity.address).name }}</div>
@@ -45,6 +50,7 @@
           color="purple-13"
           :rules="[val => (isValidAddress(val) ? true : (entity = null && false)) || 'Invalid address']"
           style="min-width: 300px; max-height: 56px;"
+          class="ellipsis"
         />
         <q-select
           v-else
@@ -65,12 +71,14 @@
           label="Input an Address"
           :rules="[val => (isValidAddress(val) ? true : (entity = null && false)) || 'Invalid address']"
           style="min-width: 300px; max-height: 56px;"
+          class="ellipsis"
         />
         <q-btn
           id="alias-button"
           label="Alias"
           outline
           no-caps
+          :disable="!(isValidAddress(selectedAddress))"
           style="height: 56px;"
           @click="showAliasDialog = !showAliasDialog"
         />

@@ -13,11 +13,11 @@
           </tr>
         </thead>
         <tbody>
-          <template v-for="({address, hashAddress, alias, formattedValue, identicon, value, percentage}, index) in nominators" :key="address">
+          <template v-for="({address, hashAddress, alias, formattedValue, value, percentage}, index) in nominators" :key="address">
             <tr :class="{ 'oversubscribed-highlight': index >= maxNominatorRewardedPerValidator }">
               <td>
                 <div class="row justify-start items-center">
-                  <div class="border-light identity-svg-wrapper" v-html="identicon" />
+                  <Identicon :address="address" />
                   <div>
                     <router-link
                       :to="{ name: 'address-lookup', params: { address: address } }"
@@ -46,13 +46,18 @@
 
 <script>
 import { computed } from 'vue'
-import { toSvg } from 'jdenticon'
 import { trimHash, toBaseToken, normalizeValue, toNormalizeBaseToken } from 'src/helpers/utils'
 import { useClientStore } from 'src/stores/client'
 import { usePreferencesStore } from 'src/stores/preferences'
 
+import Identicon from 'src/components/Identicon.vue'
+
 export default {
   name: 'Nominators',
+
+  components: {
+    Identicon
+  },
 
   props: {
     validator: {
@@ -75,7 +80,6 @@ export default {
           alias: preferencesStore.getAlias(who),
           value: toBaseToken(value, clientStore.decimals[ 0 ], clientStore.decimals[ 0 ]),
           formattedValue: formatTokenValue(value),
-          identicon: toSvg(who, 24),
           percentage
         }
       })
