@@ -29,16 +29,18 @@ export default {
   setup (props) {
     const $q = useQuasar()
 
+    console.log('props.address:', props.address)
+
     const identicon = computed(() => toSvg(props.address, 24))
 
     function copyAddress () {
-      copyToClipboard({
-        message: props.address,
-        position: 'top-right'
-      })
+      copyToClipboard(props.address)
         .then(() => {
           // success!
-          $q.notify('Address copied to clipboard!')
+          $q.notify({
+            message: 'Address copied to clipboard!',
+            position: 'top-right'
+          })
         })
         .catch(() => {
           // fail
