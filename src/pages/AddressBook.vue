@@ -44,7 +44,7 @@
             v-model="aliasAddress"
             label="Address"
             color="purple-13"
-            :rules="[val => isValidAddress(val)  || 'Invalid address']"
+            :rules="[val => isValidAddress(val)  || 'Invalid address', val => isAddressAvailable(val) || 'Address already used']"
           />
           <q-input
             outlined
@@ -58,7 +58,7 @@
       <q-card-actions vertical>
         <q-btn
           flat
-          :disable="!aliasName || aliasExists(aliasName) || !isValidAddress(aliasAddress)"
+          :disable="shouldDisableSave"
           @click="onSaveAlias"
         >Save</q-btn>
         <q-btn
@@ -173,6 +173,23 @@ export default {
       showConfirmDialog.value = false
     }
 
+    function isAddressAvailable (address) {
+      return !aliases.value.find((alias) => alias.address === address)
+    }
+
+    const shouldDisableSave = computed(() => {
+      if (aliasName.value && aliasAddress.value) {
+        if (!aliasExists(aliasName.value)) {
+          if (isValidAddress(aliasAddress.value)) {
+            if (isAddressAvailable(aliasAddress.value)) {
+              return false
+            }
+          }
+        }
+      }
+      return true
+    })
+
     return {
       filteredAliases,
       filteredAlias,
@@ -183,7 +200,9 @@ export default {
       aliasExists,
       isValidAddress,
       onSaveAlias,
-      onRemoveAlias
+      onRemoveAlias,
+      isAddressAvailable,
+      shouldDisableSave
     }
   }
 }
