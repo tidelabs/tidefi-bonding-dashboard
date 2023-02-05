@@ -87,7 +87,7 @@
         @click="showAliasDialog = true; aliasName = ''; aliasAddress = ''"
       />
     </div>
-    <div class="row justify-center">
+    <div v-if="filteredAliases.length > 0" class="row justify-center">
       <q-list
         bordered
         separator
@@ -112,7 +112,7 @@
             </div>
           </q-item-section>
         </q-item>
-    </q-list>
+      </q-list>
     </div>
   </div>
 </template>
