@@ -12,7 +12,7 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
-    "@polkadot/api": "^9.12.1",
+    "@polkadot/api": "^9.13.6",
     "@quasar/extras": "^1.15.10",
     "bignumber.js": "^9.1.1",
     "core-js": "^3.27.2",
@@ -21,21 +21,21 @@
     "highcharts-vue": "^1.4.0",
     "jdenticon": "^3.2.0",
     "mitt": "^3.0.0",
-    "pinia": "^2.0.29",
+    "pinia": "^2.0.30",
     "quasar": "^2.11.5",
-    "vue": "^3.2.45",
+    "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",
     "@quasar/app-webpack": "^3.7.1",
-    "eslint": "^8.32.0",
+    "eslint": "^8.33.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.6.1",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^9.9.0",
-    "eslint-webpack-plugin": "^3.2.0"
+    "eslint-webpack-plugin": "^4.0.0"
   },
   "browserslist": [
     "last 10 Chrome versions",
