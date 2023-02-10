@@ -52,7 +52,7 @@
         </div>
       </template>
       <template v-slot:body="props">
-        <q-tr :props="props">
+        <q-tr :props="props" class="validator-row">
 
           <q-td key="block_count" :props="props">
             <div class="row justify-evenly items-center no-wrap">
@@ -64,7 +64,7 @@
             </div>
           </q-td>
 
-          <q-td key="flags" :props="props">
+          <q-td key="flags" :props="props" class="validator-row">
             <div class="row justify-end items-center no-wrap">
               <!-- <div style="min-width: 18px;">
                 <q-icon :name="isInvulnerable(props.row) ? solidLockClosed : solidLockOpen" size="18px" color="blue-grey-3">
@@ -109,7 +109,7 @@
             </div>
           </q-td>
 
-          <q-td key="name" :props="props">
+          <q-td key="name" :props="props" class="validator-row">
             <div class="row justify-start items-center no-wrap">
               <div class="col-shrink">
                 <Identicon :address="props.row.address" />
@@ -660,7 +660,11 @@ export default {
     background-color: inherit;
   }
   .q-table--dense .q-table__top {
-    padding: 6px 0px;
+    padding: 4px 0px;
+  }
+
+  .validator-row {
+    height: 38px !important;
   }
 
   .token {
