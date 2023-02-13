@@ -134,10 +134,12 @@ export class Entity {
 
     this.bondingHistory = reactive([])
     this.commissionHistory = reactive([])
+    this.currentStakes = reactive([])
     // unsubscribes
     this.unsubscribeTokenBalances = null
     this.unsubscribeBalances = null
     this.unsubscribeStakingInfo = null
+    this.unsubscribeCurrentStakes = null
     // this.unsubscribeRewardPoints = null
 
     // this.reputation = 0 // computed - future
@@ -159,6 +161,10 @@ export class Entity {
     if (this.unsubscribeStakingInfo) {
       this.unsubscribeStakingInfo()
       this.unsubscribeStakingInfo = null
+    }
+    if (this.unsubscribeCurrentStakes) {
+      this.unsubscribeCurrentStakes()
+      this.unsubscribeCurrentStakes = null
     }
     // if (this.unsubscribeRewardPoints) {
     //   this.unsubscribeRewardPoints()
@@ -235,6 +241,7 @@ export class Entity {
     await this.fetchValidatorInfo()
     await this.fetchTokenBalances()
     await this.fetchValidatorPrefs()
+    await this.fetchCurrentStakes()
 
     const nominations = await clientStore.client.api.query.staking.nominators(this.address)
     this.nominations = nominations.toJSON()
@@ -454,6 +461,10 @@ export class Entity {
       await this.unsubscribeStakingInfo()
       this.unsubscribeStakingInfo = null
     }
+    if (this.unsubscribeCurrentStakes) {
+      await this.unsubscribeCurrentStakes()
+      this.unsubscribeCurrentStakes = null
+    }
   }
 
   formatTokenValue (val) {
@@ -602,6 +613,15 @@ export class Entity {
         this.ledger = ledger
       }
     }
+  }
+
+  async fetchCurrentStakes () {
+    const clientStore = useClientStore()
+
+    this.unsubscribeCurrentStakes = await clientStore.client.api.query.tidefiStaking.accountStakes(this.address, (currentStakes) => {
+      this.currentStakes.splice(0, this.currentStakes.length, ...(currentStakes.toHuman()))
+      // console.log('currentStakes:', currentStakes.toHuman())
+    })
   }
 
   async fetchBondingHistory () {
