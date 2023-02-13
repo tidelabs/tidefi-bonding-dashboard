@@ -90,6 +90,7 @@
         <Identity :entity="entity" />
         <Balances :entity="entity" />
         <Ledger :entity="entity" />
+        <Stakes :entity="entity" />
         <Nominations :entity="entity" />
       </div>
 
@@ -116,6 +117,7 @@ import Identity from 'src/components/Identity.vue'
 import Balances from 'src/components/Balances.vue'
 import StakerRewards from 'src/components/StakerRewards.vue'
 import Ledger from 'src/components/Ledger.vue'
+import Stakes from 'src/components/Stakes.vue'
 import Nominations from 'src/components/Nominations.vue'
 
 export default {
@@ -126,6 +128,7 @@ export default {
     Balances,
     StakerRewards,
     Ledger,
+    Stakes,
     EntityName,
     Nominations
   },
