@@ -1,5 +1,5 @@
 <template>
-  <q-card v-if="entity && entity.currentStakes.length" class="info-table">
+  <q-card v-if="entity && entity.currentStakes && entity.currentStakes.length" class="info-table">
     <table>
       <thead>
         <tr>
@@ -12,15 +12,15 @@
         <tr>
           <td class="text-bold">Name</td>
           <td class="text-bold">Symbol</td>
-          <td class="text-right text-bold">Initial Stake</td>
-          <td class="text-right text-bold">Principal</td>
+          <td class="text-right text-bold">Stake</td>
+          <td class="text-right text-bold">Reward</td>
         </tr>
-        <template v-for="{ tokenName, tokenSymbol, initialBalance, initialBalanceTotal, principal, principalTotal } in currentStakes" :key="tokenName">
+        <template v-for="{ tokenName, tokenSymbol, initialBalance, initialBalanceTotal, reward, rewardTotal } in currentStakes" :key="tokenName">
           <tr>
             <td>{{ tokenName }}</td>
             <td>{{ tokenSymbol }}</td>
             <td class="text-right">{{ initialBalance }}<q-tooltip>{{ initialBalanceTotal }} {{ tokenSymbol }}</q-tooltip></td>
-            <td class="text-right">{{ principal }}<q-tooltip>{{ principalTotal }} {{ tokenSymbol }}</q-tooltip></td>
+            <td class="text-right">{{ reward }}<q-tooltip>{{ rewardTotal }} {{ tokenSymbol }}</q-tooltip></td>
           </tr>
         </template>
       </tbody>
@@ -30,6 +30,7 @@
 
 <script>
 import { computed } from 'vue'
+import BN from 'bignumber.js'
 import { useClientStore } from 'stores/client'
 import { normalizeValue, toBaseToken } from 'src/helpers/utils'
 
@@ -54,12 +55,15 @@ export default {
         const data = {
           ...stake
         }
+        const reward = (new BN(normalizeValue(stake.principal)).minus(normalizeValue(stake.initialBalance))).toString()
         data.tokenName = token.asset.name
         data.tokenSymbol = token.asset.symbol
         data.initialBalance = toBaseToken(normalizeValue(stake.initialBalance), token.asset.decimals)
         data.initialBalanceTotal = toBaseToken(normalizeValue(stake.initialBalance), token.asset.decimals, token.asset.decimals)
-        data.principal = toBaseToken(normalizeValue(stake.principal), token.asset.decimals)
-        data.principalTotal = toBaseToken(normalizeValue(stake.principal), token.asset.decimals, token.asset.decimals)
+        data.reward = toBaseToken(reward, token.asset.decimals)
+        data.rewardTotal = toBaseToken(reward, token.asset.decimals, token.asset.decimals)
+        // data.principal = toBaseToken(normalizeValue(stake.principal), token.asset.decimals)
+        // data.principalTotal = toBaseToken(normalizeValue(stake.principal), token.asset.decimals, token.asset.decimals)
         data.duration = normalizeValue(stake.duration)
         current.push(data)
       })
