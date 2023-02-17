@@ -609,6 +609,8 @@ export class Client {
     // console.log('se:', se)
     clientStore.stakerEntries = se
 
+    // console.log('stakerEntries:', clientStore.stakerEntries)
+
     ve.forEach(async (val) => {
       addOrUpdateEntity(val.address, true)
     })
