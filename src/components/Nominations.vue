@@ -1,5 +1,5 @@
 <template>
-  <q-card v-if="nominations.length > 0" class="info-table">
+  <q-card v-if="nominations?.length > 0" class="info-table">
     <q-scroll-area style="height: 200px;">
       <table>
         <thead>

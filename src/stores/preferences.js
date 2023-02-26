@@ -61,6 +61,14 @@ export const usePreferencesStore = defineStore('preferences', {
         this.aliases.findIndex((alias) => address === alias.address)
         , 1)
       this.saveAliases()
+    },
+    getAliasesSorted () {
+      return this.aliases.sort((a, b) => {
+        return a.name.toLowerCase() > b.name.toLowerCase()
+          ? 1
+          : a.name.toLowerCase() < b.name.toLowerCase()
+            ? -1 : 0
+      })
     }
   }
 })

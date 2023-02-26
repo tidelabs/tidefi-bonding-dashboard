@@ -1,6 +1,6 @@
 {
   "name": "tidefi-bonding-dashboard",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "TIDEFI on-chain live data to help you make better bonding decisions",
   "productName": "TIDEFI Bonding Dashboard",
   "author": "Jeff Galbraith <jeff.galbraith@semantic-network.com>",
@@ -12,24 +12,24 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
-    "@polkadot/api": "^9.13.6",
-    "@quasar/extras": "^1.15.10",
+    "@polkadot/api": "^9.14.2",
+    "@quasar/extras": "^1.15.11",
     "bignumber.js": "^9.1.1",
-    "core-js": "^3.27.2",
+    "core-js": "^3.28.0",
     "date-fns": "^2.29.3",
     "highcharts": "^10.3.3",
     "highcharts-vue": "^1.4.0",
     "jdenticon": "^3.2.0",
     "mitt": "^3.0.0",
-    "pinia": "^2.0.30",
-    "quasar": "^2.11.5",
+    "pinia": "^2.0.32",
+    "quasar": "^2.11.6",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",
     "@quasar/app-webpack": "^3.7.1",
-    "eslint": "^8.33.0",
+    "eslint": "^8.35.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.6.1",

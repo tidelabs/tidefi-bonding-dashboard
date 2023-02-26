@@ -1,5 +1,5 @@
 <template>
-  <q-card v-if="entity && entity.tokenBalances && availableLedgers.length" class="info-table">
+  <q-card v-if="entity?.tokenBalances && availableLedgers?.length" class="info-table">
     <table>
       <thead>
         <tr>
