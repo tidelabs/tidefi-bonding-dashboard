@@ -1,5 +1,5 @@
 <template>
-  <q-card v-if="entity && entity.identity.hasIdentity" class="info-table">
+  <q-card v-if="entity?.identity?.hasIdentity" class="info-table">
     <table>
       <thead>
         <tr>

@@ -1,5 +1,5 @@
 <template>
-  <q-card v-if="entity && entity.currentStakes && entity.currentStakes.length" class="info-table">
+  <q-card v-if="entity?.currentStakes?.length" class="info-table">
     <table>
       <thead>
         <tr>

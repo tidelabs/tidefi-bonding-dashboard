@@ -1,5 +1,5 @@
 <template>
-  <q-card v-if="validator && validator.slashesInEras && validator.slashesInEras.length" class="info-table">
+  <q-card v-if="validator?.slashesInEras?.length" class="info-table">
     <table>
       <thead>
         <tr>
