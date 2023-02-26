@@ -17,25 +17,21 @@
         </tr>
         <template v-for="{ tokenName, tokenSymbol, initialBalance, initialBalanceTotal, accrued, accruedTotal, startDate, endDate, duration, remaining, unstaking, unstakeTime } in currentStakes" :key="tokenName">
           <tr class="top-border">
-            <td>{{ tokenName }}</td>
+            <td class="ellipsis">{{ tokenName }}</td>
             <td>{{ tokenSymbol }}</td>
             <td class="text-right">{{ initialBalance }}<q-tooltip>{{ initialBalanceTotal }} {{ tokenSymbol }}</q-tooltip></td>
             <td class="text-right">{{ accrued }}<q-tooltip>{{ accruedTotal }} {{ tokenSymbol }}</q-tooltip></td>
           </tr>
-          <tr>
-            <td colspan="4" style="font-size: 10px;">
-              <section class="row justify-between">
-                <span>{{ startDate }}<q-tooltip>Staking start</q-tooltip></span>
+          <tr style="font-size: 10px;">
+            <td>{{ startDate }}<q-tooltip>Staking start</q-tooltip></td>
 
-                <span v-if="!unstaking">{{ duration }}<q-tooltip>Duration</q-tooltip></span>
-                <span v-else>Unstaking</span>
+            <td v-if="!unstaking">{{ duration }}<q-tooltip>Duration</q-tooltip></td>
+            <td v-else>Unstaking</td>
 
-                <span v-if="!unstaking">{{ remaining }}<q-tooltip>Remaining time</q-tooltip></span>
-                <span v-else>{{ unstakeTime }}<q-tooltip>Unstaking time</q-tooltip></span>
+            <td v-if="!unstaking"  class="text-right">{{ remaining }}<q-tooltip>Remaining time</q-tooltip></td>
+            <td v-else  class="text-right">{{ unstakeTime }}<q-tooltip>Unstaking time</q-tooltip></td>
 
-                <span>{{ endDate }}<q-tooltip>Staking end</q-tooltip></span>
-              </section>
-            </td>
+            <td class="text-right">{{ endDate }}<q-tooltip>Staking end</q-tooltip></td>
           </tr>
         </template>
       </tbody>
