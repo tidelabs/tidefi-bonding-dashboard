@@ -79,21 +79,33 @@
         style="min-width: 300px; max-height: 56px;"
         class="ellipsis"
       />
-      <q-btn
-        label="Add alias"
-        no-caps
-        icon="add"
-        rounded
-        @click="showAliasDialog = true; aliasName = ''; aliasAddress = ''"
-      />
+      <div class="row justify-center items-center q-gutter-sm">
+        <q-btn
+          label="Add alias"
+          no-caps
+          icon="add"
+          rounded
+          @click="showAliasDialog = true; aliasName = ''; aliasAddress = ''"
+        />
+        <q-btn
+          label="Export"
+          no-caps
+          :icon="bxExport"
+          rounded
+          @click="onExport"
+        />
+        <q-btn
+          label="Import"
+          no-caps
+          :icon="bxImport"
+          rounded
+          @click="onImport"
+        />
+      </div>
     </div>
-    <div v-if="filteredAliases.length > 0" class="row justify-center">
-      <q-list
-        bordered
-        separator
-        style="max-width: 600px; width: 100%;"
-      >
-        <q-item v-for="alias in filteredAliases" :key="alias.address" style="min-height: 60px;">
+    <div v-if="filteredAliases.length > 0" class="row justify-center q-gutter-sm">
+      <q-card v-for="( alias, index ) in filteredAliases" :key="alias.address + '_' + index" style="width: 380px; height: 60px;">
+        <q-item>
           <q-item-section top>
             <q-item-label><Identicon :address="alias.address" />{{ alias.name }}</q-item-label>
             <q-item-label caption style="font-size: 11px;" class="ellipsis">
@@ -112,7 +124,7 @@
             </div>
           </q-item-section>
         </q-item>
-      </q-list>
+      </q-card>
     </div>
   </div>
 </template>
@@ -121,6 +133,8 @@
 import { ref, computed } from 'vue'
 import { usePreferencesStore } from 'src/stores/preferences'
 import { isValidAddress } from 'src/helpers/utils'
+import { bxExport, bxImport } from 'src/assets/icons'
+import { exportFile, useQuasar } from 'quasar'
 
 import Identicon from 'src/components/Identicon.vue'
 
@@ -132,6 +146,7 @@ export default {
   },
 
   setup () {
+    const $q = useQuasar()
     const filteredAlias = ref('')
     const showAliasDialog = ref(false)
     const showConfirmDialog = ref(false)
@@ -140,12 +155,13 @@ export default {
     const preferencesStore = usePreferencesStore()
 
     const aliases = computed(() => preferencesStore.aliases)
+    const sortedAliases = computed(() => preferencesStore.getAliasesSorted())
 
     // filter aliases by user value
     const filteredAliases = computed(() => {
       // return all if nothing to filter from
       if (!filteredAlias.value) {
-        return aliases.value
+        return sortedAliases.value
       }
       // find aliases that match
       const filtered = []
@@ -190,6 +206,46 @@ export default {
       return true
     })
 
+    function onExport () {
+      if (exportFile('aliases.json', JSON.stringify(sortedAliases.value), 'application/json')) {
+        // success!
+        $q.notify({
+          message: 'Aliases saved!!',
+          position: 'top-right'
+        })
+      }
+      else {
+        $q.notify({
+          type: 'negative',
+          message: 'Aliases export failed!!',
+          position: 'top-right'
+        })
+      }
+    }
+
+    async function onImport () {
+      try {
+        const [fileHandle] = await window.showOpenFilePicker()
+        const file = await fileHandle.getFile()
+        const contents = JSON.parse(await file.text())
+        console.log('filePicker:', file, contents)
+        preferencesStore.aliases.push(...contents)
+        $q.notify({
+          message: 'Aliases imported!!',
+          position: 'top-right'
+        })
+      }
+      catch (e) {
+        console.log(e)
+        $q.notify({
+          type: 'negative',
+          message: 'Aliases import failed!!',
+          // caption: e,
+          position: 'top-right'
+        })
+      }
+    }
+
     return {
       filteredAliases,
       filteredAlias,
@@ -202,7 +258,11 @@ export default {
       onSaveAlias,
       onRemoveAlias,
       isAddressAvailable,
-      shouldDisableSave
+      shouldDisableSave,
+      bxExport,
+      bxImport,
+      onExport,
+      onImport
     }
   }
 }
