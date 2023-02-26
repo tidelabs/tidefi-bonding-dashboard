@@ -674,4 +674,8 @@ export default {
   .left-column {
     width: 136px;
   }
+
+  .q-table--dense .q-table tbody tr, .q-table--dense .q-table tbody td {
+    height: 38px !important;
+}
 </style>
