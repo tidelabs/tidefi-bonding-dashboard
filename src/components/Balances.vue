@@ -19,17 +19,18 @@
           <td>Locked</td>
           <td class="text-right">
             {{ locked }}
-            <template v-if="lockedReasons.length > 0">
-              <q-tooltip>
+            <q-tooltip>
+              <template v-if="lockedReasons.length > 0">
                 <table>
                   <tr v-for="{name, amount} in lockedReasons" :key="name">
                     <td>{{ name }}</td>
                     <td class="text-right">{{ amount }}</td>
                   </tr>
                 </table>
-              </q-tooltip>
             </template>
-          </td>
+            <span v-else>{{ lockedTotal }}</span>
+          </q-tooltip>
+        </td>
         </tr>
         <tr>
           <td>Reserved</td>
