@@ -228,8 +228,9 @@ export default {
         const [fileHandle] = await window.showOpenFilePicker()
         const file = await fileHandle.getFile()
         const contents = JSON.parse(await file.text())
-        console.log('filePicker:', file, contents)
+        // console.log('filePicker:', file, contents)
         preferencesStore.aliases.push(...contents)
+        preferencesStore.saveAliases()
         $q.notify({
           message: 'Aliases imported!!',
           position: 'top-right'
