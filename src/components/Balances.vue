@@ -9,23 +9,35 @@
       <tbody>
         <tr>
           <td>Balance</td>
-          <td class="text-right">{{ freeBalance }}</td>
+          <td class="text-right">{{ freeBalance }}<q-tooltip>{{ freeBalanceTotal }}</q-tooltip></td>
         </tr>
         <tr>
           <td>Bonded</td>
-          <td class="text-right">{{ bonded }}</td>
+          <td class="text-right">{{ bonded }}<q-tooltip>{{ bondedTotal }}</q-tooltip></td>
         </tr>
         <tr>
           <td>Locked</td>
-          <td class="text-right">{{ locked }}</td>
+          <td class="text-right">
+            {{ locked }}
+            <template v-if="lockedReasons.length > 0">
+              <q-tooltip>
+                <table>
+                  <tr v-for="{name, amount} in lockedReasons" :key="name">
+                    <td>{{ name }}</td>
+                    <td class="text-right">{{ amount }}</td>
+                  </tr>
+                </table>
+              </q-tooltip>
+            </template>
+          </td>
         </tr>
         <tr>
           <td>Reserved</td>
-          <td class="text-right">{{ reserved }}</td>
+          <td class="text-right">{{ reserved }}<q-tooltip>{{ reservedTotal }}</q-tooltip></td>
         </tr>
         <tr>
           <td>Transferrable</td>
-          <td class="text-right">{{ transferrable }}</td>
+          <td class="text-right">{{ transferrable }}<q-tooltip>{{ transferrableTotal }}</q-tooltip></td>
         </tr>
       </tbody>
     </table>
@@ -55,36 +67,78 @@ export default {
       return clientStore.decimals.length > 0 ? toBaseToken(val, clientStore.decimals[ 0 ]) : 0
     }
 
+    function formatTokenValueAll (val) {
+      const clientStore = useClientStore()
+
+      return clientStore.decimals.length > 0 ? toBaseToken(val, clientStore.decimals[ 0 ], clientStore.decimals[ 0 ]) : 0
+    }
+
     const freeBalance = computed(() => {
-      if (props.entity && props.entity.balances) {
-        // const total = String(parseInt(props.entity.balances.freeBalance) + parseInt(props.entity.bonded))
-        // return formatTokenValue(normalizeValue(total))
+      if (props?.entity?.balances?.freeBalance) {
         return formatTokenValue(normalizeValue(props.entity.balances.freeBalance))
       }
       return 0
     })
 
+    const freeBalanceTotal = computed(() => {
+      if (props?.entity?.balances?.freeBalance) {
+        return formatTokenValueAll(normalizeValue(props.entity.balances.freeBalance))
+      }
+      return 0
+    })
+
     const bonded = computed(() => {
-      return formatTokenValue(normalizeValue(props.entity.bonded))
+      if (props?.entity?.bonded) {
+        return formatTokenValue(normalizeValue(props.entity.bonded))
+      }
+      return 0
+    })
+
+    const bondedTotal = computed(() => {
+      if (props?.entity?.bonded) {
+        return formatTokenValueAll(normalizeValue(props.entity.bonded))
+      }
+      return 0
     })
 
     const locked = computed(() => {
-      if (props.entity && props.entity.balances) {
+      if (props?.entity?.balances?.lockedBalance) {
         return formatTokenValue(normalizeValue(props.entity.balances.lockedBalance))
       }
       return 0
     })
 
+    const lockedTotal = computed(() => {
+      if (props?.entity?.balances?.lockedBalance) {
+        return formatTokenValueAll(normalizeValue(props.entity.balances.lockedBalance))
+      }
+      return 0
+    })
+
     const reserved = computed(() => {
-      if (props.entity && props.entity.balances) {
+      if (props?.entity?.balances?.reservedBalance) {
         return formatTokenValue(normalizeValue(props.entity.balances.reservedBalance))
       }
       return 0
     })
 
+    const reservedTotal = computed(() => {
+      if (props?.entity?.balances?.reservedBalance) {
+        return formatTokenValueAll(normalizeValue(props.entity.balances.reservedBalance))
+      }
+      return 0
+    })
+
     const transferrable = computed(() => {
-      if (props.entity && props.entity.balances) {
+      if (props?.entity?.balances?.availableBalance) {
         return formatTokenValue(normalizeValue(props.entity.balances.availableBalance))
+      }
+      return 0
+    })
+
+    const transferrableTotal = computed(() => {
+      if (props?.entity?.balances?.availableBalance) {
+        return formatTokenValueAll(normalizeValue(props.entity.balances.availableBalance))
       }
       return 0
     })
@@ -95,13 +149,31 @@ export default {
         || transferrable.value
     })
 
+    const lockedReasons = computed(() => {
+      if (props?.entity?.balances?.lockedBreakdown?.length > 1) {
+        return props.entity.balances.lockedBreakdown.map((locked) => {
+          return {
+            name: locked.id.trim(),
+            amount: formatTokenValue(normalizeValue(locked.amount))
+          }
+        })
+      }
+      return []
+    })
+
     return {
       freeBalance,
+      freeBalanceTotal,
       bonded,
+      bondedTotal,
       locked,
+      lockedTotal,
       reserved,
+      reservedTotal,
       transferrable,
-      hasBalances
+      transferrableTotal,
+      hasBalances,
+      lockedReasons
     }
   }
 }
