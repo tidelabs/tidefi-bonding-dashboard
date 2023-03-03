@@ -341,7 +341,7 @@ export class Entity {
     })
 
     this.bonded = computed(() => {
-      if (this.balances.lockedBreakdown && this.balances.lockedBreakdown.length > 0) {
+      if (this.balances?.lockedBreakdown?.length > 0) {
         const breakdown = this.balances.lockedBreakdown.find((bd) => {
           return bd.id.trim() === 'staking'
         })
