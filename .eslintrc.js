@@ -78,14 +78,6 @@ module.exports = {
     'computed-property-spacing': [ 'error', 'always' ],
     'template-curly-spacing': [ 'error', 'always' ],
 
-    // allow async-await
-    'generator-star-spacing': 'off',
-    // allow paren-less arrow functions
-    'arrow-parens': 'off',
-    'one-var': 'off',
-    'no-void': 'off',
-    'multiline-ternary': 'off',
-
     'import/first': 'off',
     'import/named': 'error',
     'import/namespace': 'error',
@@ -94,8 +86,6 @@ module.exports = {
     'import/extensions': 'off',
     'import/no-unresolved': 'off',
     'import/no-extraneous-dependencies': 'off',
-
-    'prefer-promise-reject-errors': 'off',
 
     'vue/multi-word-component-names': 'off'
   }
