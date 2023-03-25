@@ -90,6 +90,7 @@
         <Identity :entity="entity" />
         <Balances :entity="entity" />
         <Ledger :entity="entity" />
+        <Unbonding :entity="entity" />
         <Stakes :entity="entity" />
         <Nominations :entity="entity" />
       </div>
@@ -119,6 +120,7 @@ import StakerRewards from 'src/components/StakerRewards.vue'
 import Ledger from 'src/components/Ledger.vue'
 import Stakes from 'src/components/Stakes.vue'
 import Nominations from 'src/components/Nominations.vue'
+import Unbonding from 'src/components/Unbonding.vue'
 
 export default {
   name: 'Address Lookup',
@@ -130,7 +132,8 @@ export default {
     Ledger,
     Stakes,
     EntityName,
-    Nominations
+    Nominations,
+    Unbonding
   },
 
   setup (props) {

@@ -608,6 +608,15 @@ export class Entity {
         if ('active' in ledger) {
           ledger.active = normalizeValue(ledger.active)
         }
+        if ('unlocking' in ledger) {
+          const unlocking = ledger.unlocking.map((unlock) => {
+            return {
+              era: parseInt(unlock.era, 10),
+              value: normalizeValue(unlock.value)
+            }
+          })
+          ledger.unlocking = unlocking
+        }
         ledger.claimedRewards = ledgerJSON.claimedRewards
         ledger.total = normalizeValue(ledger.total)
         this.ledger = ledger

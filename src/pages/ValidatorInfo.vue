@@ -42,6 +42,7 @@
         <ValidatorStats :validator="validator" />
         <Balances :entity="validator" />
         <Ledger :entity="validator" />
+        <Unbonding :entity="validator" />
         <PreviousErasSlashes :validator="validator" />
         <UnappliedSlashes :validator="validator" />
       </div>
@@ -73,6 +74,7 @@ import ValidatorStats from 'src/components/ValidatorStats.vue'
 import Balances from 'src/components/Balances.vue'
 import StakerRewards from 'src/components/StakerRewards.vue'
 import Ledger from 'src/components/Ledger.vue'
+import Unbonding from 'src/components/Unbonding.vue'
 import BondingHistory from 'src/components/BondingHistory.vue'
 import CommissionHistory from 'src/components/CommissionHistory.vue'
 import PreviousErasSlashes from 'src/components/PreviousErasSlashes.vue'
@@ -89,6 +91,7 @@ export default {
     ErasRewardPoints,
     StakerRewards,
     Ledger,
+    Unbonding,
     EntityName,
     BondingHistory,
     CommissionHistory,
