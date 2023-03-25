@@ -4,7 +4,7 @@ import { hexToU8a, isHex } from '@polkadot/util'
 import { useChainsStore } from 'stores/chain'
 import { useClientStore } from 'src/stores/client'
 import { Client } from '../classes/client'
-import { format, subDays, parseISO } from 'date-fns'
+import { format, addDays, subDays, parseISO } from 'date-fns'
 
 export async function getAccountBalances (api, addr) {
   return await api.query.balances.account(addr)
@@ -103,13 +103,14 @@ export async function initializeClient () {
   return await chainsStore.client.connect()
 }
 
-export function eraToDate (era) {
+export function eraToDate (era, useYear = false) {
   const clientStore = useClientStore()
   const currentEra = clientStore.currentEra
   if (era <= currentEra) {
-    return format(subDays(new Date(), currentEra - era), 'MMM.dd')
+    return format(subDays(new Date(), currentEra - era), useYear ? 'dd.MMM.yyyy' : 'dd.MMM')
   }
-  return 'unknown'
+  return format(addDays(new Date(), era - currentEra), useYear ? 'dd.MMM.yyyy' : 'dd.MMM')
+  // return 'unknown'
 }
 
 export function blocksToMS (block) {
@@ -124,7 +125,16 @@ export function formatDateInternational (when) {
   if (!date) return ''
   if (typeof date === 'string') date = parseISO(date)
 
-  return format(date, 'dd.LLL.yyyy')
+  return format(date, 'dd.MMM.yyyy')
+}
+
+export function formatDateTimeInternational (when) {
+  let date = when
+
+  if (!date) return ''
+  if (typeof date === 'string') date = parseISO(date)
+
+  return format(date, 'dd.MMM.yyyy hh:mm:ss')
 }
 
 /**

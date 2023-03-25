@@ -37,8 +37,8 @@
           <td class="text-right">{{ reserved }}<q-tooltip>{{ reservedTotal }}</q-tooltip></td>
         </tr>
         <tr>
-          <td>Transferrable</td>
-          <td class="text-right">{{ transferrable }}<q-tooltip>{{ transferrableTotal }}</q-tooltip></td>
+          <td>Transferable</td>
+          <td class="text-right">{{ transferable }}<q-tooltip>{{ transferableTotal }}</q-tooltip></td>
         </tr>
       </tbody>
     </table>
@@ -130,14 +130,14 @@ export default {
       return 0
     })
 
-    const transferrable = computed(() => {
+    const transferable = computed(() => {
       if (props?.entity?.balances?.availableBalance) {
         return formatTokenValue(normalizeValue(props.entity.balances.availableBalance))
       }
       return 0
     })
 
-    const transferrableTotal = computed(() => {
+    const transferableTotal = computed(() => {
       if (props?.entity?.balances?.availableBalance) {
         return formatTokenValueAll(normalizeValue(props.entity.balances.availableBalance))
       }
@@ -147,7 +147,7 @@ export default {
     const hasBalances = computed(() => {
       return freeBalance.value || bonded.value
         || locked.value || reserved.value
-        || transferrable.value
+        || transferable.value
     })
 
     const lockedReasons = computed(() => {
@@ -171,8 +171,8 @@ export default {
       lockedTotal,
       reserved,
       reservedTotal,
-      transferrable,
-      transferrableTotal,
+      transferable,
+      transferableTotal,
       hasBalances,
       lockedReasons
     }
