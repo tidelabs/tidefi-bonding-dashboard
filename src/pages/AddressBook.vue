@@ -224,8 +224,21 @@ export default {
     }
 
     async function onImport () {
+      const pickerOpts = {
+        types: [
+          {
+            description: 'JSON',
+            accept: {
+              'application/json': ['.json']
+            }
+          }
+        ],
+        excludeAcceptAllOption: true,
+        multiple: false
+      }
+
       try {
-        const [fileHandle] = await window.showOpenFilePicker()
+        const [fileHandle] = await window.showOpenFilePicker(pickerOpts)
         const file = await fileHandle.getFile()
         const contents = JSON.parse(await file.text())
         // console.log('filePicker:', file, contents)
