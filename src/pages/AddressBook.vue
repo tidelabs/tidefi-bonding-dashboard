@@ -185,7 +185,7 @@ export default {
     }
 
     function onRemoveAlias () {
-      preferencesStore.removeAlias(aliasAddress.value)
+      preferencesStore.removeAlias(aliasAddress.value, aliasName.value)
       showConfirmDialog.value = false
     }
 

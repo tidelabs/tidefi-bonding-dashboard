@@ -56,9 +56,9 @@ export const usePreferencesStore = defineStore('preferences', {
       })
       this.saveAliases()
     },
-    removeAlias (address) {
+    removeAlias (address, name) {
       this.aliases.splice(
-        this.aliases.findIndex((alias) => address === alias.address)
+        this.aliases.findIndex((alias) => address === alias.address && name === alias.name)
         , 1)
       this.saveAliases()
     },
