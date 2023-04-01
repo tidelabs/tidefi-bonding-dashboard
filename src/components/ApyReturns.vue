@@ -1,7 +1,7 @@
 <template>
   <q-card class="panel col q-ma-sm q-pa-sm">
     <div class="fit column items-center justify-center">
-      <div class="col-shrink row items-center justify-center">APY</div>
+      <div class="col-shrink row items-center justify-center text-bold"><span :class="$q.dark.isActive ? 'text-yellow' : 'text-primary'">APY</span></div>
       <div class="col row items-center justify-center no-wrap"><span class="panel-title">{{ stakedReturn.toFixed(2) }}%</span></div>
     </div>
   </q-card>

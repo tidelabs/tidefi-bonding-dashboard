@@ -268,7 +268,7 @@ export default {
               : []
           },
           {
-            name: props.isValidator ? 'Validator Self-staked Reward' : 'This Nominator Reward',
+            name: props.isValidator ? 'Validator Self-bonded Reward' : 'This Nominator Reward',
             data: props.rewards
               ? props.rewards.map((eraReward) => totalReward(eraReward))
               : []

@@ -1,7 +1,7 @@
 <template>
   <q-card class="panel col q-ma-sm q-pa-sm">
     <div class="column justify-start items-center">
-      <div class="col column items-center justify-center no-wrap">Current Block</div>
+      <div class="col column items-center justify-center no-wrap text-bold"><span :class="$q.dark.isActive ? 'text-yellow' : 'text-primary'">Current Block</span></div>
       <div class="full-width row justify-start items-center">
         <q-circular-progress
           :value="progressValue"
