@@ -128,7 +128,14 @@
           </q-td>
 
           <q-td key="payee" :props="props">
-            <div v-if="props.row.payee.Account">Account<q-tooltip>{{ props.row.payee.Account }}</q-tooltip></div>
+            <div v-if="props.row.payee.Account">
+              <router-link
+                :to="{ name: 'address-lookup', params: { address: props.row.payee.Account } }"
+                class="entity-link full-width"
+              >
+                Account
+              </router-link>
+              <q-tooltip>{{ props.row.payee.Account }}</q-tooltip></div>
             <div v-else>{{ props.row.payee }}</div>
           </q-td>
 
@@ -246,7 +253,14 @@
             <tr>
               <td class="left-column text-weight-bold">Payee</td>
               <td>
-                <div v-if="props.row.payee.Account">Account<q-tooltip>{{ props.row.payee.Account }}</q-tooltip></div>
+                <div v-if="props.row.payee.Account">
+                  <router-link
+                    :to="{ name: 'address-lookup', params: { address: props.row.payee.Account } }"
+                    class="entity-link full-width"
+                  >
+                    Account
+                  </router-link>
+                  <q-tooltip>{{ props.row.payee.Account }}</q-tooltip></div>
                 <div v-else>{{ props.row.payee }}</div>
               </td>
             </tr>
