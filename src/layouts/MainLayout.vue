@@ -115,7 +115,9 @@ import {
   mdiHomeCircleOutline,
   fasHome,
   remNodeTree,
-  fasAddressBook
+  fasAddressBook,
+  mdiEye,
+  carbon32CicsExplorer
 } from 'assets/icons'
 import { initializeClient } from 'src/helpers/utils'
 
@@ -167,6 +169,18 @@ const externalList = [
     caption: 'tidelabs.org',
     icon: 'school',
     link: 'https://tidelabs.org'
+  },
+  {
+    title: 'Tideview',
+    caption: 'Tidechain viewer',
+    icon: mdiEye,
+    link: 'https://tideview.tidefi.io'
+  },
+  {
+    title: 'Explorer',
+    caption: 'Tidechain explorer',
+    icon: carbon32CicsExplorer,
+    link: 'https://explorer.tidefi.io/#/explorer'
   },
   {
     title: 'GitHub',

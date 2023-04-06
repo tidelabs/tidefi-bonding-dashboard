@@ -135,6 +135,7 @@ import { usePreferencesStore } from 'src/stores/preferences'
 import { isValidAddress } from 'src/helpers/utils'
 import { bxExport, bxImport } from 'src/assets/icons'
 import { exportFile, useQuasar } from 'quasar'
+import { merge } from 'src/helpers/merge'
 
 import Identicon from 'src/components/Identicon.vue'
 
@@ -242,7 +243,8 @@ export default {
         const file = await fileHandle.getFile()
         const contents = JSON.parse(await file.text())
         // console.log('filePicker:', file, contents)
-        preferencesStore.aliases.push(...contents)
+        const { uniques } = merge(preferencesStore.aliases, contents)
+        preferencesStore.aliases.push(...uniques)
         preferencesStore.saveAliases()
         $q.notify({
           message: 'Aliases imported!!',
