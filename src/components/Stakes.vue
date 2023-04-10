@@ -65,11 +65,7 @@ export default {
       const current = []
       // console.log('currentStakes:', props.entity.currentStakes)
       props.entity.currentStakes.forEach((stake) => {
-        const token = clientStore.getTokenAsset(Number(stake.currencyId.Wrapped))
-        const data = {
-          ...stake
-        }
-
+        const token = clientStore.getTokenAsset(stake.currencyId === 'Tdfy' ? stake.currencyId : Number(stake.currencyId.Wrapped))
         const accrued = (new BN(normalizeValue(stake.principal)).minus(normalizeValue(stake.initialBalance))).toString()
         const currentMS = Date.now()
         const initialBlockMS = blocksToMS(clientStore.currentHeader.number - parseInt(normalizeValue(stake.initialBlock), 10))
@@ -78,24 +74,28 @@ export default {
         const endMS = startMS + durationMS
         const remainingMS = endMS - currentMS
 
-        data.tokenName = token.asset.name
-        data.tokenSymbol = token.asset.symbol
-        data.initialBalance = toBaseToken(normalizeValue(stake.initialBalance), token.asset.decimals)
-        data.initialBalanceTotal = toBaseToken(normalizeValue(stake.initialBalance), token.asset.decimals, token.asset.decimals)
-        data.accrued = toBaseToken(accrued, token.asset.decimals)
-        data.accruedTotal = toBaseToken(accrued, token.asset.decimals, token.asset.decimals)
-        data.startDate = formatDateInternational(startMS)
-        data.endDate = formatDateInternational(endMS)
-        data.duration = formatDurationFromSeconds(durationMS / 1000, 'hours')
-        data.remaining = remainingMS > 0 ? formatDurationFromSeconds(remainingMS / 1000, 'hours') : 'Completed!'
-        data.unstaking = !!stake.status.pendingUnlock
+        const currentStake = {
+          ...stake
+        }
+
+        currentStake.tokenName = token.asset.name
+        currentStake.tokenSymbol = token.asset.symbol
+        currentStake.initialBalance = toBaseToken(normalizeValue(stake.initialBalance), token.asset.decimals)
+        currentStake.initialBalanceTotal = toBaseToken(normalizeValue(stake.initialBalance), token.asset.decimals, token.asset.decimals)
+        currentStake.accrued = toBaseToken(accrued, token.asset.decimals)
+        currentStake.accruedTotal = toBaseToken(accrued, token.asset.decimals, token.asset.decimals)
+        currentStake.startDate = formatDateInternational(startMS)
+        currentStake.endDate = formatDateInternational(endMS)
+        currentStake.duration = formatDurationFromSeconds(durationMS / 1000, 'hours')
+        currentStake.remaining = remainingMS > 0 ? formatDurationFromSeconds(remainingMS / 1000, 'hours') : 'Completed!'
+        currentStake.unstaking = !!stake.status.pendingUnlock
         const unstakeTime = currentMS + Math.min(
           UNSTAKE_DURATION,
           blocksToMS(normalizeValue(stake.status.pendingUnlock) - clientStore.currentHeader.number)
         )
-        data.unstakeTime = formatDateInternational(unstakeTime, 'hours')
+        currentStake.unstakeTime = formatDateInternational(unstakeTime, 'hours')
 
-        current.push(data)
+        current.push(currentStake)
       })
       // console.log(current)
       return current

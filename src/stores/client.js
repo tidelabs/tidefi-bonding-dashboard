@@ -79,11 +79,23 @@ export const useClientStore = defineStore('client', {
     },
     getPreviousHistoryErasCount (state) {
       return state.activeEra.index - state.consts.historyDepth <= 0 ? state.activeEra.index : state.consts.historyDepth
+    },
+    getTdfyAsset (state) {
+      return {
+        asset: {
+          name: 'Tidefi',
+          symbol: state.tokens[ 0 ],
+          decimals: state.decimals[ 0 ]
+        }
+      }
     }
   },
 
   actions: {
     getTokenAsset (assetId) {
+      if (assetId === 'Tdfy') {
+        return this.getTdfyAsset
+      }
       return this.assets.find((asset) => asset.id === assetId)
     }
   }
