@@ -2,10 +2,15 @@
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { useClientStore } from 'src/stores/client'
 import { useEntitiesStore } from 'src/stores/entities'
-import { normalizeValue } from '../helpers/utils'
+// import { normalizeValue } from '../helpers/utils'
 import { addOrUpdateEntity, updateLastBlock } from './entity'
 import mitt from 'mitt'
 import { calcInflation } from 'src/helpers/calcInflation'
+
+import BN from 'bignumber.js'
+import { normalizeValue, toBaseToken, blocksToMS, formatDateInternational, formatDateTimeInternational, formatDurationFromSeconds } from 'src/helpers/utils'
+
+const UNSTAKE_DURATION = 24 * 60 * 60 * 1000 // milliseconds in a day
 
 export class Client {
   constructor (chain) {
@@ -58,7 +63,7 @@ export class Client {
       const node = await api.rpc.system.health()
       console.log('node health:', node.toJSON())
 
-      this.refetchAll()
+      await this.refetchAll()
 
       const [
         // bondedEras,
@@ -106,7 +111,7 @@ export class Client {
         // 'electedInfo:', electedInfo.toJSON(), '\n'
       )
 
-      // this.playground()
+      // await this.playground()
 
       this.unsubscribeNextElected = await this.api.derive.staking.nextElected((elected) => {
         // console.log('Next Elected:', elected)
@@ -157,8 +162,88 @@ export class Client {
   }
 
   async playground () {
+    const clientStore = useClientStore()
+    const returnedData = await Promise.all([
+      this.api.query.tidefiStaking.accountStakes.entries()
+    ])
+
+    // console.log('RAW values:', returnedData)
+
+    let count = 0
+    const currentStakes = []
+
+    returnedData.forEach((data) => {
+      data.forEach(([ key, other ], idx) => {
+        const address = key.toHuman()[ 0 ]
+        const data = other.toHuman()
+        data.forEach((stake) => {
+          if (stake.currencyId.Wrapped === '6') {
+            console.log(address, stake)
+            count++
+
+            const data = {
+              ...stake
+            }
+
+            const token = clientStore.getTokenAsset(stake.currencyId === 'Tdfy' ? stake.currencyId : Number(stake.currencyId.Wrapped))
+            const accrued = (new BN(normalizeValue(stake.principal)).minus(normalizeValue(stake.initialBalance))).toString()
+            const currentMS = Date.now()
+            const initialBlockMS = blocksToMS(clientStore.currentHeader.number - parseInt(normalizeValue(stake.initialBlock), 10))
+            const startMS = currentMS - initialBlockMS
+            const durationMS = blocksToMS(normalizeValue(stake.duration))
+            const endMS = startMS + durationMS
+            const remainingMS = endMS - currentMS
+
+            data.address = address
+            data.tokenName = token.asset.name
+            data.tokenSymbol = token.asset.symbol
+            data.lastSessionIndexCompound = normalizeValue(stake.lastSessionIndexCompound)
+            data.initialBlock = normalizeValue(stake.initialBlock)
+            data.principal = toBaseToken(normalizeValue(stake.initialBalance), token.asset.decimals)
+            data.principalTotal = toBaseToken(normalizeValue(stake.initialBalance), token.asset.decimals, token.asset.decimals)
+            data.initialBalance = toBaseToken(normalizeValue(stake.initialBalance), token.asset.decimals)
+            data.initialBalanceTotal = toBaseToken(normalizeValue(stake.initialBalance), token.asset.decimals, token.asset.decimals)
+            data.accrued = toBaseToken(accrued, token.asset.decimals)
+            data.accruedTotal = toBaseToken(accrued, token.asset.decimals, token.asset.decimals)
+            data.startDate = formatDateTimeInternational(startMS)
+            data.endDate = formatDateTimeInternational(endMS)
+            data.duration = formatDurationFromSeconds(durationMS / 1000, 'hours')
+            data.remaining = remainingMS > 0 ? formatDurationFromSeconds(remainingMS / 1000, 'hours') : 'Completed!'
+            data.unstaking = !!stake.status.pendingUnlock
+            if (data.unstaking) {
+              const unstakeTime = currentMS + Math.min(
+                UNSTAKE_DURATION,
+                blocksToMS(normalizeValue(stake.status.pendingUnlock) - clientStore.currentHeader.number)
+              )
+              data.unstakeTime = formatDateInternational(unstakeTime, 'hours')
+            }
+            else {
+              data.unstakeTime = -1
+            }
+            currentStakes.push(data)
+          }
+        })
+        // console.log(address, data)
+        // if (data.other.currencyId.Wrapped === '6') {
+        //   console.log(address, data)
+        // }
+      })
+    })
+    console.log(count)
+    console.log(currentStakes)
+    currentStakes.forEach((stake) => console.log(JSON.stringify(stake)))
+
+    // const treasury = await this.api.query.treasury
+    // console.log('treasury:', treasury)
+    // const proposalCount = (await treasury.proposalCount()).toNumber()
+    // const approvals = (await treasury.approvals()).toHuman()
+    // const proposals = (await treasury.proposals()).toHuman()
+    // console.log(proposalCount, approvals, proposals)
+    // const spendPeriod = treasury.spendPeriod.toNumber()
+    // console.log('spendPeriod', spendPeriod)
+
     // const returnedData = await Promise.all([
-    // this.api.query.tidefiStaking.accountStakes.entries()
+    //   this.api.query.tidefiStaking.accountStakes.entries()
     // this.api.query.tidefiStaking.accountStakes(id)
     // this.api.query.nominationPools.rewardPools()
     // this.api.derive.staking.account(),
