@@ -15,7 +15,7 @@
     "@polkadot/api": "^10.3.2",
     "@quasar/extras": "^1.16.2",
     "bignumber.js": "^9.1.1",
-    "core-js": "^3.30.0",
+    "core-js": "^3.30.1",
     "date-fns": "^2.29.3",
     "highcharts": "^10.3.3",
     "highcharts-vue": "^1.4.0",
