@@ -18,7 +18,7 @@
     "core-js": "^3.30.2",
     "date-fns": "^2.30.0",
     "highcharts": "^11.0.1",
-    "highcharts-vue": "^1.4.0",
+    "highcharts-vue": "^1.4.1",
     "jdenticon": "^3.2.0",
     "mitt": "^3.0.0",
     "pinia": "^2.0.36",
