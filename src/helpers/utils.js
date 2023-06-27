@@ -1,7 +1,7 @@
 import BN from 'bignumber.js'
 import { decodeAddress, encodeAddress } from '@polkadot/keyring'
 import { hexToU8a, isHex } from '@polkadot/util'
-import { useChainsStore } from 'stores/chain'
+import { useChainStore } from 'stores/chain'
 import { useClientStore } from 'src/stores/client'
 import { Client } from '../classes/client'
 import { format, addDays, subDays, parseISO } from 'date-fns'
@@ -16,12 +16,12 @@ export async function getFreeBalance (api, addr) {
 }
 
 export function toDecimals (val, exp, precision = 2) {
-  const value = (new BN(val).div(new BN(10).pow(exp))).dp(precision).toFormat()
+  const value = new BN(val).div(new BN(10).pow(exp)).dp(precision).toFormat()
   return value
 }
 
 export function toBaseToken (val, exp, precision = 4) {
-  const value = (new BN(val).div(new BN(10).pow(exp))).toFormat(precision)
+  const value = new BN(val).div(new BN(10).pow(exp)).toFormat(precision)
   return value
 }
 
@@ -65,7 +65,10 @@ export function normalizeValue (val) {
 }
 
 // options = { d: h, m, s } : set to true/false for visible
-export function convertSecondsToTime (sec, options = { d: false, h: true, m: true, s: true }) {
+export function convertSecondsToTime (
+  sec,
+  options = { d: false, h: true, m: true, s: true }
+) {
   // convert to milliseconds
   const dateObj = new Date(sec * 1000)
   const days = dateObj.getUTCDate() - 1
@@ -92,31 +95,37 @@ export const isValidAddress = (address) => {
 }
 
 export async function initializeClient () {
-  const chainsStore = useChainsStore()
+  const chainStore = useChainStore()
 
-  if (chainsStore.client) {
-    await chainsStore.client.disconnect(true)
-    delete chainsStore.client
+  if (chainStore.client) {
+    await chainStore.client.disconnect(true)
+    delete chainStore.client
   }
 
-  chainsStore.client = new Client(chainsStore.chains[ chainsStore.chainIndex ])
-  return await chainsStore.client.connect()
+  chainStore.client = new Client(chainStore.chains[ chainStore.chainIndex ])
+  return await chainStore.client.connect()
 }
 
 export function eraToDate (era, useYear = false) {
   const clientStore = useClientStore()
   const currentEra = clientStore.currentEra
   if (era <= currentEra) {
-    return format(subDays(new Date(), currentEra - era), useYear ? 'dd.MMM.yyyy' : 'dd.MMM')
+    return format(
+      subDays(new Date(), currentEra - era),
+      useYear ? 'dd.MMM.yyyy' : 'dd.MMM'
+    )
   }
-  return format(addDays(new Date(), era - currentEra), useYear ? 'dd.MMM.yyyy' : 'dd.MMM')
+  return format(
+    addDays(new Date(), era - currentEra),
+    useYear ? 'dd.MMM.yyyy' : 'dd.MMM'
+  )
   // return 'unknown'
 }
 
 export function blocksToMS (block) {
   const clientStore = useClientStore()
   const blockTime = parseInt(clientStore.consts.expectedBlockTime, 10) // 6000
-  return (parseInt(block, 10) * blockTime)
+  return parseInt(block, 10) * blockTime
 }
 
 export function formatDateInternational (when) {
