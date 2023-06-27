@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const useChainsStore = defineStore('chain', {
+export const useChainStore = defineStore('chain', {
   state: () => ({
     chains: [
       {

@@ -17,34 +17,93 @@
     >
       <template v-slot:top>
         <div class="full-width row justify-start items-center">
-          <q-expansion-item
-            class="full-width rounded-borders"
-          >
+          <q-expansion-item class="full-width rounded-borders">
             <template v-slot:header>
               <q-item-section>
                 <div class="row justify-start items-center">
                   <div>Exclude from Search</div>
-                  <q-btn dense flat unelevated round size="md" :icon="infoIcon" @click.stop="displayFilterInfoModal = !displayFilterInfoModal" />
-                  <div v-if="hasFilter"><q-icon :name="solidCheckCircle" size="md" color="purple-13" ><q-tooltip>1 or more Filters are active</q-tooltip></q-icon></div>
+                  <q-btn
+                    dense
+                    flat
+                    unelevated
+                    round
+                    size="md"
+                    :icon="infoIcon"
+                    @click.stop="
+                      displayFilterInfoModal = !displayFilterInfoModal
+                    "
+                  />
+                  <div v-if="hasFilter">
+                    <q-icon :name="solidCheckCircle" size="md" color="purple-13"
+                      ><q-tooltip
+                        >1 or more Filters are active</q-tooltip
+                      ></q-icon
+                    >
+                  </div>
                 </div>
               </q-item-section>
             </template>
             <q-card class="rounded-borders">
               <q-card-section class="q-gutter-sm">
                 <!-- <div class="row justify-evenly items-center q-gutter-sm"> -->
-                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.inactive" label="Inactive Validators" />
-                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.nextSet" label="Not Elected Next Set" />
-                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.highCommission" label="High Commission (>10%)" />
-                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.recentPayouts" label="Recent Payouts (3 days or less)" />
-                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.oversubscribed" label="Oversubscribed" />
-                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.blockedNominations" label="Blocked Nominations" />
-                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.missingIdentity" label="Missing Identity" />
-                  <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.noVerifiedIdentity" label="No Verified Identity" /> -->
-                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.notStaked" label="Payee Not Staked" />
-                  <q-toggle dense color="purple-13" v-model="preferencesStore.filters.selfController" label="Self Controller" />
-                  <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.belowAvgPoints" label="Below Average Era Points" /> -->
-                  <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.slashed" label="Slashed" /> -->
-                  <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.noGovernance" label="No Governance Participation" /> -->
+                <q-toggle
+                  dense
+                  color="purple-13"
+                  v-model="preferencesStore.filters.inactive"
+                  label="Inactive Validators"
+                />
+                <q-toggle
+                  dense
+                  color="purple-13"
+                  v-model="preferencesStore.filters.nextSet"
+                  label="Not Elected Next Set"
+                />
+                <q-toggle
+                  dense
+                  color="purple-13"
+                  v-model="preferencesStore.filters.highCommission"
+                  label="High Commission (>10%)"
+                />
+                <q-toggle
+                  dense
+                  color="purple-13"
+                  v-model="preferencesStore.filters.recentPayouts"
+                  label="Recent Payouts (3 days or less)"
+                />
+                <q-toggle
+                  dense
+                  color="purple-13"
+                  v-model="preferencesStore.filters.oversubscribed"
+                  label="Oversubscribed"
+                />
+                <q-toggle
+                  dense
+                  color="purple-13"
+                  v-model="preferencesStore.filters.blockedNominations"
+                  label="Blocked Nominations"
+                />
+                <q-toggle
+                  dense
+                  color="purple-13"
+                  v-model="preferencesStore.filters.missingIdentity"
+                  label="Missing Identity"
+                />
+                <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.noVerifiedIdentity" label="No Verified Identity" /> -->
+                <q-toggle
+                  dense
+                  color="purple-13"
+                  v-model="preferencesStore.filters.notStaked"
+                  label="Payee Not Staked"
+                />
+                <q-toggle
+                  dense
+                  color="purple-13"
+                  v-model="preferencesStore.filters.selfController"
+                  label="Self Controller"
+                />
+                <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.belowAvgPoints" label="Below Average Era Points" /> -->
+                <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.slashed" label="Slashed" /> -->
+                <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.noGovernance" label="No Governance Participation" /> -->
                 <!-- </div> -->
               </q-card-section>
             </q-card>
@@ -53,11 +112,14 @@
       </template>
       <template v-slot:body="props">
         <q-tr :props="props" class="validator-row">
-
           <q-td key="block_count" :props="props">
             <div class="row justify-evenly items-center no-wrap">
-              <div style="min-width: 33px;">
-                <q-badge v-if="props.row.blockCount" :label="props.row.blockCount" class="justify-center">
+              <div style="min-width: 33px">
+                <q-badge
+                  v-if="props.row.blockCount"
+                  :label="props.row.blockCount"
+                  class="justify-center"
+                >
                   <q-tooltip>Blocks produced this era</q-tooltip>
                 </q-badge>
               </div>
@@ -74,7 +136,7 @@
                 </q-icon>
               </div> -->
 
-              <div v-if="props.row.isSlashed"  style="min-width: 18px;">
+              <div v-if="props.row.isSlashed" style="min-width: 18px">
                 <q-icon :name="fasLocationCrosshairs" size="18px" color="red-6">
                   <q-tooltip>
                     This validator has been previously slashed
@@ -82,30 +144,43 @@
                 </q-icon>
               </div>
 
-              <div v-if="props.row.nominatorCount >= maxNominatorRewardedPerValidator" style="min-width: 18px;">
+              <div
+                v-if="
+                  props.row.nominatorCount >= maxNominatorRewardedPerValidator
+                "
+                style="min-width: 18px"
+              >
                 <q-icon :name="mdiScaleUnbalanced" size="18px" color="red-6">
                   <q-tooltip>
-                    Nominators over the {{ maxNominatorRewardedPerValidator }} limit will not share in the validator rewards
+                    Nominators over the
+                    {{ maxNominatorRewardedPerValidator }} limit will not share
+                    in the validator rewards
                   </q-tooltip>
                 </q-icon>
               </div>
 
-              <div style="min-width: 18px;">
-                <q-icon :name="props.row.identity.identityIcon" size="18px" color="blue-grey-3">
+              <div style="min-width: 18px">
+                <q-icon
+                  :name="props.row.identity.identityIcon"
+                  size="18px"
+                  color="blue-grey-3"
+                >
                   <q-tooltip>
                     {{ props.row.identity.identityTooltip }}
                   </q-tooltip>
                 </q-icon>
               </div>
 
-              <div style="min-width: 18px;">
-                <q-icon v-if="props.row.nextElected" :name="mdiChevronRightCircle" size="18px" color="green-6">
-                  <q-tooltip>
-                    Validator is elected to the next set
-                  </q-tooltip>
+              <div style="min-width: 18px">
+                <q-icon
+                  v-if="props.row.nextElected"
+                  :name="mdiChevronRightCircle"
+                  size="18px"
+                  color="green-6"
+                >
+                  <q-tooltip> Validator is elected to the next set </q-tooltip>
                 </q-icon>
               </div>
-
             </div>
           </q-td>
 
@@ -115,10 +190,16 @@
                 <Identicon :address="props.row.address" />
               </div>
               <router-link
-                :to="{ name: 'validator-lookup', params: { address: props.row.address } }"
+                :to="{
+                  name: 'validator-lookup',
+                  params: { address: props.row.address },
+                }"
                 class="entity-link"
               >
-                <div class="col q-ml-sm">{{ getName(props.row) }}<q-tooltip>{{ props.row.address }}</q-tooltip></div>
+                <div class="col q-ml-sm">
+                  {{ getName(props.row)
+                  }}<q-tooltip>{{ props.row.address }}</q-tooltip>
+                </div>
               </router-link>
             </div>
           </q-td>
@@ -130,12 +211,16 @@
           <q-td key="payee" :props="props">
             <div v-if="props.row.payee.Account">
               <router-link
-                :to="{ name: 'address-lookup', params: { address: props.row.payee.Account } }"
+                :to="{
+                  name: 'address-lookup',
+                  params: { address: props.row.payee.Account },
+                }"
                 class="entity-link full-width"
               >
                 Account
               </router-link>
-              <q-tooltip>{{ props.row.payee.Account }}</q-tooltip></div>
+              <q-tooltip>{{ props.row.payee.Account }}</q-tooltip>
+            </div>
             <div v-else>{{ props.row.payee }}</div>
           </q-td>
 
@@ -144,43 +229,71 @@
           </q-td>
 
           <q-td key="other_staked" :props="props">
-            {{ props.row.otherStaked || ''}}<span v-if="props.row.otherStaked" class="text-weight-thin token">&nbsp;{{ tokenName }}</span>
+            {{ props.row.otherStaked || ""
+            }}<span v-if="props.row.otherStaked" class="text-weight-thin token"
+              >&nbsp;{{ tokenName }}</span
+            >
           </q-td>
 
-          <q-td key="nominator_count" :props="props" :class="{ 'oversubscribed-highlight': props.row.nominatorCount >= maxNominatorRewardedPerValidator }">
+          <q-td
+            key="nominator_count"
+            :props="props"
+            :class="{
+              'oversubscribed-highlight':
+                props.row.nominatorCount >= maxNominatorRewardedPerValidator,
+            }"
+          >
             {{ props.row.nominatorCount }}
           </q-td>
 
           <q-td key="own_staked" :props="props">
-            {{ props.row.ownStaked || formatTokenValue(normalizeValue(props.row.bonded)) }}<span v-if="props.row.ownStaked || props.row.bonded" class="text-weight-thin token">&nbsp;{{ tokenName }}</span>
+            {{
+              props.row.ownStaked ||
+              formatTokenValue(normalizeValue(props.row.bonded))
+            }}<span
+              v-if="props.row.ownStaked || props.row.bonded"
+              class="text-weight-thin token"
+              >&nbsp;{{ tokenName }}</span
+            >
           </q-td>
 
           <q-td key="total_staked" :props="props">
-            {{ props.row.totalStaked || formatTokenValue(normalizeValue(props.row.bonded))}}<span v-if="props.row.totalStaked || props.row.bonded" class="text-weight-thin token">&nbsp;{{ tokenName }}</span>
+            {{
+              props.row.totalStaked ||
+              formatTokenValue(normalizeValue(props.row.bonded))
+            }}<span
+              v-if="props.row.totalStaked || props.row.bonded"
+              class="text-weight-thin token"
+              >&nbsp;{{ tokenName }}</span
+            >
           </q-td>
 
           <q-td key="bonded_return" :props="props">
-            {{ props.row.stakedReturn || '' }}<span v-if="props.row.stakedReturn">%</span>
+            {{ props.row.stakedReturn || ""
+            }}<span v-if="props.row.stakedReturn">%</span>
           </q-td>
 
           <q-td key="reward_points" :props="props">
-            {{ props.row.currentRewardPoints || ''}}
+            {{ props.row.currentRewardPoints || "" }}
           </q-td>
 
           <q-td key="last_block" :props="props">
             {{ props.row.lastBlock }}
           </q-td>
-
         </q-tr>
       </template>
       <template v-slot:item="props">
-        <q-markup-table class="q-ma-md full-width" style="min-width: 300px;">
+        <q-markup-table class="q-ma-md full-width" style="min-width: 300px">
           <tbody>
-
             <tr>
               <td colspan="2">
                 <div class="row justify-center items-center">
-                  <q-badge v-if="props.row.blockCount" :label="props.row.blockCount" class="justify-center" style="width: 26px;">
+                  <q-badge
+                    v-if="props.row.blockCount"
+                    :label="props.row.blockCount"
+                    class="justify-center"
+                    style="width: 26px"
+                  >
                     <q-tooltip>Blocks produced this era</q-tooltip>
                   </q-badge>
 
@@ -192,38 +305,62 @@
                     </q-icon>
                   </div> -->
 
-                  <div v-if="props.row.isSlashed"  style="min-width: 18px;">
-                    <q-icon :name="fasLocationCrosshairs" size="18px" color="red-6">
+                  <div v-if="props.row.isSlashed" style="min-width: 18px">
+                    <q-icon
+                      :name="fasLocationCrosshairs"
+                      size="18px"
+                      color="red-6"
+                    >
                       <q-tooltip>
                         This validator has been previously slashed
                       </q-tooltip>
                     </q-icon>
                   </div>
 
-                  <div v-if="props.row.nominatorCount >= maxNominatorRewardedPerValidator" style="min-width: 18px;">
-                    <q-icon :name="mdiScaleUnbalanced" size="18px" color="red-6">
+                  <div
+                    v-if="
+                      props.row.nominatorCount >=
+                      maxNominatorRewardedPerValidator
+                    "
+                    style="min-width: 18px"
+                  >
+                    <q-icon
+                      :name="mdiScaleUnbalanced"
+                      size="18px"
+                      color="red-6"
+                    >
                       <q-tooltip>
-                        Nominators over the {{ maxNominatorRewardedPerValidator }} limit will not share in the validator rewards
+                        Nominators over the
+                        {{ maxNominatorRewardedPerValidator }} limit will not
+                        share in the validator rewards
                       </q-tooltip>
                     </q-icon>
                   </div>
 
-                  <div style="min-width: 18px;">
-                    <q-icon :name="props.row.identity.identityIcon" size="18px" color="blue-grey-3">
+                  <div style="min-width: 18px">
+                    <q-icon
+                      :name="props.row.identity.identityIcon"
+                      size="18px"
+                      color="blue-grey-3"
+                    >
                       <q-tooltip>
                         {{ props.row.identity.identityTooltip }}
                       </q-tooltip>
                     </q-icon>
                   </div>
 
-                  <div style="min-width: 18px;">
-                    <q-icon v-if="props.row.nextElected" :name="mdiChevronRightCircle" size="18px" color="green-6">
+                  <div style="min-width: 18px">
+                    <q-icon
+                      v-if="props.row.nextElected"
+                      :name="mdiChevronRightCircle"
+                      size="18px"
+                      color="green-6"
+                    >
                       <q-tooltip>
                         Validator is elected to the next set
                       </q-tooltip>
                     </q-icon>
                   </div>
-
                 </div>
               </td>
             </tr>
@@ -236,7 +373,10 @@
                     <Identicon :address="props.row.address" />
                   </div>
                   <router-link
-                    :to="{ name: 'validator-lookup', params: { address: props.row.address } }"
+                    :to="{
+                      name: 'validator-lookup',
+                      params: { address: props.row.address },
+                    }"
                     class="entity-link"
                   >
                     <div class="col q-ml-sm">{{ props.row.identity.name }}</div>
@@ -255,12 +395,16 @@
               <td>
                 <div v-if="props.row.payee.Account">
                   <router-link
-                    :to="{ name: 'address-lookup', params: { address: props.row.payee.Account } }"
+                    :to="{
+                      name: 'address-lookup',
+                      params: { address: props.row.payee.Account },
+                    }"
                     class="entity-link full-width"
                   >
                     Account
                   </router-link>
-                  <q-tooltip>{{ props.row.payee.Account }}</q-tooltip></div>
+                  <q-tooltip>{{ props.row.payee.Account }}</q-tooltip>
+                </div>
                 <div v-else>{{ props.row.payee }}</div>
               </td>
             </tr>
@@ -274,32 +418,66 @@
 
             <tr>
               <td class="left-column text-weight-bold">Other Bonded</td>
-              <td>{{ props.row.otherStaked || ''}}<span v-if="props.row.otherStaked" class="text-weight-thin token">&nbsp;{{ tokenName }}</span></td>
+              <td>
+                {{ props.row.otherStaked || ""
+                }}<span
+                  v-if="props.row.otherStaked"
+                  class="text-weight-thin token"
+                  >&nbsp;{{ tokenName }}</span
+                >
+              </td>
             </tr>
 
             <tr>
               <td class="left-column text-weight-bold">Nominators</td>
-              <td :class="{ 'oversubscribed-highlight': props.row.nominatorCount >= maxNominatorRewardedPerValidator }">{{ props.row.nominatorCount || ''}}</td>
+              <td
+                :class="{
+                  'oversubscribed-highlight':
+                    props.row.nominatorCount >=
+                    maxNominatorRewardedPerValidator,
+                }"
+              >
+                {{ props.row.nominatorCount || "" }}
+              </td>
             </tr>
 
             <tr>
               <td class="left-column text-weight-bold">Own Bonded</td>
-              <td>{{ props.row.ownStaked || formatTokenValue(normalizeValue(props.row.bonded)) }}<span v-if="props.row.ownStaked || props.row.bonded" class="text-weight-thin token">&nbsp;{{ tokenName }}</span></td>
+              <td>
+                {{
+                  props.row.ownStaked ||
+                  formatTokenValue(normalizeValue(props.row.bonded))
+                }}<span
+                  v-if="props.row.ownStaked || props.row.bonded"
+                  class="text-weight-thin token"
+                  >&nbsp;{{ tokenName }}</span
+                >
+              </td>
             </tr>
 
             <tr>
               <td class="left-column text-weight-bold">Total Bonded</td>
-              <td>{{ props.row.totalStaked || formatTokenValue(normalizeValue(props.row.bonded))}}<span class="text-weight-thin token">&nbsp;{{ tokenName }}</span></td>
+              <td>
+                {{
+                  props.row.totalStaked ||
+                  formatTokenValue(normalizeValue(props.row.bonded))
+                }}<span class="text-weight-thin token"
+                  >&nbsp;{{ tokenName }}</span
+                >
+              </td>
             </tr>
 
             <tr>
               <td class="left-column text-weight-bold">Bonded Return</td>
-              <td>{{ props.row.stakedReturn || '' }}<span v-if="props.row.totalStaked">%</span></td>
+              <td>
+                {{ props.row.stakedReturn || ""
+                }}<span v-if="props.row.totalStaked">%</span>
+              </td>
             </tr>
 
             <tr>
               <td class="left-column text-weight-bold">Reward Points</td>
-              <td>{{ props.row.currentRewardPoints || ' '}}</td>
+              <td>{{ props.row.currentRewardPoints || " " }}</td>
             </tr>
 
             <tr>
@@ -307,7 +485,6 @@
               <td>{{ props.row.lastBlock }}</td>
             </tr>
           </tbody>
-
         </q-markup-table>
       </template>
     </q-table>
@@ -316,7 +493,7 @@
 
 <script>
 import { computed, watch, ref } from 'vue'
-import { useChainsStore } from 'stores/chain'
+import { useChainStore } from 'stores/chain'
 import { useEntitiesStore } from 'stores/entities'
 import { useClientStore } from 'stores/client'
 import { usePreferencesStore } from 'stores/preferences'
@@ -332,8 +509,10 @@ import { toBaseToken, normalizeValue } from 'src/helpers/utils'
 import FilterInfo from 'components/FilterInfo.vue'
 import Identicon from 'src/components/Identicon.vue'
 
-const solidLockClosed = 'M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z@@fill:currentColor;fill-rule:evenodd;clip-rule:evenodd;|0 0 20 20'
-const solidLockOpen = 'M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 015.905-.75 1 1 0 001.937-.5A5.002 5.002 0 0010 2z@@fill:currentColor;|0 0 20 20'
+const solidLockClosed
+  = 'M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z@@fill:currentColor;fill-rule:evenodd;clip-rule:evenodd;|0 0 20 20'
+const solidLockOpen
+  = 'M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 015.905-.75 1 1 0 001.937-.5A5.002 5.002 0 0010 2z@@fill:currentColor;|0 0 20 20'
 
 // Icons for later
 // const scalesDuotone = 'M56,88l32,80c0,17.7-20,24-32,24s-32-6.3-32-24ZM200,56l-32,80c0,17.7,20,24,32,24s32-6.3,32-24Z@@opacity:0.2;&&M239.4,133l-32-80h0l-.5-.9h0l-.6-.8c-.1-.1-.1-.1-.1-.2l-.8-.8a.1.1,0,0,1-.1-.1,1.8,1.8,0,0,0-.7-.5l-.2-.2-.9-.5h-.2l-.8-.3h-.2l-1-.2h-3L136,62V40a8,8,0,0,0-16,0V65.6L54.3,80.2h-.7l-1,.4h-.2l-.8.4a.1.1,0,0,1-.1.1l-.9.7a.1.1,0,0,1-.1.1l-.6.7h-.1a2.4,2.4,0,0,0-.6.9l-.2.2-.4.9h-.1L16.6,165a8,8,0,0,0-.6,3c0,23.3,24.5,32,40,32s40-8.7,40-32a8,8,0,0,0-.6-3L66.9,93.8,120,82V208H104a8,8,0,0,0,0,16h48a8,8,0,0,0,0-16H136V78.4l50.9-11.3L160.6,133a8,8,0,0,0-.6,3c0,23.3,24.5,32,40,32s40-8.7,40-32A8,8,0,0,0,239.4,133ZM56,184c-7.5,0-22.8-3.6-23.9-14.6L56,109.5l23.9,59.9C78.8,180.4,63.5,184,56,184Zm144-32c-7.5,0-22.8-3.6-23.9-14.6L200,77.5l23.9,59.9C222.8,148.4,207.5,152,200,152Z|0 0 256 256'
@@ -354,7 +533,7 @@ export default {
   },
 
   setup () {
-    const chainStore = useChainsStore()
+    const chainStore = useChainStore()
     const entitiesStore = useEntitiesStore()
     const clientStore = useClientStore()
     const preferencesStore = usePreferencesStore()
@@ -480,26 +659,73 @@ export default {
     const filteredValidators = computed(() => {
       return validators.value.filter((val) => {
         let retVal = true
-        if (retVal && preferencesStore.filters.inactive && val.elected === false) retVal = false
-        if (retVal && preferencesStore.filters.nextSet && val.nextElected === false) retVal = false
-        if (retVal && preferencesStore.filters.highCommission && parseFloat(val.preferences.commission) > 10.00) retVal = false
-        if (retVal && preferencesStore.filters.oversubscribed && val.isOversubscribed) retVal = false
+        if (
+          retVal
+          && preferencesStore.filters.inactive
+          && val.elected === false
+        ) { retVal = false }
+        if (
+          retVal
+          && preferencesStore.filters.nextSet
+          && val.nextElected === false
+        ) { retVal = false }
+        if (
+          retVal
+          && preferencesStore.filters.highCommission
+          && parseFloat(val.preferences.commission) > 10.0
+        ) { retVal = false }
+        if (
+          retVal
+          && preferencesStore.filters.oversubscribed
+          && val.isOversubscribed
+        ) { retVal = false }
         // a validator has to be elected to do payouts, so we filter non-elected here as well
-        if (retVal && preferencesStore.filters.recentPayouts && (!val.elected || (val.lastPaidOut !== 'recently' && parseInt(val.lastPaidOut) > 3))) retVal = false
-        if (retVal && preferencesStore.filters.blockedNominations && val.preferences.blocked === true) retVal = false
-        if (retVal && preferencesStore.filters.missingIdentity && !val.identity.hasIdentity) retVal = false
-        if (retVal && preferencesStore.filters.noVerifiedIdentity && !val.identity.hasVerifiedIdentity) retVal = false
-        if (retVal && preferencesStore.filters.notStaked && val.payee !== 'Staked') retVal = false
-        if (retVal && preferencesStore.filters.selfController && val.selfController === val.address) retVal = false
-        if (retVal && preferencesStore.filters.belowAvgPoints && val.belowAvgPoints) retVal = false
-        if (retVal && preferencesStore.filters.slashed && val.slashed) retVal = false
-        if (retVal && preferencesStore.filters.noGovernance && val.noGovernance) retVal = false
+        if (
+          retVal
+          && preferencesStore.filters.recentPayouts
+          && (!val.elected
+            || (val.lastPaidOut !== 'recently' && parseInt(val.lastPaidOut) > 3))
+        ) { retVal = false }
+        if (
+          retVal
+          && preferencesStore.filters.blockedNominations
+          && val.preferences.blocked === true
+        ) { retVal = false }
+        if (
+          retVal
+          && preferencesStore.filters.missingIdentity
+          && !val.identity.hasIdentity
+        ) { retVal = false }
+        if (
+          retVal
+          && preferencesStore.filters.noVerifiedIdentity
+          && !val.identity.hasVerifiedIdentity
+        ) { retVal = false }
+        if (
+          retVal
+          && preferencesStore.filters.notStaked
+          && val.payee !== 'Staked'
+        ) { retVal = false }
+        if (
+          retVal
+          && preferencesStore.filters.selfController
+          && val.selfController === val.address
+        ) { retVal = false }
+        if (
+          retVal
+          && preferencesStore.filters.belowAvgPoints
+          && val.belowAvgPoints
+        ) { retVal = false }
+        if (retVal && preferencesStore.filters.slashed && val.slashed) { retVal = false }
+        if (retVal && preferencesStore.filters.noGovernance && val.noGovernance) { retVal = false }
         return retVal
       })
     })
 
     const hasFilter = computed(() => {
-      return Object.keys(preferencesStore.filters).some((key) => preferencesStore.filters[ key ])
+      return Object.keys(preferencesStore.filters).some(
+        (key) => preferencesStore.filters[ key ]
+      )
     })
 
     const tableLoading = computed(() => {
@@ -545,10 +771,12 @@ export default {
             return getName(x).toLowerCase() > getName(y).toLowerCase()
               ? 1
               : getName(x).toLowerCase() < getName(y).toLowerCase()
-                ? -1 : 0
+                ? -1
+                : 0
           }
           else if (sortBy === 'payee') {
-            let x1 = x[ sortBy ], y1 = y[ sortBy ]
+            let x1 = x[ sortBy ],
+              y1 = y[ sortBy ]
             if (x1.Account) {
               x1 = 'Account'
             }
@@ -559,11 +787,13 @@ export default {
             return x1.toLowerCase() > y1.toLowerCase()
               ? 1
               : x1.toLowerCase() < y1.toLowerCase()
-                ? -1 : 0
+                ? -1
+                : 0
           }
           else {
             // numeric sorts
-            let x1 = 0, y1 = 0
+            let x1 = 0,
+              y1 = 0
             if (sortBy === 'block_count') {
               x1 = parseFloat(x.blockCount)
               y1 = parseFloat(y.blockCount)
@@ -573,8 +803,10 @@ export default {
               y1 = parseFloat(y.preferences.commission)
             }
             else if (sortBy === 'other_staked') {
-              x1 = x.otherStaked === 'unknown' ? 0 : normalizeValue(x.otherStaked)
-              y1 = y.otherStaked === 'unknown' ? 0 : normalizeValue(y.otherStaked)
+              x1
+                = x.otherStaked === 'unknown' ? 0 : normalizeValue(x.otherStaked)
+              y1
+                = y.otherStaked === 'unknown' ? 0 : normalizeValue(y.otherStaked)
             }
             else if (sortBy === 'nominator_count') {
               x1 = x.nominatorCount
@@ -582,13 +814,21 @@ export default {
             }
             else if (sortBy === 'own_staked') {
               // if not elected to the current set, then we use the bonded amount
-              x1 = x.elected ? normalizeValue(x.ownStaked) : normalizeValue(formatTokenValue(normalizeValue(x.bonded)))
-              y1 = y.elected ? normalizeValue(y.ownStaked) : normalizeValue(formatTokenValue(normalizeValue(y.bonded)))
+              x1 = x.elected
+                ? normalizeValue(x.ownStaked)
+                : normalizeValue(formatTokenValue(normalizeValue(x.bonded)))
+              y1 = y.elected
+                ? normalizeValue(y.ownStaked)
+                : normalizeValue(formatTokenValue(normalizeValue(y.bonded)))
             }
             else if (sortBy === 'total_staked') {
               // if not elected to the current set, then we use the bonded amount
-              x1 = x.elected ? normalizeValue(x.totalStaked) : normalizeValue(formatTokenValue(normalizeValue(x.bonded)))
-              y1 = y.elected ? normalizeValue(y.totalStaked) : normalizeValue(formatTokenValue(normalizeValue(y.bonded)))
+              x1 = x.elected
+                ? normalizeValue(x.totalStaked)
+                : normalizeValue(formatTokenValue(normalizeValue(x.bonded)))
+              y1 = y.elected
+                ? normalizeValue(y.totalStaked)
+                : normalizeValue(formatTokenValue(normalizeValue(y.bonded)))
             }
             else if (sortBy === 'bonded_return') {
               x1 = x.stakedReturn || 0
@@ -609,11 +849,13 @@ export default {
     }
 
     function isInvulnerable (validator) {
-      return clientStore.invulnerables.find(id => id === validator.address)
+      return clientStore.invulnerables.find((id) => id === validator.address)
     }
 
     function getProtectedIcon (validator) {
-      const found = clientStore.invulnerables.find(id => id === validator.address)
+      const found = clientStore.invulnerables.find(
+        (id) => id === validator.address
+      )
       if (found) {
         return solidLockClosed
       }
@@ -623,7 +865,9 @@ export default {
     function formatTokenValue (val) {
       const clientStore = useClientStore()
 
-      return clientStore.decimals.length > 0 ? toBaseToken(val, clientStore.decimals[ 0 ]) : 0
+      return clientStore.decimals.length > 0
+        ? toBaseToken(val, clientStore.decimals[ 0 ])
+        : 0
     }
 
     function getName (validator) {
@@ -644,7 +888,8 @@ export default {
       mdiChevronRightCircle,
       fasLocationCrosshairs,
       mdiScaleUnbalanced,
-      maxNominatorRewardedPerValidator: clientStore.consts.maxNominatorRewardedPerValidator,
+      maxNominatorRewardedPerValidator:
+        clientStore.consts.maxNominatorRewardedPerValidator,
       // scalesDuotone,
       // howToVoteTwoTone,
       // alarmClockOutline,
@@ -669,27 +914,29 @@ export default {
 </script>
 
 <style lang="scss">
-  .q-table th, .q-table td {
-    padding: 7px 8px;
-    background-color: inherit;
-  }
-  .q-table--dense .q-table__top {
-    padding: 4px 0px;
-  }
+.q-table th,
+.q-table td {
+  padding: 7px 8px;
+  background-color: inherit;
+}
+.q-table--dense .q-table__top {
+  padding: 4px 0px;
+}
 
-  .validator-row {
-    height: 38px !important;
-  }
+.validator-row {
+  height: 38px !important;
+}
 
-  .token {
-    font-size: 11px;
-  }
+.token {
+  font-size: 11px;
+}
 
-  .left-column {
-    width: 136px;
-  }
+.left-column {
+  width: 136px;
+}
 
-  .q-table--dense .q-table tbody tr, .q-table--dense .q-table tbody td {
-    height: 38px !important;
+.q-table--dense .q-table tbody tr,
+.q-table--dense .q-table tbody td {
+  height: 38px !important;
 }
 </style>
