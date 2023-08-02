@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@polkadot/api": "^10.9.1",
-    "@quasar/extras": "^1.16.4",
+    "@quasar/extras": "^1.16.5",
     "bignumber.js": "^9.1.1",
     "core-js": "^3.31.1",
     "date-fns": "^2.30.0",
