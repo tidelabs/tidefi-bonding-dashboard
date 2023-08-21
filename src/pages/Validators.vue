@@ -13,6 +13,7 @@
       row-key="name"
       :sort-method="customSort"
       binary-state-sort
+      table-class="no-scroll"
       card-container-class="row justify-center"
     >
       <template v-slot:top>
@@ -663,61 +664,91 @@ export default {
           retVal
           && preferencesStore.filters.inactive
           && val.elected === false
-        ) { retVal = false }
+        ) {
+          retVal = false
+        }
         if (
           retVal
           && preferencesStore.filters.nextSet
           && val.nextElected === false
-        ) { retVal = false }
+        ) {
+          retVal = false
+        }
         if (
           retVal
           && preferencesStore.filters.highCommission
           && parseFloat(val.preferences.commission) > 10.0
-        ) { retVal = false }
+        ) {
+          retVal = false
+        }
         if (
           retVal
           && preferencesStore.filters.oversubscribed
           && val.isOversubscribed
-        ) { retVal = false }
+        ) {
+          retVal = false
+        }
         // a validator has to be elected to do payouts, so we filter non-elected here as well
         if (
           retVal
           && preferencesStore.filters.recentPayouts
           && (!val.elected
             || (val.lastPaidOut !== 'recently' && parseInt(val.lastPaidOut) > 3))
-        ) { retVal = false }
+        ) {
+          retVal = false
+        }
         if (
           retVal
           && preferencesStore.filters.blockedNominations
           && val.preferences.blocked === true
-        ) { retVal = false }
+        ) {
+          retVal = false
+        }
         if (
           retVal
           && preferencesStore.filters.missingIdentity
           && !val.identity.hasIdentity
-        ) { retVal = false }
+        ) {
+          retVal = false
+        }
         if (
           retVal
           && preferencesStore.filters.noVerifiedIdentity
           && !val.identity.hasVerifiedIdentity
-        ) { retVal = false }
+        ) {
+          retVal = false
+        }
         if (
           retVal
           && preferencesStore.filters.notStaked
           && val.payee !== 'Staked'
-        ) { retVal = false }
+        ) {
+          retVal = false
+        }
         if (
           retVal
           && preferencesStore.filters.selfController
           && val.selfController === val.address
-        ) { retVal = false }
+        ) {
+          retVal = false
+        }
         if (
           retVal
           && preferencesStore.filters.belowAvgPoints
           && val.belowAvgPoints
-        ) { retVal = false }
-        if (retVal && preferencesStore.filters.slashed && val.slashed) { retVal = false }
-        if (retVal && preferencesStore.filters.noGovernance && val.noGovernance) { retVal = false }
+        ) {
+          retVal = false
+        }
+        if (retVal && preferencesStore.filters.slashed && val.slashed) {
+          retVal = false
+        }
+        if (
+          retVal
+          && preferencesStore.filters.noGovernance
+          && val.noGovernance
+        ) {
+          retVal = false
+        }
         return retVal
       })
     })
