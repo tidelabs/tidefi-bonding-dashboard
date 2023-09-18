@@ -14,7 +14,7 @@
   "dependencies": {
     "@polkadot/api": "^10.9.1",
     "@quasar/extras": "^1.16.5",
-    "bignumber.js": "^9.1.1",
+    "bignumber.js": "^9.1.2",
     "core-js": "^3.32.1",
     "date-fns": "^2.30.0",
     "highcharts": "^11.1.0",
