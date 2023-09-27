@@ -42,7 +42,7 @@ export class Client {
 
     if (api) {
       // listen for errors
-      api.on('error', (error) => {
+      api.on('error', async (error) => {
         if (
           error.toString().includes('FATAL')
           || JSON.stringify(error).includes('FATAL')
@@ -53,7 +53,7 @@ export class Client {
         else {
           console.log('The API had an error!', error)
         }
-        this.reconnect()
+        return await this.reconnect()
       })
 
       // save to clientStore
@@ -158,6 +158,9 @@ export class Client {
       })
 
       clientStore.loading = false
+    }
+    else {
+      return await this.reconnect()
     }
   }
 
