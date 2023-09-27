@@ -8,7 +8,14 @@ import mitt from 'mitt'
 import { calcInflation } from 'src/helpers/calcInflation'
 
 import BN from 'bignumber.js'
-import { normalizeValue, toBaseToken, blocksToMS, formatDateInternational, formatDateTimeInternational, formatDurationFromSeconds } from 'src/helpers/utils'
+import {
+  normalizeValue,
+  toBaseToken,
+  blocksToMS,
+  formatDateInternational,
+  formatDateTimeInternational,
+  formatDurationFromSeconds
+} from 'src/helpers/utils'
 
 const UNSTAKE_DURATION = 24 * 60 * 60 * 1000 // milliseconds in a day
 
@@ -42,7 +49,7 @@ export class Client {
 
     if (api) {
       // listen for errors
-      api.on('error', (error) => {
+      api.on('error', async (error) => {
         if (
           error.toString().includes('FATAL')
           || JSON.stringify(error).includes('FATAL')
@@ -53,7 +60,7 @@ export class Client {
         else {
           console.log('The API had an error!', error)
         }
-        this.reconnect()
+        return await this.reconnect()
       })
 
       // save to clientStore
@@ -97,15 +104,29 @@ export class Client {
 
       console.log(
         // 'bondedEras:', bondedEras.toJSON(), '\n',
-        'canceledSlashPayout:', canceledSlashPayout.toJSON(), '\n',
-        'chillThreshold:', chillThreshold.toJSON(), '\n',
-        'currentPlannedSession:', currentPlannedSession.toJSON(), '\n',
-        'offendingValidators:', offendingValidators.toJSON(), '\n',
-        'slashRewardFraction:', slashRewardFraction.toJSON(), '\n',
+        'canceledSlashPayout:',
+        canceledSlashPayout.toJSON(),
+        '\n',
+        'chillThreshold:',
+        chillThreshold.toJSON(),
+        '\n',
+        'currentPlannedSession:',
+        currentPlannedSession.toJSON(),
+        '\n',
+        'offendingValidators:',
+        offendingValidators.toJSON(),
+        '\n',
+        'slashRewardFraction:',
+        slashRewardFraction.toJSON(),
+        '\n',
         // 'eraElectionStatus:', eraElectionStatus.toJSON(), '\n',
         // 'activeValidatorIndices:', activeValidatorIndices, '\n'
-        'electionsCandidates:', electionsCandidates.toJSON(), '\n',
-        'electionsMembers:', electionsMembers.toJSON(), '\n'
+        'electionsCandidates:',
+        electionsCandidates.toJSON(),
+        '\n',
+        'electionsMembers:',
+        electionsMembers.toJSON(),
+        '\n'
         // 'erasHistoric:', erasHistoric, '\n',
         // 'accounts:', accounts.toJSON(), '\n',
         // 'electedInfo:', electedInfo.toJSON(), '\n'
@@ -113,51 +134,68 @@ export class Client {
 
       // await this.playground()
 
-      this.unsubscribeNextElected = await this.api.derive.staking.nextElected((elected) => {
-        // console.log('Next Elected:', elected)
-        clientStore.nextElected = elected.map((elect) => elect.toHuman())
-      })
+      this.unsubscribeNextElected = await this.api.derive.staking.nextElected(
+        (elected) => {
+          // console.log('Next Elected:', elected)
+          clientStore.nextElected = elected.map((elect) => elect.toHuman())
+        }
+      )
 
-      this.unsubscribeNewHeads = await api.derive.chain.subscribeNewHeads((header) => {
-        // console.log(`#${ header.number }: ${ header.author }\n`)
-        // console.log('header:', header)
-        updateLastBlock(header.number.toNumber(), header.author.toString())
-        // console.log(`(${ JSON.stringify(header.toJSON(), null, 2) })\n(${ JSON.stringify(header.toHuman(), null, 2) })\n`)
-        const currentHeader = header.toHuman()
-        // block number
-        currentHeader.number = normalizeValue(currentHeader.number)
-        clientStore.currentHeader = currentHeader
+      this.unsubscribeNewHeads = await api.derive.chain.subscribeNewHeads(
+        (header) => {
+          // console.log(`#${ header.number }: ${ header.author }\n`)
+          // console.log('header:', header)
+          updateLastBlock(header.number.toNumber(), header.author.toString())
+          // console.log(`(${ JSON.stringify(header.toJSON(), null, 2) })\n(${ JSON.stringify(header.toHuman(), null, 2) })\n`)
+          const currentHeader = header.toHuman()
+          // block number
+          currentHeader.number = normalizeValue(currentHeader.number)
+          clientStore.currentHeader = currentHeader
 
-        this.fetchAuthoredBlocks()
-      })
+          this.fetchAuthoredBlocks()
+        }
+      )
 
       this.unsubscribeSession = await api.derive.session.progress((session) => {
         clientStore.session.eraLength = session.eraLength.toNumber()
         clientStore.session.eraProgress = session.eraProgress.toNumber()
         clientStore.session.sessionLength = session.sessionLength.toNumber()
-        clientStore.session.sessionProgress = session.sessionProgress.toNumber()
+        clientStore.session.sessionProgress
+          = session.sessionProgress.toNumber()
         clientStore.session.sessionsPerEra = session.sessionsPerEra.toNumber()
 
-        if (clientStore.session.sessionLength - clientStore.session.sessionProgress === 1) {
+        if (
+          clientStore.session.sessionLength
+            - clientStore.session.sessionProgress
+          === 1
+        ) {
           // refetch data when session ends
           console.log('---------- SESSION ENDED ----------')
           this.refetchAll()
           this.emitter.emit('session-ended')
         }
 
-        if (clientStore.session.eraLength - clientStore.session.eraProgress === 1) {
+        if (
+          clientStore.session.eraLength - clientStore.session.eraProgress
+          === 1
+        ) {
           console.log('---------- ERA ENDED ----------')
           this.emitter.emit('era-ended')
         }
       })
 
-      this.unsubscribeSomeOffline = await api.events.imOnline.SomeOffline.is((offline) => {
-        console.log('---------- SOME OFFLINE ----------\n', offline.toJSON())
-        // not sure this can be cleared when a Validator is back on line
-        // clientStore.offline = offline.toJSON()
-      })
+      this.unsubscribeSomeOffline = await api.events.imOnline.SomeOffline.is(
+        (offline) => {
+          console.log('---------- SOME OFFLINE ----------\n', offline.toJSON())
+          // not sure this can be cleared when a Validator is back on line
+          // clientStore.offline = offline.toJSON()
+        }
+      )
 
       clientStore.loading = false
+    }
+    else {
+      return await this.reconnect()
     }
   }
 
@@ -185,10 +223,19 @@ export class Client {
               ...stake
             }
 
-            const token = clientStore.getTokenAsset(stake.currencyId === 'Tdfy' ? stake.currencyId : Number(stake.currencyId.Wrapped))
-            const accrued = (new BN(normalizeValue(stake.principal)).minus(normalizeValue(stake.initialBalance))).toString()
+            const token = clientStore.getTokenAsset(
+              stake.currencyId === 'Tdfy'
+                ? stake.currencyId
+                : Number(stake.currencyId.Wrapped)
+            )
+            const accrued = new BN(normalizeValue(stake.principal))
+              .minus(normalizeValue(stake.initialBalance))
+              .toString()
             const currentMS = Date.now()
-            const initialBlockMS = blocksToMS(clientStore.currentHeader.number - parseInt(normalizeValue(stake.initialBlock), 10))
+            const initialBlockMS = blocksToMS(
+              clientStore.currentHeader.number
+                - parseInt(normalizeValue(stake.initialBlock), 10)
+            )
             const startMS = currentMS - initialBlockMS
             const durationMS = blocksToMS(normalizeValue(stake.duration))
             const endMS = startMS + durationMS
@@ -197,24 +244,55 @@ export class Client {
             data.address = address
             data.tokenName = token.asset.name
             data.tokenSymbol = token.asset.symbol
-            data.lastSessionIndexCompound = normalizeValue(stake.lastSessionIndexCompound)
+            data.lastSessionIndexCompound = normalizeValue(
+              stake.lastSessionIndexCompound
+            )
             data.initialBlock = normalizeValue(stake.initialBlock)
-            data.principal = toBaseToken(normalizeValue(stake.initialBalance), token.asset.decimals)
-            data.principalTotal = toBaseToken(normalizeValue(stake.initialBalance), token.asset.decimals, token.asset.decimals)
-            data.initialBalance = toBaseToken(normalizeValue(stake.initialBalance), token.asset.decimals)
-            data.initialBalanceTotal = toBaseToken(normalizeValue(stake.initialBalance), token.asset.decimals, token.asset.decimals)
+            data.principal = toBaseToken(
+              normalizeValue(stake.initialBalance),
+              token.asset.decimals
+            )
+            data.principalTotal = toBaseToken(
+              normalizeValue(stake.initialBalance),
+              token.asset.decimals,
+              token.asset.decimals
+            )
+            data.initialBalance = toBaseToken(
+              normalizeValue(stake.initialBalance),
+              token.asset.decimals
+            )
+            data.initialBalanceTotal = toBaseToken(
+              normalizeValue(stake.initialBalance),
+              token.asset.decimals,
+              token.asset.decimals
+            )
             data.accrued = toBaseToken(accrued, token.asset.decimals)
-            data.accruedTotal = toBaseToken(accrued, token.asset.decimals, token.asset.decimals)
+            data.accruedTotal = toBaseToken(
+              accrued,
+              token.asset.decimals,
+              token.asset.decimals
+            )
             data.startDate = formatDateTimeInternational(startMS)
             data.endDate = formatDateTimeInternational(endMS)
-            data.duration = formatDurationFromSeconds(durationMS / 1000, 'hours')
-            data.remaining = remainingMS > 0 ? formatDurationFromSeconds(remainingMS / 1000, 'hours') : 'Completed!'
+            data.duration = formatDurationFromSeconds(
+              durationMS / 1000,
+              'hours'
+            )
+            data.remaining
+              = remainingMS > 0
+                ? formatDurationFromSeconds(remainingMS / 1000, 'hours')
+                : 'Completed!'
             data.unstaking = !!stake.status.pendingUnlock
             if (data.unstaking) {
-              const unstakeTime = currentMS + Math.min(
-                UNSTAKE_DURATION,
-                blocksToMS(normalizeValue(stake.status.pendingUnlock) - clientStore.currentHeader.number)
-              )
+              const unstakeTime
+                = currentMS
+                + Math.min(
+                  UNSTAKE_DURATION,
+                  blocksToMS(
+                    normalizeValue(stake.status.pendingUnlock)
+                      - clientStore.currentHeader.number
+                  )
+                )
               data.unstakeTime = formatDateInternational(unstakeTime, 'hours')
             }
             else {
@@ -404,11 +482,7 @@ export class Client {
   async fetchChainInfo () {
     const clientStore = useClientStore()
 
-    const [
-      chain,
-      nodeName,
-      nodeVersion
-    ] = await Promise.all([
+    const [ chain, nodeName, nodeVersion ] = await Promise.all([
       this.api.rpc.system.chain(),
       this.api.rpc.system.name(),
       this.api.rpc.system.version()
@@ -455,7 +529,8 @@ export class Client {
       this.api.consts.electionProviderMultiPhase.maxElectingVoters,
       this.api.consts.babe.expectedBlockTime,
       this.api.consts.balances.existentialDeposit,
-      this.api.consts.staking.historyDepth || this.api.query.staking.historyDepth()
+      this.api.consts.staking.historyDepth
+        || this.api.query.staking.historyDepth()
       // this.api.consts.nominationPools.palletId,
     ])
 
@@ -469,7 +544,8 @@ export class Client {
     clientStore.consts.bondingDuration = bondingDuration.toJSON()
     clientStore.consts.maxNominations = maxNominations.toJSON()
     clientStore.consts.sessionsPerEra = sessionsPerEra.toJSON()
-    clientStore.consts.maxNominatorRewardedPerValidator = maxNominatorRewardedPerValidator.toJSON()
+    clientStore.consts.maxNominatorRewardedPerValidator
+      = maxNominatorRewardedPerValidator.toJSON()
     clientStore.consts.maxElectingVoters = maxElectingVoters.toJSON()
     clientStore.consts.expectedBlockTime = expectedBlockTime.toJSON()
     clientStore.consts.existentialDeposit = existentialDeposit.toJSON()
@@ -513,11 +589,7 @@ export class Client {
   async fetchEras () {
     const clientStore = useClientStore()
 
-    const [
-      activeEra,
-      currentEra,
-      sessionIndex
-    ] = await Promise.all([
+    const [ activeEra, currentEra, sessionIndex ] = await Promise.all([
       this.api.query.staking.activeEra(),
       this.api.query.staking.currentEra(),
       this.api.query.session.currentIndex()
@@ -575,7 +647,8 @@ export class Client {
     clientStore.minCommission = minCommission.toJSON()
 
     clientStore.totalIssuance = normalizeValue(totalIssuance.toHuman())
-    clientStore.auctionCounter = auctionCounter === 0 ? auctionCounter : auctionCounter.toString()
+    clientStore.auctionCounter
+      = auctionCounter === 0 ? auctionCounter : auctionCounter.toString()
 
     const {
       idealInterest,
@@ -620,7 +693,9 @@ export class Client {
   async fetchErasTotalStake () {
     const clientStore = useClientStore()
 
-    const erasTotalStaked = await this.api.query.staking.erasTotalStake(clientStore.currentEra)
+    const erasTotalStaked = await this.api.query.staking.erasTotalStake(
+      clientStore.currentEra
+    )
     clientStore.erasTotalStaked = normalizeValue(erasTotalStaked.toHuman())
 
     // console.log('erasTotalStaked:', clientStore.erasTotalStaked)
@@ -637,7 +712,7 @@ export class Client {
     const subIdentityEntries = await this.api.query.identity.subsOf.entries()
 
     subIdentityEntries.forEach(([ key, data ]) => {
-      (data.toJSON()[ 1 ]).forEach((sub) => {
+      data.toJSON()[ 1 ].forEach((sub) => {
         subIdentities.push({
           parent: key.toHuman()[ 0 ],
           sub
@@ -667,7 +742,9 @@ export class Client {
     clientStore.validatorEntries = ve
 
     // validators of the current era
-    const stakerEntries = await this.api.query.staking.erasStakers.entries(clientStore.currentEra)
+    const stakerEntries = await this.api.query.staking.erasStakers.entries(
+      clientStore.currentEra
+    )
     const se = stakerEntries.map(([ key, data ]) => {
       const address = key.args[ 1 ].toHuman()
       const stakers = data.toHuman()
@@ -679,7 +756,9 @@ export class Client {
           value: normalizeValue(other.value)
         }
       })
-      const validatorEntry = validatorEntries.find(([key]) => key.args[ 0 ].toHuman() === address)
+      const validatorEntry = validatorEntries.find(
+        ([key]) => key.args[ 0 ].toHuman() === address
+      )
       const preferences = (validatorEntry && validatorEntry[ 1 ].toHuman()) || {
         commission: 0,
         blocked: false
@@ -742,12 +821,16 @@ export class Client {
     const electedInfo = []
 
     // console.log('staking api:', this.api.derive.staking)
-    const electedInfoEra = await this.api.derive.staking.electedInfo(clientStore.currentEra)
+    const electedInfoEra = await this.api.derive.staking.electedInfo(
+      clientStore.currentEra
+    )
     // console.log('electedInfoEra:', electedInfoEra)
     electedInfo.info = electedInfoEra.info.map((info) => {
       return {
         accountId: info.accountId.toHuman(),
-        controllerId: info.controllerId ? info.controllerId.toHuman() : info.controllerId,
+        controllerId: info.controllerId
+          ? info.controllerId.toHuman()
+          : info.controllerId,
         exposure: info.exposure.toHuman(),
         nominators: info.nominators.map((nominator) => nominator.toHuman()),
         rewardDestination: info.rewardDestination.toHuman(),
@@ -756,8 +839,12 @@ export class Client {
         validatorPrefs: info.validatorPrefs.toHuman()
       }
     })
-    electedInfo.nextElected = electedInfoEra.nextElected.map((elected) => elected.toHuman())
-    electedInfo.validators = electedInfoEra.validators.map((validator) => validator.toHuman())
+    electedInfo.nextElected = electedInfoEra.nextElected.map((elected) =>
+      elected.toHuman()
+    )
+    electedInfo.validators = electedInfoEra.validators.map((validator) =>
+      validator.toHuman()
+    )
     // console.log('electedInfo:', electedInfo)
   }
 
@@ -778,7 +865,8 @@ export class Client {
     const clientStore = useClientStore()
     const rewardPoints = []
 
-    const erasRewardPoints = await this.api.query.staking.erasRewardPoints.entries()
+    const erasRewardPoints
+      = await this.api.query.staking.erasRewardPoints.entries()
     erasRewardPoints.forEach(([ key, rewards ]) => {
       rewardPoints.push({
         era: key.args[ 0 ].toJSON(),
@@ -802,7 +890,8 @@ export class Client {
     const clientStore = useClientStore()
     const rewardsHistory = []
 
-    const erasValidatorReward = await this.api.query.staking.erasValidatorReward.entries() // (clientStore.currentEra - 1)
+    const erasValidatorReward
+      = await this.api.query.staking.erasValidatorReward.entries() // (clientStore.currentEra - 1)
     erasValidatorReward.forEach(([ key, rewards ]) => {
       const era = key.args[ 0 ].toJSON()
       rewardsHistory.push({
@@ -829,36 +918,38 @@ export class Client {
     const historyDepth = clientStore.consts.historyDepth
     const currentEra = clientStore.currentEra
     const depth = Math.min(historyDepth, currentEra)
-    const args = [...Array(depth)].map((_, i) => [
-      clientStore.currentEra - i
-    ])
+    const args = [...Array(depth)].map((_, i) => [clientStore.currentEra - i])
 
-    const unappliedSlashesEntries = await this.api.query.staking.unappliedSlashes.multi(args)
+    const unappliedSlashesEntries
+      = await this.api.query.staking.unappliedSlashes.multi(args)
 
-    const unappliedSlashes = unappliedSlashesEntries.reduce((arr, data, index) => {
-      const eraSlash = data.toHuman()
-      if (eraSlash.length === 0) {
-        return arr
-      }
-      // console.log('eraSlash:', eraSlash)
-
-      const era = currentEra - index
-      const slashes = eraSlash.map((slash) => {
-        return {
-          ...slash,
-          own: normalizeValue(slash.own),
-          payout: normalizeValue(slash.payout),
-          others: slash.others.map((other) => other.map((o) => normalizeValue(o)))
+    const unappliedSlashes = unappliedSlashesEntries
+      .reduce((arr, data, index) => {
+        const eraSlash = data.toHuman()
+        if (eraSlash.length === 0) {
+          return arr
         }
-      })
+        // console.log('eraSlash:', eraSlash)
 
-      arr.push({
-        era,
-        slashes
-      })
+        const era = currentEra - index
+        const slashes = eraSlash.map((slash) => {
+          return {
+            ...slash,
+            own: normalizeValue(slash.own),
+            payout: normalizeValue(slash.payout),
+            others: slash.others.map((other) =>
+              other.map((o) => normalizeValue(o))
+            )
+          }
+        })
 
-      return arr
-    }, [])
+        arr.push({
+          era,
+          slashes
+        })
+
+        return arr
+      }, [])
       .sort((a, b) => a.era - b.era)
 
     // console.log('unappliedSlashes:', unappliedSlashes)
@@ -873,10 +964,18 @@ export class Client {
   async fetchNominatorSlashInEra () {
     const clientStore = useClientStore()
 
-    const allEntries = await clientStore.client.api.query.staking.nominatorSlashInEra.entries()
-    allEntries.forEach(([ { args: [ era, nominatorId ] }, value ]) => {
-      console.log(`${ era }: ${ nominatorId } slashed ${ value.toHuman() }`)
-    })
+    const allEntries
+      = await clientStore.client.api.query.staking.nominatorSlashInEra.entries()
+    allEntries.forEach(
+      ([
+        {
+          args: [ era, nominatorId ]
+        },
+        value
+      ]) => {
+        console.log(`${ era }: ${ nominatorId } slashed ${ value.toHuman() }`)
+      }
+    )
   }
 
   async fetchAuthoredBlocks () {
@@ -884,7 +983,8 @@ export class Client {
     const entitiesStore = useEntitiesStore()
     const authoredBlocks = []
 
-    const authoredBlocksEntries = await clientStore.client.api.query.imOnline.authoredBlocks.entries() // (clientStore.activeEra.index - 1, this.address)
+    const authoredBlocksEntries
+      = await clientStore.client.api.query.imOnline.authoredBlocks.entries() // (clientStore.activeEra.index - 1, this.address)
     // console.log('authoredBlocksEntries:', authoredBlocksEntries)
     authoredBlocksEntries.forEach(([ key, blocks ]) => {
       const address = key.args[ 1 ].toJSON()
@@ -896,7 +996,9 @@ export class Client {
 
     // console.log('authoredBlocks:', authoredBlocks)
     entitiesStore.getActiveValidators.forEach((validator) => {
-      const authoredBlock = authoredBlocks.find((authoredBlock) => authoredBlock.address === validator.address)
+      const authoredBlock = authoredBlocks.find(
+        (authoredBlock) => authoredBlock.address === validator.address
+      )
       if (authoredBlock) {
         validator.blockCount = authoredBlock.blocks
       }
