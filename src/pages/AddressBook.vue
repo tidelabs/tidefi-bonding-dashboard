@@ -1,27 +1,22 @@
 <template>
   <div class="q-pa-xs full-width">
-    <q-dialog
-      v-model="showConfirmDialog"
-    >
-      <q-card style="min-width: 300px;">
+    <q-dialog v-model="showConfirmDialog">
+      <q-card style="min-width: 300px">
         <q-card-section>
-          <div class="text-h6">Confirm delete for: </div>
+          <div class="text-h6">Confirm delete for:</div>
           <q-separator />
           <div class="row">
-            <span style="min-width: 60px;">Name:</span><span>{{ aliasName }}</span>
+            <span style="min-width: 60px">Name:</span
+            ><span>{{ aliasName }}</span>
           </div>
           <div class="row">
-            <span style="min-width: 60px;">Address:</span><span class="ellipsis">{{ aliasAddress }}</span>
+            <span style="min-width: 60px">Address:</span
+            ><span class="ellipsis">{{ aliasAddress }}</span>
           </div>
         </q-card-section>
         <q-separator />
         <q-card-actions vertical>
-          <q-btn
-            label="Remove"
-            flat
-            no-caps
-            @click="onRemoveAlias"
-          />
+          <q-btn label="Remove" flat no-caps @click="onRemoveAlias" />
           <q-btn
             label="Cancel"
             flat
@@ -32,42 +27,38 @@
       </q-card>
     </q-dialog>
 
-    <q-dialog
-      v-model="showAliasDialog"
-    >
-    <q-card style="min-width: 300px;">
-      <q-card-section>
-        <div class="text-h6">Add alias: </div>
-        <div class="q-gutter-xs">
-          <q-input
-            outlined
-            v-model="aliasAddress"
-            label="Address"
-            color="purple-13"
-            :rules="[val => isValidAddress(val)  || 'Invalid address', val => isAddressAvailable(val) || 'Address already used']"
-          />
-          <q-input
-            outlined
-            v-model="aliasName"
-            label="Name"
-            color="purple-13"
-          />
-        </div>
-      </q-card-section>
-      <q-separator />
-      <q-card-actions vertical>
-        <q-btn
-          flat
-          :disable="shouldDisableSave"
-          @click="onSaveAlias"
-        >Save</q-btn>
-        <q-btn
-          flat
-          @click="showAliasDialog = false"
-        >Cancel</q-btn>
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+    <q-dialog v-model="showAliasDialog">
+      <q-card style="min-width: 300px">
+        <q-card-section>
+          <div class="text-h6">Add alias:</div>
+          <div class="q-gutter-xs">
+            <q-input
+              outlined
+              v-model="aliasAddress"
+              label="Address"
+              :color="$q.dark.isActive ? 'yellow' : ''"
+              :rules="[
+                (val) => isValidAddress(val) || 'Invalid address',
+                (val) => isAddressAvailable(val) || 'Address already used',
+              ]"
+            />
+            <q-input
+              outlined
+              v-model="aliasName"
+              label="Name"
+              :color="$q.dark.isActive ? 'yellow' : ''"
+            />
+          </div>
+        </q-card-section>
+        <q-separator />
+        <q-card-actions vertical>
+          <q-btn flat :disable="shouldDisableSave" @click="onSaveAlias"
+            >Save</q-btn
+          >
+          <q-btn flat @click="showAliasDialog = false">Cancel</q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
     <div class="row justify-around items-center q-mb-md">
       <q-input
@@ -75,8 +66,8 @@
         label="Filter by alias"
         outlined
         clearable
-        color="purple-13"
-        style="min-width: 300px; max-height: 56px;"
+        :color="$q.dark.isActive ? 'yellow' : ''"
+        style="min-width: 300px; max-height: 56px"
         class="ellipsis"
       />
       <div class="row justify-center items-center q-gutter-sm">
@@ -85,7 +76,11 @@
           no-caps
           icon="add"
           rounded
-          @click="showAliasDialog = true; aliasName = ''; aliasAddress = ''"
+          @click="
+            showAliasDialog = true;
+            aliasName = '';
+            aliasAddress = '';
+          "
         />
         <q-btn
           label="Export"
@@ -103,14 +98,28 @@
         />
       </div>
     </div>
-    <div v-if="filteredAliases.length > 0" class="row justify-center q-gutter-sm">
-      <q-card v-for="( alias, index ) in filteredAliases" :key="alias.address + '_' + index" style="width: 380px; height: 60px;">
+    <div
+      v-if="filteredAliases.length > 0"
+      class="row justify-center q-gutter-sm"
+    >
+      <q-card
+        v-for="(alias, index) in filteredAliases"
+        :key="alias.address + '_' + index"
+        style="width: 380px; height: 60px"
+      >
         <q-item>
           <q-item-section top>
-            <q-item-label><Identicon :address="alias.address" />{{ alias.name }}</q-item-label>
-            <q-item-label caption style="font-size: 11px;" class="ellipsis">
+            <q-item-label
+              ><Identicon :address="alias.address" />{{
+                alias.name
+              }}</q-item-label
+            >
+            <q-item-label caption style="font-size: 11px" class="ellipsis">
               <router-link
-                :to="{ name: 'address-lookup', params: { address: alias.address } }"
+                :to="{
+                  name: 'address-lookup',
+                  params: { address: alias.address },
+                }"
                 class="entity-link"
               >
                 {{ alias.address }}
@@ -119,7 +128,19 @@
           </q-item-section>
           <q-item-section side class="">
             <div class="text-grey-8 q-gutter-xs">
-              <q-btn class="" size="10px" flat dense round icon="delete" @click="aliasAddress = alias.address; aliasName = alias.name; showConfirmDialog = true;"/>
+              <q-btn
+                class=""
+                size="10px"
+                flat
+                dense
+                round
+                icon="delete"
+                @click="
+                  aliasAddress = alias.address;
+                  aliasName = alias.name;
+                  showConfirmDialog = true;
+                "
+              />
               <!-- <q-btn class="" size="10px" flat dense round icon="edit"/> -->
             </div>
           </q-item-section>
@@ -208,7 +229,13 @@ export default {
     })
 
     function onExport () {
-      if (exportFile('aliases.json', JSON.stringify(sortedAliases.value), 'application/json')) {
+      if (
+        exportFile(
+          'aliases.json',
+          JSON.stringify(sortedAliases.value),
+          'application/json'
+        )
+      ) {
         // success!
         $q.notify({
           message: 'Aliases saved!!',

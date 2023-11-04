@@ -82,7 +82,7 @@
           map-options
           outlines
           :disable="isLoading"
-          color="purple-13"
+          :color="$q.dark.isActive ? 'yellow' : ''"
           label="Selected network"
           input-class="q-mx-sm"
         />

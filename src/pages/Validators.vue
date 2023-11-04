@@ -5,6 +5,7 @@
       id="validator-data"
       title="Validators"
       dense
+      :color="$q.dark.isActive ? 'yellow' : 'grey-4'"
       :rows="filteredValidators"
       :columns="columns"
       :loading="tableLoading"
@@ -35,7 +36,10 @@
                     "
                   />
                   <div v-if="hasFilter">
-                    <q-icon :name="solidCheckCircle" size="md" color="purple-13"
+                    <q-icon
+                      :name="solidCheckCircle"
+                      size="md"
+                      :color="$q.dark.isActive ? 'yellow' : ''"
                       ><q-tooltip
                         >1 or more Filters are active</q-tooltip
                       ></q-icon
@@ -49,62 +53,62 @@
                 <!-- <div class="row justify-evenly items-center q-gutter-sm"> -->
                 <q-toggle
                   dense
-                  color="purple-13"
+                  :color="$q.dark.isActive ? 'yellow' : ''"
                   v-model="preferencesStore.filters.inactive"
                   label="Inactive Validators"
                 />
                 <q-toggle
                   dense
-                  color="purple-13"
+                  :color="$q.dark.isActive ? 'yellow' : ''"
                   v-model="preferencesStore.filters.nextSet"
                   label="Not Elected Next Set"
                 />
                 <q-toggle
                   dense
-                  color="purple-13"
+                  :color="$q.dark.isActive ? 'yellow' : ''"
                   v-model="preferencesStore.filters.highCommission"
                   label="High Commission (>10%)"
                 />
                 <q-toggle
                   dense
-                  color="purple-13"
+                  :color="$q.dark.isActive ? 'yellow' : ''"
                   v-model="preferencesStore.filters.recentPayouts"
                   label="Recent Payouts (3 days or less)"
                 />
                 <q-toggle
                   dense
-                  color="purple-13"
+                  :color="$q.dark.isActive ? 'yellow' : ''"
                   v-model="preferencesStore.filters.oversubscribed"
                   label="Oversubscribed"
                 />
                 <q-toggle
                   dense
-                  color="purple-13"
+                  :color="$q.dark.isActive ? 'yellow' : ''"
                   v-model="preferencesStore.filters.blockedNominations"
                   label="Blocked Nominations"
                 />
                 <q-toggle
                   dense
-                  color="purple-13"
+                  :color="$q.dark.isActive ? 'yellow' : ''"
                   v-model="preferencesStore.filters.missingIdentity"
                   label="Missing Identity"
                 />
-                <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.noVerifiedIdentity" label="No Verified Identity" /> -->
+                <!-- <q-toggle dense :color="$q.dark.isActive ? 'yellow' : ''" v-model="preferencesStore.filters.noVerifiedIdentity" label="No Verified Identity" /> -->
                 <q-toggle
                   dense
-                  color="purple-13"
+                  :color="$q.dark.isActive ? 'yellow' : ''"
                   v-model="preferencesStore.filters.notStaked"
                   label="Payee Not Staked"
                 />
                 <q-toggle
                   dense
-                  color="purple-13"
+                  :color="$q.dark.isActive ? 'yellow' : ''"
                   v-model="preferencesStore.filters.selfController"
                   label="Self Controller"
                 />
-                <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.belowAvgPoints" label="Below Average Era Points" /> -->
-                <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.slashed" label="Slashed" /> -->
-                <!-- <q-toggle dense color="purple-13" v-model="preferencesStore.filters.noGovernance" label="No Governance Participation" /> -->
+                <!-- <q-toggle dense :color="$q.dark.isActive ? 'yellow' : ''" v-model="preferencesStore.filters.noGovernance" label="No Governance Participation" /> -->
+                <!-- <q-toggle dense :color="$q.dark.isActive ? 'yellow' : ''" v-model="preferencesStore.filters.belowAvgPoints" label="Below Average Era Points" /> -->
+                <!-- <q-toggle dense :color="$q.dark.isActive ? 'yellow' : ''" v-model="preferencesStore.filters.slashed" label="Slashed" /> -->
                 <!-- </div> -->
               </q-card-section>
             </q-card>
@@ -119,6 +123,8 @@
                 <q-badge
                   v-if="props.row.blockCount"
                   :label="props.row.blockCount"
+                  :color="$q.dark.isActive ? 'yellow' : ''"
+                  :text-color="$q.dark.isActive ? 'black' : ''"
                   class="justify-center"
                 >
                   <q-tooltip>Blocks produced this era</q-tooltip>
@@ -292,6 +298,8 @@
                   <q-badge
                     v-if="props.row.blockCount"
                     :label="props.row.blockCount"
+                    :color="$q.dark.isActive ? 'yellow' : ''"
+                    :text-color="$q.dark.isActive ? 'black' : ''"
                     class="justify-center"
                     style="width: 26px"
                   >
