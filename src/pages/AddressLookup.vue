@@ -4,52 +4,52 @@
       <q-spinner-facebook size="lg" />
     </div>
     <div v-else class="column justify-start items-start full-width">
-      <q-dialog
-        v-model="showAliasDialog"
-      >
-      <q-card style="min-width: 300px;">
-        <q-card-section v-if="!hasAlias(entity.address)">
-          <div class="text-h6">Add alias for: {{ entity.identity.name }}</div>
-          <q-input
-            outlined
-            v-model="aliasName"
-            label="Name"
-            color="purple-13"
-          />
-        </q-card-section>
-        <q-card-section v-else>
-          <div class="text-h6">Remove alias for: {{ getAlias(entity.address).name }}</div>
-        </q-card-section>
-        <q-separator />
-        <q-card-actions vertical>
-          <q-btn
-            v-if="!hasAlias(entity.address)"
-            flat
-            :disable="!aliasName"
-            @click="onSaveAlias"
-          >Save</q-btn>
-          <q-btn
-            v-else
-            flat
-            @click="onRemoveAlias"
-          >Remove</q-btn>
-          <q-btn
-            flat
-            @click="showAliasDialog = false"
-          >Cancel</q-btn>
-        </q-card-actions>
-      </q-card>
+      <q-dialog v-model="showAliasDialog">
+        <q-card style="min-width: 300px">
+          <q-card-section v-if="!hasAlias(entity.address)">
+            <div class="text-h6">Add alias for: {{ entity.identity.name }}</div>
+            <q-input
+              outlined
+              v-model="aliasName"
+              label="Name"
+              :color="$q.dark.isActive ? 'yellow' : ''"
+            />
+          </q-card-section>
+          <q-card-section v-else>
+            <div class="text-h6">
+              Remove alias for: {{ getAlias(entity.address).name }}
+            </div>
+          </q-card-section>
+          <q-separator />
+          <q-card-actions vertical>
+            <q-btn
+              v-if="!hasAlias(entity.address)"
+              flat
+              :disable="!aliasName"
+              @click="onSaveAlias"
+              >Save</q-btn
+            >
+            <q-btn v-else flat @click="onRemoveAlias">Remove</q-btn>
+            <q-btn flat @click="showAliasDialog = false">Cancel</q-btn>
+          </q-card-actions>
+        </q-card>
       </q-dialog>
-      <div class="row justify-center items-start full-width q-mb-lg q-gutter-lg">
+      <div
+        class="row justify-center items-start full-width q-mb-lg q-gutter-lg"
+      >
         <q-input
           v-if="aliases.length === 0"
           v-model="selectedAddress"
           label="Input an Address"
           outlined
           clearable
-          color="purple-13"
-          :rules="[val => (isValidAddress(val) ? true : (entity = null && false)) || 'Invalid address']"
-          style="min-width: 300px; max-height: 56px;"
+          :color="$q.dark.isActive ? 'yellow' : ''"
+          :rules="[
+            (val) =>
+              (isValidAddress(val) ? true : (entity = null && false)) ||
+              'Invalid address',
+          ]"
+          style="min-width: 300px; max-height: 56px"
           class="ellipsis"
         />
         <q-select
@@ -67,10 +67,14 @@
           outlined
           new-value-mode="add"
           debounce="500"
-          color="purple-13"
+          :color="$q.dark.isActive ? 'yellow' : ''"
           label="Input an Address"
-          :rules="[val => (isValidAddress(val) ? true : (entity = null && false)) || 'Invalid address']"
-          style="min-width: 300px; max-height: 56px;"
+          :rules="[
+            (val) =>
+              (isValidAddress(val) ? true : (entity = null && false)) ||
+              'Invalid address',
+          ]"
+          style="min-width: 300px; max-height: 56px"
           class="ellipsis"
         />
         <q-btn
@@ -78,8 +82,8 @@
           label="Alias"
           outline
           no-caps
-          :disable="!(isValidAddress(selectedAddress))"
-          style="height: 56px;"
+          :disable="!isValidAddress(selectedAddress)"
+          style="height: 56px"
           @click="showAliasDialog = !showAliasDialog"
         />
       </div>
@@ -97,7 +101,10 @@
 
       <!-- End of split page -->
       <div class="column full-width q-mt-md q-gutter-sm">
-        <StakerRewards v-if="entity?.stakerRewards && entity?.stakerRewards?.length > 0" :rewards="entity.stakerRewards" />
+        <StakerRewards
+          v-if="entity?.stakerRewards && entity?.stakerRewards?.length > 0"
+          :rewards="entity.stakerRewards"
+        />
       </div>
     </div>
   </div>
@@ -158,7 +165,11 @@ export default {
     })
 
     onBeforeMount(() => {
-      if (clientStore.client && route.params.address && isValidAddress(route.params.address)) {
+      if (
+        clientStore.client
+        && route.params.address
+        && isValidAddress(route.params.address)
+      ) {
         selectedAddress.value = route.params.address
       }
     })
@@ -202,14 +213,19 @@ export default {
       }
     })
 
-    watch(() => clientStore.client !== null, () => {
-      if (clientStore.client
-        && route.params.address
-        && isValidAddress(route.params.address)
-        && selectedAddress.value !== route.params.address) {
-        selectedAddress.value = route.params.address
+    watch(
+      () => clientStore.client !== null,
+      () => {
+        if (
+          clientStore.client
+          && route.params.address
+          && isValidAddress(route.params.address)
+          && selectedAddress.value !== route.params.address
+        ) {
+          selectedAddress.value = route.params.address
+        }
       }
-    })
+    )
 
     function filterEntities (val, update) {
       if (val === '' || preferencesStore.aliases.isEmpty) {
@@ -229,7 +245,9 @@ export default {
 
     // takes an entity's address and checks if there is an alias
     function hasAlias (address) {
-      return !!preferencesStore.aliases.find((alias) => address === alias.address)
+      return !!preferencesStore.aliases.find(
+        (alias) => address === alias.address
+      )
     }
 
     function getAlias (address) {

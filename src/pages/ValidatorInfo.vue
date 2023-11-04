@@ -3,7 +3,10 @@
     <div v-if="loading" class="column justify-center items-center">
       <q-spinner-facebook size="lg" />
     </div>
-    <div v-else-if="validator === null && $route.params.address" class="error-message column justify-center items-center">
+    <div
+      v-else-if="validator === null && $route.params.address"
+      class="error-message column justify-center items-center"
+    >
       <div class="q-mt-lg">
         Validator address not found!
         <q-icon :name="infoIcon">
@@ -28,12 +31,12 @@
           @filter="filterValidators"
           map-options
           outlined
-          color="purple-13"
+          :color="$q.dark.isActive ? 'yellow' : ''"
           label="Selected validator"
-          style="min-width: 300px;"
+          style="min-width: 300px"
         />
       </div>
-      <div class="row  full-width">
+      <div class="row full-width">
         <EntityName :entity="validator" />
       </div>
       <div class="row justify-start items-stretch full-width q-gutter-sm">
@@ -48,10 +51,23 @@
       </div>
 
       <div class="column full-width q-mt-md q-gutter-sm">
-        <ErasRewardPoints v-if="validator && validator.erasRewardPoints.length" :erasRewardPoints="validator.erasRewardPoints" />
-        <StakerRewards v-if="validator && validator.stakerRewards.length > 0" :rewards="validator.stakerRewards" :isValidator="true" />
-        <BondingHistory v-if="validator && validator.bondingHistory.length > 0" :bondingHistory="validator.bondingHistory" />
-        <CommissionHistory v-if="validator && validator.commissionHistory.length > 0" :commissionHistory="validator.commissionHistory" />
+        <ErasRewardPoints
+          v-if="validator && validator.erasRewardPoints.length"
+          :erasRewardPoints="validator.erasRewardPoints"
+        />
+        <StakerRewards
+          v-if="validator && validator.stakerRewards.length > 0"
+          :rewards="validator.stakerRewards"
+          :isValidator="true"
+        />
+        <BondingHistory
+          v-if="validator && validator.bondingHistory.length > 0"
+          :bondingHistory="validator.bondingHistory"
+        />
+        <CommissionHistory
+          v-if="validator && validator.commissionHistory.length > 0"
+          :commissionHistory="validator.commissionHistory"
+        />
       </div>
     </div>
   </div>
@@ -119,7 +135,9 @@ export default {
 
     const validator = computed(() => {
       if (isValidAddress(route.params.address)) {
-        const v = validators.value.find((val) => val.address === route.params.address)
+        const v = validators.value.find(
+          (val) => val.address === route.params.address
+        )
         if (v) {
           // console.log('Selected validator:', v, clientStore)
 
@@ -145,11 +163,12 @@ export default {
       if (val) {
         selectedValidator.value = val
         stakerRewardsData.splice(0, stakerRewardsData.length)
-        stakerRewards(clientStore.client.api, val.address, true)
-          .then((result) => {
+        stakerRewards(clientStore.client.api, val.address, true).then(
+          (result) => {
             stakerRewardsData.splice(0, stakerRewardsData.length, ...result)
             // console.log('StakerRewards:', stakerRewardsData)
-          })
+          }
+        )
       }
       else {
         stakerRewardsData.splice(0, stakerRewardsData.length)
