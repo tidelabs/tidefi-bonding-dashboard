@@ -1,12 +1,7 @@
 import { computed, ref, reactive, watch } from 'vue'
-import {
-  getControllerInfo
-} from '../helpers/validators'
+import { getControllerInfo } from '../helpers/validators'
 import useIdentity from 'src/helpers/useIdentity'
-import {
-  toBaseToken,
-  normalizeValue
-} from 'src/helpers/utils'
+import { toBaseToken, normalizeValue } from 'src/helpers/utils'
 import BN from 'bignumber.js'
 import { useClientStore } from 'stores/client'
 import { useEntitiesStore } from 'stores/entities'
@@ -36,7 +31,9 @@ export async function addOrUpdateEntity (address, validator = false) {
 export async function updateLastBlock (number, author) {
   const entitiesStore = useEntitiesStore()
 
-  const validator = entitiesStore.getActiveValidators.find((validator) => validator.address === author)
+  const validator = entitiesStore.getActiveValidators.find(
+    (validator) => validator.address === author
+  )
   if (validator) {
     validator.lastBlock = number
   }
@@ -186,12 +183,17 @@ export class Entity {
 
     // console.log('Account:', entryHash, entrySize)
 
-    const controller = await getControllerInfo(this.address, clientStore.client.api)
+    const controller = await getControllerInfo(
+      this.address,
+      clientStore.client.api
+    )
     this.controller = controller.toHuman()
     // console.log('controller:', this.controller)
     // console.log('address   :', this.address)
 
-    const payee = await await clientStore.client.api.query.staking.payee(this.address)
+    const payee = await await clientStore.client.api.query.staking.payee(
+      this.address
+    )
     this.payee = payee.toHuman()
     // console.log('payee:', this.address, this.payee)
 
@@ -213,7 +215,11 @@ export class Entity {
       riot,
       twitter,
       web
-    } = useIdentity(this.address, clientStore.subIdentities, clientStore.client.api)
+    } = useIdentity(
+      this.address,
+      clientStore.subIdentities,
+      clientStore.client.api
+    )
     await updateIdentity()
     // console.log(identityInfo.value, parentInfo.value, superInfo.value)
 
@@ -243,7 +249,9 @@ export class Entity {
     await this.fetchValidatorPrefs()
     await this.fetchCurrentStakes()
 
-    const nominations = await clientStore.client.api.query.staking.nominators(this.address)
+    const nominations = await clientStore.client.api.query.staking.nominators(
+      this.address
+    )
     this.nominations = nominations.toJSON()
     // console.log('nominations:', this.nominations)
 
@@ -252,7 +260,9 @@ export class Entity {
       await this.updateStakerInfo()
       await this.fetchStakingInfo()
 
-      const slashingSpans = (await clientStore.client.api.query.staking.slashingSpans(this.address)).toJSON()
+      const slashingSpans = (
+        await clientStore.client.api.query.staking.slashingSpans(this.address)
+      ).toJSON()
       // console.log('slashingSpans:', this.slashingSpans, slashingSpans)
       this.slashingSpans = ref(slashingSpans)
 
@@ -264,24 +274,32 @@ export class Entity {
         this.address
       ])
 
-      const validatorSlashInEra = (await clientStore.client.api.query.staking.validatorSlashInEra.multi(args))
+      const validatorSlashInEra
+        = await clientStore.client.api.query.staking.validatorSlashInEra.multi(
+          args
+        )
       if (validatorSlashInEra) {
-        const slashesInEras = validatorSlashInEra.reduce((acc, val, index) => {
-          if (val.isEmpty) return acc
+        const slashesInEras = validatorSlashInEra
+          .reduce((acc, val, index) => {
+            if (val.isEmpty) return acc
 
-          const era = currentEra - index
-          const valHuman = val.toHuman()
-          acc.push({
-            era,
-            percent: valHuman[ 0 ],
-            amount: normalizeValue(valHuman[ 1 ])
-          })
+            const era = currentEra - index
+            const valHuman = val.toHuman()
+            acc.push({
+              era,
+              percent: valHuman[ 0 ],
+              amount: normalizeValue(valHuman[ 1 ])
+            })
 
-          return acc
-        }, [])
+            return acc
+          }, [])
           .sort((a, b) => a.era - b.era)
 
-        this.slashesInEras.splice(0, this.slashesInEras.length, ...slashesInEras)
+        this.slashesInEras.splice(
+          0,
+          this.slashesInEras.length,
+          ...slashesInEras
+        )
 
         // console.log('slashesInEras:', slashesInEras)
       }
@@ -291,10 +309,11 @@ export class Entity {
     }
 
     // ones that will be done asynchronously
-    stakerRewards(clientStore.client.api, this.address, true)
-      .then((rewards) => {
+    stakerRewards(clientStore.client.api, this.address, true).then(
+      (rewards) => {
         this.stakerRewards.splice(0, this.stakerRewards.length, ...rewards)
-      })
+      }
+    )
 
     if (this.stakers && 'total' in this.stakers) {
       const {
@@ -327,14 +346,21 @@ export class Entity {
 
     this.isOversubscribed = computed(() => {
       const clientStore = useClientStore()
-      return this.nominatorCount.value > clientStore.consts.maxNominatorRewardedPerValidator
+      return (
+        this.nominatorCount.value
+        > clientStore.consts.maxNominatorRewardedPerValidator
+      )
     })
 
     this.isSlashed = computed(() => !!this.slashesInEras.length)
     // console.log('isSlashed:', this.identity.name.value, this.isSlashed.value)
 
     this.nominatorCount = computed(() => {
-      if (this.stakers && this.stakers.others && this.stakers.others.length > 0) {
+      if (
+        this.stakers
+        && this.stakers.others
+        && this.stakers.others.length > 0
+      ) {
         return this.stakers.others.length
       }
       return 0
@@ -381,7 +407,10 @@ export class Entity {
     this.currentRewardPoints = computed(() => {
       const clientStore = useClientStore()
 
-      return clientStore.rewardPoints[ clientStore.rewardPoints.length - 1 ]?.rewards?.individual[ this.address ] || 0
+      return (
+        clientStore.rewardPoints[ clientStore.rewardPoints.length - 1 ]?.rewards
+          ?.individual[ this.address ] || 0
+      )
     })
 
     this.erasRewardPoints = computed(() => {
@@ -419,8 +448,16 @@ export class Entity {
         return ''
       }
 
-      if (this.stakingInfo && this.stakingInfo.stakingLedger && this.stakingInfo.stakingLedger.claimedRewards && this.stakingInfo.stakingLedger.claimedRewards.length > 0) {
-        const lastEraPaid = this.stakingInfo.stakingLedger.claimedRewards[ this.stakingInfo.stakingLedger.claimedRewards.length - 1 ]
+      if (
+        this.stakingInfo
+        && this.stakingInfo.stakingLedger
+        && this.stakingInfo.stakingLedger.claimedRewards
+        && this.stakingInfo.stakingLedger.claimedRewards.length > 0
+      ) {
+        const lastEraPaid
+          = this.stakingInfo.stakingLedger.claimedRewards[
+            this.stakingInfo.stakingLedger.claimedRewards.length - 1
+          ]
 
         if (lastEraPaid === -1) {
           return 'never'
@@ -440,9 +477,12 @@ export class Entity {
       return ''
     })
 
-    watch(() => this.stakerRewards, (val) => {
-      console.log('watch StakersRewards', val)
-    })
+    watch(
+      () => this.stakerRewards,
+      (val) => {
+        console.log('watch StakersRewards', val)
+      }
+    )
 
     // success
     return true
@@ -470,38 +510,43 @@ export class Entity {
   formatTokenValue (val) {
     const clientStore = useClientStore()
 
-    return clientStore.decimals.length > 0 ? toBaseToken(val, clientStore.decimals[ 0 ]) : 0
+    return clientStore.decimals.length > 0
+      ? toBaseToken(val, clientStore.decimals[ 0 ])
+      : 0
   }
 
   async fetchBalances () {
     const clientStore = useClientStore()
 
-    this.unsubscribeBalances
-      = await clientStore.client.api.derive.balances.all(
-        this.address, (balance) => {
-          this.balances.freeBalance = balance.freeBalance.toString()
-          this.balances.frozenFee = balance.frozenFee.toString()
-          this.balances.frozenMisc = balance.frozenMisc.toString()
-          this.balances.reservedBalance = balance.reservedBalance.toString()
-          this.balances.votingBalance = balance.votingBalance.toString()
-          this.balances.availableBalance = balance.availableBalance.toString()
-          this.balances.lockedBalance = balance.lockedBalance.toString()
-          this.balances.lockedBreakdown = balance.lockedBreakdown
-            .map((breakdown) => breakdown.toHuman())
-            .map((breakdown) => {
-              return {
-                ...breakdown,
-                amount: normalizeValue(breakdown.amount)
-              }
-            })
-          this.balances.vestingLocked = balance.vestingLocked.toString()
-          this.balances.isVesting = balance.isVesting
-          this.balances.vestedBalance = balance.vestedBalance.toString()
-          this.balances.vestedClaimable = balance.vestedClaimable.toString()
-          this.balances.vesting = balance.vesting.toString()
-          this.balances.vestingTotal = balance.vestingTotal.toString()
-          this.balances.namedReserves = balance.namedReserves.map((reserve) => reserve.toHuman())
-        })
+    this.unsubscribeBalances = await clientStore.client.api.derive.balances.all(
+      this.address,
+      (balance) => {
+        this.balances.freeBalance = balance.freeBalance.toString()
+        this.balances.frozenFee = balance.frozenFee.toString()
+        this.balances.frozenMisc = balance.frozenMisc.toString()
+        this.balances.reservedBalance = balance.reservedBalance.toString()
+        this.balances.votingBalance = balance.votingBalance.toString()
+        this.balances.availableBalance = balance.availableBalance.toString()
+        this.balances.lockedBalance = balance.lockedBalance.toString()
+        this.balances.lockedBreakdown = balance.lockedBreakdown
+          .map((breakdown) => breakdown.toHuman())
+          .map((breakdown) => {
+            return {
+              ...breakdown,
+              amount: normalizeValue(breakdown.amount)
+            }
+          })
+        this.balances.vestingLocked = balance.vestingLocked.toString()
+        this.balances.isVesting = balance.isVesting
+        this.balances.vestedBalance = balance.vestedBalance.toString()
+        this.balances.vestedClaimable = balance.vestedClaimable.toString()
+        this.balances.vesting = balance.vesting.toString()
+        this.balances.vestingTotal = balance.vestingTotal.toString()
+        this.balances.namedReserves = balance.namedReserves.map((reserve) =>
+          reserve.toHuman()
+        )
+      }
+    )
 
     // console.log('balances:', this.balances)
   }
@@ -510,7 +555,9 @@ export class Entity {
     const clientStore = useClientStore()
 
     // all validators in StakersEntries are in the elected set
-    const stakerEntry = clientStore.stakerEntries.find((se) => se.address === this.address)
+    const stakerEntry = clientStore.stakerEntries.find(
+      (se) => se.address === this.address
+    )
     if (stakerEntry) {
       this.elected = true
       this.stakers = stakerEntry.stakers
@@ -518,7 +565,9 @@ export class Entity {
     }
     else {
       // console.log('Validator not in current set:', this.address)
-      const validatorEntry = clientStore.validatorEntries.find((ve) => ve.address === this.address)
+      const validatorEntry = clientStore.validatorEntries.find(
+        (ve) => ve.address === this.address
+      )
       if (validatorEntry) {
         this.elected = false
         this.stakers = []
@@ -548,7 +597,13 @@ export class Entity {
 
       // adjusted for commission
       // console.log('stakedReturn:', this.address, stakedReturn, this.preferences.commission)
-      this.stakedReturn = ref((this.inflation.stakedReturn * (100 - parseFloat(this.preferences.commission)) / 100).toFixed(2))
+      this.stakedReturn = ref(
+        (
+          (this.inflation.stakedReturn
+            * (100 - parseFloat(this.preferences.commission)))
+          / 100
+        ).toFixed(2)
+      )
 
       // console.log('Validator Bonded Return:', adjusted.toNumber(), stakedReturn, this.stakedReturn)
     }
@@ -558,7 +613,8 @@ export class Entity {
     const clientStore = useClientStore()
 
     this.unsubscribeStakingInfo
-    = await clientStore.client.api.derive.staking.account(this.address,
+      = await clientStore.client.api.derive.staking.account(
+        this.address,
         (si) => {
           // console.log('si:', si)
           const stakingInfo = {}
@@ -569,7 +625,9 @@ export class Entity {
           stakingInfo.exposure = si.exposure.toJSON()
           stakingInfo.exposure.others = exposureHuman.others
 
-          stakingInfo.nextSessionIds = si.nextSessionIds.map((id) => id.toHuman())
+          stakingInfo.nextSessionIds = si.nextSessionIds.map((id) =>
+            id.toHuman()
+          )
           stakingInfo.nominators = si.nominators.map((id) => id.toHuman())
           stakingInfo.redeemable = si.redeemable.toJSON()
           stakingInfo.rewardDestination = si.rewardDestination.toHuman()
@@ -577,29 +635,38 @@ export class Entity {
 
           const stakingLedgerHuman = si.stakingLedger.toHuman()
           stakingInfo.stakingLedger = si.stakingLedger.toJSON()
-          stakingInfo.stakingLedger.active = normalizeValue(stakingLedgerHuman.active)
-          stakingInfo.stakingLedger.total = normalizeValue(stakingLedgerHuman.total)
+          stakingInfo.stakingLedger.active = normalizeValue(
+            stakingLedgerHuman.active
+          )
+          stakingInfo.stakingLedger.total = normalizeValue(
+            stakingLedgerHuman.total
+          )
 
           stakingInfo.stashId = si.stashId.toHuman()
-          stakingInfo.unlocking = si.unlocking ? si.unlocking.map((value) => {
-            return {
-              remainingEras: value.remainingEras.toNumber(),
-              value: value.value.toString()
-            }
-          }) : []
+          stakingInfo.unlocking = si.unlocking
+            ? si.unlocking.map((value) => {
+              return {
+                remainingEras: value.remainingEras.toNumber(),
+                value: value.value.toString()
+              }
+            })
+            : []
           // console.log('unlocking:', stakingInfo.unlocking)
           stakingInfo.validatorPrefs = si.validatorPrefs.toJSON()
 
           this.stakingInfo = stakingInfo
 
           // console.log('stakingInfo:', this.stakingInfo)
-        })
+        }
+      )
   }
 
   async fetchLedger () {
     const clientStore = useClientStore()
 
-    const ledgerData = await clientStore.client.api.query.staking.ledger(this.address)
+    const ledgerData = await clientStore.client.api.query.staking.ledger(
+      this.address
+    )
     if (ledgerData) {
       const ledger = ledgerData.toHuman()
       // console.log('Ledger:', ledger)
@@ -627,10 +694,18 @@ export class Entity {
   async fetchCurrentStakes () {
     const clientStore = useClientStore()
 
-    this.unsubscribeCurrentStakes = await clientStore.client.api.query.tidefiStaking.accountStakes(this.address, (currentStakes) => {
-      this.currentStakes.splice(0, this.currentStakes.length, ...(currentStakes.toHuman()))
-      // console.log('currentStakes:', currentStakes.toHuman())
-    })
+    this.unsubscribeCurrentStakes
+      = await clientStore.client.api.query.tidefiStaking.accountStakes(
+        this.address,
+        (currentStakes) => {
+          this.currentStakes.splice(
+            0,
+            this.currentStakes.length,
+            ...currentStakes.toHuman()
+          )
+          // console.log('currentStakes:', currentStakes.toHuman())
+        }
+      )
   }
 
   async fetchBondingHistory () {
@@ -644,26 +719,28 @@ export class Entity {
       this.address
     ])
 
-    const stakerEntries = await clientStore.client.api.query.staking.erasStakers.multi(args)
-    const se = stakerEntries.map((data, index) => {
-      const era = currentEra - index
-      const stakers = data.toHuman()
-      stakers.own = normalizeValue(stakers.own)
-      stakers.total = normalizeValue(stakers.total)
-      stakers.others = stakers.others.map((other) => {
+    const stakerEntries
+      = await clientStore.client.api.query.staking.erasStakers.multi(args)
+    const se = stakerEntries
+      .map((data, index) => {
+        const era = currentEra - index
+        const stakers = data.toHuman()
+        stakers.own = normalizeValue(stakers.own)
+        stakers.total = normalizeValue(stakers.total)
+        stakers.others = stakers.others.map((other) => {
+          return {
+            ...other,
+            value: normalizeValue(other.value)
+          }
+        })
+
         return {
-          ...other,
-          value: normalizeValue(other.value)
+          era,
+          own: stakers.own,
+          total: stakers.total,
+          others: stakers.others
         }
       })
-
-      return {
-        era,
-        own: stakers.own,
-        total: stakers.total,
-        others: stakers.others
-      }
-    })
       .sort((a, b) => a.era - b.era)
     this.bondingHistory.splice(0, this.bondingHistory.length, ...se)
 
@@ -672,7 +749,6 @@ export class Entity {
 
   async fetchValidatorInfo () {
     // const clientStore = useClientStore()
-
     // const validatorInfo = await clientStore.client.api.query.staking.validators(this.address)
     // console.log('Validator Info:', validatorInfo)
   }
@@ -680,25 +756,22 @@ export class Entity {
   async fetchTokenBalances () {
     const clientStore = useClientStore()
 
-    const a = clientStore.assets.map(({ id }) => [
-      this.address,
-      id
-    ])
+    const a = clientStore.assets.map(({ id }) => [ this.address, id ])
 
     this.unsubscribeTokenBalances
-    = await clientStore.client.api.query.assets.account.multi(a,
-        (data) => {
-          this.tokenBalances = data.map((balance, i) => {
-            const assetId = parseInt(a[ i ][ 1 ])
-            const balanceHuman = balance.toHuman()
-            const val = { id: assetId, ledger: balance.toJSON() }
-            if (val.ledger !== null) {
-              val.ledger.balance = normalizeValue(balanceHuman.balance)
-              val.ledger.reason = balanceHuman.reason
-            }
-            return val
-          })
+      = await clientStore.client.api.query.assets.account.multi(a, (data) => {
+        this.tokenBalances = data.map((balance, i) => {
+          const assetId = parseInt(a[ i ][ 1 ])
+          const balanceHuman = balance.toHuman()
+          const val = { id: assetId, ledger: balance.toJSON() }
+          if (val.ledger !== null) {
+            val.ledger.balance = normalizeValue(balanceHuman.balance)
+            val.ledger.reserved = normalizeValue(balanceHuman.reserved)
+            val.ledger.reason = balanceHuman.reason
+          }
+          return val
         })
+      })
   }
 
   async fetchValidatorPrefs () {
@@ -712,23 +785,29 @@ export class Entity {
       this.address
     ])
 
-    const validatorPrefsHistory = (await clientStore.client.api.query.staking.erasValidatorPrefs.multi(args))
+    const validatorPrefsHistory
+      = await clientStore.client.api.query.staking.erasValidatorPrefs.multi(args)
     // console.log('validatorPrefsHistory:', validatorPrefsHistory)
-    const commissionHistory = validatorPrefsHistory.reduce((acc, preferences, index) => {
-      if (!preferences || preferences.isEmpty) return acc
+    const commissionHistory = validatorPrefsHistory
+      .reduce((acc, preferences, index) => {
+        if (!preferences || preferences.isEmpty) return acc
 
-      const data = preferences.toJSON()
-      const era = currentEra - index
-      acc.push({
-        era,
-        commission: data.commission / 10000000
-      })
+        const data = preferences.toJSON()
+        const era = currentEra - index
+        acc.push({
+          era,
+          commission: data.commission / 10000000
+        })
 
-      return acc
-    }, [])
+        return acc
+      }, [])
       .sort((a, b) => a.era - b.era)
 
     // console.log('erasValidatorPrefs:', erasValidatorPrefs)
-    this.commissionHistory.splice(0, this.commissionHistory.length, ...commissionHistory)
+    this.commissionHistory.splice(
+      0,
+      this.commissionHistory.length,
+      ...commissionHistory
+    )
   }
 }
