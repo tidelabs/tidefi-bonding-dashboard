@@ -1,7 +1,7 @@
 // app global css in SCSS form
 @supports (backdrop-filter: none) {
   .glass {
-    background-color: rgba(25,118,210,.65);
+    background-color: rgba(25, 118, 210, 0.65);
     backdrop-filter: blur(7px);
   }
 }
@@ -26,7 +26,6 @@
       background-color: $dark;
     }
   }
-
 }
 
 .entity-link {
@@ -39,7 +38,7 @@
 }
 
 .panel-title {
-  font-size: 1.0rem;
+  font-size: 1rem;
 }
 
 .identity-svg-wrapper {
@@ -49,7 +48,7 @@
 }
 
 .info-table {
-  max-width: 320px;
+  max-width: 380px;
   width: 100%;
   border-radius: 4px;
   padding: 2px;
@@ -81,24 +80,25 @@
 }
 
 .border-light {
-  border: solid 1px rgba(0,0,0,0.2);
+  border: solid 1px rgba(0, 0, 0, 0.2);
   border-radius: 2px;
 }
 
 .q-dark div,
 .body--dark div {
   .info-table thead {
-    color: #FFFF00;
+    color: #ffff00;
   }
   .info-table thead,
   .info-table tbody {
     background-color: var(--q-dark);
   }
-  .q-item.q-router-link--active, .q-item--active {
-    color: #FFFF00;
+  .q-item.q-router-link--active,
+  .q-item--active {
+    color: #ffff00;
   }
   .border-light {
-    border: solid 1px rgba(255,255,255,0.2);
+    border: solid 1px rgba(255, 255, 255, 0.2);
     border-radius: 2px;
   }
 }

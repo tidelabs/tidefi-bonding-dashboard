@@ -1,19 +1,45 @@
 <template>
-  <q-card v-if="entity?.tokenBalances && availableLedgers?.length" class="info-table">
+  <q-card
+    v-if="entity?.tokenBalances && availableLedgers?.length"
+    class="info-table"
+  >
     <table>
       <thead>
         <tr>
-          <th colspan="1">Ledger ({{ availableLedgers.length }})</th>
+          <th colspan="4">Ledger ({{ availableLedgers.length }})</th>
         </tr>
       </thead>
     </table>
     <table>
       <tbody>
-        <template v-for="{ name, symbol, balance, total } in availableLedgers" :key="name">
+        <tr></tr>
+        <tr class="bottom-border">
+          <td class="text-bold">Name</td>
+          <td class="text-bold">Symbol</td>
+          <td class="text-right text-bold">Total</td>
+          <td class="text-right text-bold">Reserved</td>
+        </tr>
+        <template
+          v-for="{
+            name,
+            symbol,
+            balance,
+            reserved,
+            total,
+            totalReserved,
+          } in availableLedgers"
+          :key="name"
+        >
           <tr>
             <td>{{ name }}</td>
             <td>{{ symbol }}</td>
-            <td class="text-right">{{ balance }}<q-tooltip>{{ total }} {{ symbol }}</q-tooltip></td>
+            <td class="text-right">
+              {{ balance }}<q-tooltip>{{ total }} {{ symbol }}</q-tooltip>
+            </td>
+            <td class="text-right">
+              {{ reserved
+              }}<q-tooltip>{{ totalReserved }} {{ symbol }}</q-tooltip>
+            </td>
           </tr>
         </template>
       </tbody>
@@ -51,7 +77,17 @@ export default {
               name: token.asset.name,
               symbol: token.asset.symbol,
               balance: toBaseToken(tb.ledger.balance, token.asset.decimals),
-              total: toBaseToken(tb.ledger.balance, token.asset.decimals, token.asset.decimals)
+              reserved: toBaseToken(tb.ledger.reserved, token.asset.decimals),
+              reservedTotal: toBaseToken(
+                tb.ledger.reserved,
+                token.asset.decimals,
+                token.asset.decimals
+              ),
+              total: toBaseToken(
+                tb.ledger.balance,
+                token.asset.decimals,
+                token.asset.decimals
+              )
             })
           }
         }
@@ -66,3 +102,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.bottom-border {
+  border-bottom: 1px solid gray;
+}
+</style>
